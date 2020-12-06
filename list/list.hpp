@@ -277,8 +277,9 @@ namespace ft {
 
 		void
 		push_front(const T& data) {
-			list_node *temp = new list_node(data, this->head, this->head->next->next);
+			list_node *temp = new list_node(data, this->head, this->head->next);
 			this->head->next = this->head->next->prev = temp;
+			list_size++;
 		}
 
 		// void
