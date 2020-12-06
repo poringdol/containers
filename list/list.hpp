@@ -3,6 +3,7 @@
 // #include <iostream>
 // #include <memory>
 #include <iterator>
+#include <limits>
 
 #if __cplusplus <= 199711L
 	#define NOEXCEPT throw()
@@ -12,7 +13,7 @@
 
 namespace ft {
 
-	template<typename T>	
+	template<typename T>
 	class list {
 
 	private:
@@ -29,6 +30,8 @@ namespace ft {
 					: data(new_data), prev(new_prev), next(new_next) {}
 		};
 // ============================================================================
+
+	
 
 // Iterator class for list ----------------------------------------------------
 	public:
@@ -174,23 +177,35 @@ namespace ft {
 // List constructor	
 		list() NOEXCEPT : list_size(0) { list_init(); }
 
-		list(const list& to_copy) NOEXCEPT : list_size(to_copy.list_size) {
-			list_init();
-			const_iterator temp = to_copy.begin();
-			while (temp != to_copy.end()) {
+		list(const list& x) NOEXCEPT : list_size(0) { 
+			this->list_init();
+			*this = x;
+		}
+
+		list&
+		operator=(const list& x) {
+			this->clear();
+
+			const_iterator temp = x.begin();
+			while (temp != x.end()) {
 				this->push_back(temp.ptr->data);
 				temp++;
 			}
+			return *this;
 		}
 
 // List destructor	
 		~list() {
 			clear();
+			delete this->head;
 		}
 	
 // List methods ---------------------------------------------------------------------
 		size_t
 		size() const NOEXCEPT { return list_size; }
+
+		size_t
+		max_size() const NOEXCEPT { return std::numeric_limits<size_t>::max(); }
 
 		iterator
 		begin() NOEXCEPT { return iterator(this->head->next); }
@@ -230,16 +245,20 @@ namespace ft {
 			return *tmp;
 		}
 
-		// iterator
-		// insert(iterator position, const T& data) {
-		// 	if (!list_size)
+		iterator
+		insert(iterator position, const T& data);
+		// {
+		// 	if (!list_size) {
 		// 		push_back(data);
-		// 	else {
-		// 		list_node *temp = new list_node(data);
-		// 		temp->next = position;
-		// 		temp->prev = position->prev;
-		// 		position->prev->next = position->prev = temp;
+		// 		return this->begin();
 		// 	}
+		// 	list_node *temp = new list_node(data);
+		// 	if (position == this->begin())
+		// 		this->head = temp;
+		// 	temp->next = position.ptr;
+		// 	temp->prev = position.ptr->prev;
+		// 	position.ptr->prev->next = position.ptr->prev = temp;
+		// 	return iterator(temp);
 		// }
 
 		void
@@ -257,25 +276,48 @@ namespace ft {
 		}
 
 		void
+		push_front(const T& data) {
+			list_node *temp = new list_node(data, this->head, this->head->next->next);
+			this->head->next = this->head->next->prev = temp;
+		}
+
+		// void
+		// merge(list&& x);
+
+		// void
+		// merge(list& x);
+
+		void
+		pop_front() NOEXCEPT {
+			this->erase(this->begin());
+		}
+
+		void
+		pop_back() NOEXCEPT {
+			this->erase(iterator(this->head->prev));
+		}
+
+		void
 		clear() NOEXCEPT {
 			list_node *temp;
-			while (list_size) {
+			while (this->list_size) {
 				temp = this->head->next;
 				delete this->head;
 				this->head = temp;
 				this->list_size--;
 			}
-			delete this->head;
-			list_init();
 		}
 
 		iterator
 		erase(iterator position) {
 			position.ptr->prev->next = position.ptr->next;
 			position.ptr->next->prev = position.ptr->prev;
-			delete position.ptr;
-			list_size--;
-			return ++position;
+			iterator temp = position++;
+			if (temp == this->begin())
+				this->head->next = temp.ptr;
+			delete temp.ptr;
+			list_size -= list_size ? 1 : 0;
+			return position;
 		}
 
 		iterator
