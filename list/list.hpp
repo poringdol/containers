@@ -13,10 +13,11 @@
 
 namespace ft {
 
-	template<typename T>
+	template<typename T, typename Alloc = std::allocator<T> >
 	class list {
 
 	private:
+	struct list_node;
 
 // Supporting structure list_node ---------------------------------------------
 		struct list_node {
@@ -33,7 +34,7 @@ namespace ft {
 
 	
 
-// Iterator class for list ----------------------------------------------------
+// Iterator class for ---------------------------------------------------------
 	public:
 		struct iterator : std::bidirectional_iterator_tag {
 			list_node* ptr;
@@ -42,59 +43,55 @@ namespace ft {
 			iterator(list_node* new_ptr) NOEXCEPT : ptr(new_ptr) {}
 			iterator(const iterator& new_it) NOEXCEPT : ptr(new_it.ptr) {} 
 
-			T&			operator*() const NOEXCEPT {
+			T&
+			operator*() const NOEXCEPT {
 				return this->ptr->data;
 			}
 			
-			T*	operator->() const NOEXCEPT {
+			T*
+			operator->() const NOEXCEPT {
 				return &this->ptr->data;
 			}
 
-			iterator	operator++() NOEXCEPT {
-				ptr = ptr->next;
+			iterator
+			operator++() NOEXCEPT {
+				this->ptr = this->ptr->next;
 				return *this;
 			}
 
-			iterator	operator++(int) const NOEXCEPT {
+			iterator
+			operator++(int) NOEXCEPT {
 				iterator tmp = *this;
-				ptr = ptr->next;
+				this->ptr = this->ptr->next;
 				return tmp;
 			}
 			
-			iterator	operator--() NOEXCEPT {
-				ptr = ptr->prev;
+			iterator
+			operator--() NOEXCEPT {
+				this->ptr = this->ptr->prev;
 				return *this;
 			}
 
-			iterator	operator--(int) const NOEXCEPT {
+			iterator
+			operator--(int) NOEXCEPT {
 				iterator tmp = *this;
-				ptr = ptr->prev;
+				this->ptr = this->ptr->prev;
 				return tmp;
 			}
 
-			iterator	operator++(int) NOEXCEPT {
-				iterator tmp = *this;
-				ptr = ptr->next;
-				return tmp;
-			}
-
-			iterator	operator--(int) NOEXCEPT {
-				iterator tmp = *this;
-				ptr = ptr->prev;
-				return tmp;
-			}
-
-			bool		operator==(const iterator& x) NOEXCEPT {
+			bool
+			operator==(const iterator& x) NOEXCEPT {
 				return this->ptr == x.ptr;
 			}
 
-			bool		operator!=(const iterator& x) NOEXCEPT {
+			bool
+			operator!=(const iterator& x) NOEXCEPT {
 				return this->ptr != x.ptr;
 			}
 		};
 // ============================================================================
 
-// Const iterator class for list ----------------------------------------------------
+// Const iterator class -------------------------------------------------------
 	public:
 		struct const_iterator : std::bidirectional_iterator_tag {
 			typedef const_iterator iterator;
@@ -114,36 +111,24 @@ namespace ft {
 			}
 
 			iterator	operator++() NOEXCEPT {
-				ptr = ptr->next;
+				this->ptr = this->ptr->next;
 				return *this;
-			}
-
-			iterator	operator++(int) const NOEXCEPT {
-				iterator tmp = *this;
-				ptr = ptr->next;
-				return tmp;
-			}
-			
-			iterator	operator--() NOEXCEPT {
-				ptr = ptr->prev;
-				return *this;
-			}
-
-			iterator	operator--(int) const NOEXCEPT {
-				iterator tmp = *this;
-				ptr = ptr->prev;
-				return tmp;
 			}
 
 			iterator	operator++(int) NOEXCEPT {
 				iterator tmp = *this;
-				ptr = ptr->next;
+				this->ptr = this->ptr->next;
 				return tmp;
+			}
+			
+			iterator	operator--() NOEXCEPT {
+				this->ptr = this->ptr->prev;
+				return *this;
 			}
 
 			iterator	operator--(int) NOEXCEPT {
 				iterator tmp = *this;
-				ptr = ptr->prev;
+				this->ptr = this->ptr->prev;
 				return tmp;
 			}
 
@@ -157,28 +142,122 @@ namespace ft {
 		};
 // ============================================================================
 
+// Reverse iterator class -----------------------------------------------------
+	public:
+		struct reverse_iterator : public ft::list<T, Alloc>::iterator {
+			
+			typedef ft::list<T, Alloc>::iterator	base_iterator;
+			typedef reverse_iterator		iterator;
+
+			reverse_iterator() NOEXCEPT : base_iterator() {}
+			reverse_iterator(list_node* new_ptr) NOEXCEPT : base_iterator(new_ptr) {}
+			reverse_iterator(const iterator& new_it) NOEXCEPT : base_iterator(new_it.ptr) {} 
+
+			iterator	operator++() NOEXCEPT {
+				this->ptr = this->ptr->prev;
+				return *this;
+			}
+
+			iterator	operator++(int) NOEXCEPT {
+				iterator tmp = *this;
+				this->ptr = this->ptr->prev;
+				return tmp;
+			}
+			
+			iterator	operator--() NOEXCEPT {
+				this->ptr = this->ptr->next;
+				return *this;
+			}
+
+			iterator	operator--(int) NOEXCEPT {
+				iterator tmp = *this;
+				this->ptr = this->ptr->next;
+				return tmp;
+			}
+		};
+// ============================================================================
+
+// Const reverse iterator class -----------------------------------------------
+	public:
+
+		struct const_reverse_iterator : public ft::list<T, Alloc>::const_iterator {
+			
+			typedef ft::list<T, Alloc>::const_iterator	base_iterator;
+			typedef const_reverse_iterator		iterator;
+
+			const_reverse_iterator() NOEXCEPT : base_iterator() {}
+			const_reverse_iterator(list_node* new_ptr) NOEXCEPT : base_iterator(new_ptr) {}
+			const_reverse_iterator(const iterator& new_it) NOEXCEPT : base_iterator(new_it.ptr) {} 
+
+			iterator	operator++() NOEXCEPT {
+				this->ptr = this->ptrptr->prev;
+				return *this;
+			}
+
+			iterator	operator++(int) NOEXCEPT {
+				iterator tmp = *this;
+				this->ptr = this->ptr->prev;
+				return tmp;
+			}
+			
+			iterator	operator--() NOEXCEPT {
+				this->ptr = this->ptr->next;
+				return *this;
+			}
+
+			iterator	operator--(int) NOEXCEPT {
+				iterator tmp = *this;
+				this->ptr = this->ptr->next;
+				return tmp;
+			}
+		};
+// ============================================================================
+
 	private:
 		size_t list_size;
 		list_node *head;
+		Alloc alloc;
 
 		void
-		list_init() NOEXCEPT {
+		_list_init() NOEXCEPT {
 			this->head->prev = this->head->next = this->head = new list_node;
 		}
 
+		/* 'insert' node placed to current position, 'current' moved to next position */
+		void
+		_node_insert(list_node* current, list_node* insert) {
+			insert->next = current;
+			insert->prev = current->prev;
+			current->prev = current->prev->next = insert;
+		}
+
+		static bool
+		_compare(T val1, T val2) { return val2 < val1; }
+
 	public:
-		// explicit list (const allocator_type& alloc = allocator_type());
-		// explicit list (size_type n, const value_type& val = value_type(),
-		// const allocator_type& alloc = allocator_type());
-		// template <class InputIterator>
-		// list (InputIterator first, InputIterator last,
-        // 	const allocator_type& alloc = allocator_type());	
+// List constructors
+		explicit
+		list (const Alloc& x = Alloc())
+					: alloc(x), list_size(0) { _list_init(); }
 
-// List constructor	
-		list() NOEXCEPT : list_size(0) { list_init(); }
+		explicit
+		list (size_t n, const T& val = T(), const Alloc& x = Alloc()): list_size(0), alloc(x) {
+			_list_init();
+			iterator temp = head;
+			while (n--) {
+				this->push_back(val);
+			}
+		}
+		
 
-		list(const list& x) NOEXCEPT : list_size(0) { 
-			this->list_init();
+		template<typename InputIterator>
+		list (InputIterator first, InputIterator last, const Alloc& x = Alloc()): list_size(0), alloc(x) {
+			_list_init();
+			this->assign(first, last);
+		}
+
+		list(const list& x): list_size(0) { 
+			this->_list_init();
 			*this = x;
 		}
 
@@ -202,64 +281,129 @@ namespace ft {
 	
 // List methods ---------------------------------------------------------------------
 		size_t
-		size() const NOEXCEPT { return list_size; }
+		size() const NOEXCEPT		{ return list_size; }
+
+		bool
+		empty() const NOEXCEPT		{ return list_size == 0; }
 
 		size_t
-		max_size() const NOEXCEPT { return std::numeric_limits<size_t>::max(); }
+		max_size() const NOEXCEPT	{ return std::numeric_limits<size_t>::max() / sizeof(list_node); }
 
 		iterator
-		begin() NOEXCEPT { return iterator(this->head->next); }
+		begin() NOEXCEPT			{ return iterator(this->head->next); }
 
 		const_iterator
-		begin() const NOEXCEPT { return const_iterator(this->head->next); }
+		begin() const NOEXCEPT		{ return const_iterator(this->head->next); }
 
 		iterator
-		end() NOEXCEPT { return iterator(this->head); }
+		end() NOEXCEPT				{ return iterator(this->head); }
 
 		const_iterator
-		end() const NOEXCEPT { return const_iterator(this->head); }
+		end() const NOEXCEPT		{ return const_iterator(this->head); }
+
+		reverse_iterator
+		rbegin() NOEXCEPT			{ return reverse_iterator(this->head->prev); }
+
+		const_reverse_iterator
+		rbegin() const NOEXCEPT 	{ return const_reverse_iterator(this->head->prev); }
+
+		reverse_iterator
+		rend() NOEXCEPT				{ return reverse_iterator(this->head); }
+
+		const_reverse_iterator
+		rend() const NOEXCEPT		{ return const_reverse_iterator(this->head); }
 
 		T&
-		front() NOEXCEPT {
-			iterator tmp = begin();
-			return *tmp;
-		}
+		front() NOEXCEPT			{ return *(begin()); }
 
 		const T&
-		front() const NOEXCEPT {
-			iterator tmp = begin();
-			return *tmp;
-		}
+		front() const NOEXCEPT		{ return *(this->begin()); }
 
 		T&
-		back() NOEXCEPT {
-			iterator tmp = end();
-			--tmp;
-			return *tmp;
-		}
+		back() NOEXCEPT				{ return *(--(this->end())); }
 
 		const T&
-		back() const NOEXCEPT {
-			iterator tmp = end();
-			--tmp;
-			return *tmp;
+		back() const NOEXCEPT		{ return *(--(this->end())); }
+
+		void
+		assign(iterator first, iterator last) {
+			this->clear();
+			while (first != last) {
+				this->push_back(*first);
+				++first;
+			}
+		}
+
+		void
+		assign(size_t n, const T& val) {
+			this->clear();
+			while (n--) {
+				this->push_back(val);
+			}
+		}
+
+		void
+		merge(list& x) {
+			this->merge(x, _compare);
+		}
+
+		template <class Compare>
+		void merge(list& x, Compare comp) {
+			if (&x == this)
+				return;
+			// this->sort();
+			// x.sort();
+			iterator first1 = this->begin(), first2 = x.begin(),
+					  last1 = this->end(),	  last2 = x.end();
+			while (first1 != last1 && first2 != last2) {
+				if (comp(*first1, *first2 )) {
+					iterator temp = first2;
+					temp++;
+					_node_insert(first1.ptr, first2.ptr);
+					first2 = temp;
+					this->list_size++;
+				}
+				else
+					++first1;
+			}
+			while (first2 != last2) {
+				iterator temp = first2;
+				temp++;
+				_node_insert(first1.ptr, first2.ptr);
+				first2 = temp;
+				this->list_size++;;
+			}
+			x.list_size = 0;
 		}
 
 		iterator
-		insert(iterator position, const T& data);
-		// {
-		// 	if (!list_size) {
-		// 		push_back(data);
-		// 		return this->begin();
-		// 	}
-		// 	list_node *temp = new list_node(data);
-		// 	if (position == this->begin())
-		// 		this->head = temp;
-		// 	temp->next = position.ptr;
-		// 	temp->prev = position.ptr->prev;
-		// 	position.ptr->prev->next = position.ptr->prev = temp;
-		// 	return iterator(temp);
-		// }
+		insert(iterator position, const T& data) {
+			if (position == this->begin()) {
+				push_front(data);
+				return this->begin();
+			}
+
+			list_node *temp = new list_node(data);
+			_node_insert(position.ptr, temp);
+			list_size++;
+			return iterator(temp);
+		}
+
+		void
+		insert (iterator position, int n, const T& val) {
+			while (n--) {
+				iterator temp = position;
+				this->insert(temp, val);
+			}
+		}
+		
+		template<class InputIterator>
+		void
+		insert (iterator position, InputIterator first, InputIterator last) {
+			for (; first != last; ++first, ++position) {
+				this->insert(position, *first);
+			}
+		}
 
 		void
 		push_back(const T& data) {
@@ -282,20 +426,34 @@ namespace ft {
 			list_size++;
 		}
 
-		// void
-		// merge(list&& x);
-
-		// void
-		// merge(list& x);
+		void
+		pop_front() NOEXCEPT { this->erase(this->begin()); }
 
 		void
-		pop_front() NOEXCEPT {
-			this->erase(this->begin());
+		pop_back() NOEXCEPT { this->erase(iterator(this->head->prev)); }
+
+		void
+		resize(size_t new_size, T val = T()) {
+			if (new_size < this->list_size) {
+				iterator it = this->begin();
+				while (new_size--)
+					++it;
+				erase(it, this->end());
+			} else {
+				insert(this->end(), new_size - this->list_size, val);
+			}
 		}
 
 		void
-		pop_back() NOEXCEPT {
-			this->erase(iterator(this->head->prev));
+		reverse() {
+			reverse_iterator it = this->rend();
+			list_node* temp;
+			while (it != this->rend()) {
+				temp = it.ptr->prev;
+				it.ptr->next = it.ptr->prev;
+				it.ptr = temp;
+			}
+			it.ptr->prev = this->end();
 		}
 
 		void
@@ -307,6 +465,7 @@ namespace ft {
 				this->head = temp;
 				this->list_size--;
 			}
+			this->head->prev = this->head->next = this->head;
 		}
 
 		iterator
@@ -329,9 +488,29 @@ namespace ft {
 			return last;
 		}
 
-		bool
-		empty() const NOEXCEPT {
-			return list_size == 0;
+		void
+		remove(const T& val) {
+			iterator it = this->begin();
+			while (it != this->end()) {
+				iterator temp = it;
+				++it;
+				if (*temp == val) {
+					this->erase(temp);
+				}
+			}
+		}
+
+		template <class Predicate>
+		void
+		remove_if (Predicate pred) {
+			iterator it = this->begin();
+			while (it != this->end()) {
+				iterator temp = it;
+				++it;
+				if (pred(*temp)) {
+					this->erase(temp);
+				}
+			}
 		}
 // ============================================================================
 	};
