@@ -673,46 +673,90 @@ int main() {
 
 	ft::list<int> ls;
 
-	ft::list<int>::iterator it = ls.begin();
-	ft::list<int>::const_iterator it2;
-	it2 = it;
-	push_back_size_test(ls);
-	push_front_test(ls);
-	insert_test(ls);
-	insert_fill_test(ls);
-	insert_range_test(ls);
-	rbegin_rend_test(ls);
-	const_rbegin_rend_test(ls);
-	copy_constructor_assign_test(ls);
-	range_constructor_assign_test(ls);
-	assign_range_test(ls);
-	assign_fill_test(ls);
-	iterator_test(ls);
-	clear_test(ls);
-	empty_test(ls);
-	back_front_test(ls);
-	pop_back_pop_front_test(ls);
-	resize_test();
-	reverse_test();
-	erase_test(ls);
-	erase_range_test(ls);
-	remove_test(ls);
-	remove_if_test(ls);
-	merge_test();
-	merge_compare_test();
-	splice_1_test();
-	splice_2_test();
-	splice_3_test();
-	sort_test();
-	sort_compare_test();
-	swap_test();
-	unique_test();
+	// ft::list<int>::iterator it = ls.begin();
+	// ft::list<int>::const_iterator it2;
+	// it2 = it;
+	// push_back_size_test(ls);
+	// push_front_test(ls);
+	// insert_test(ls);
+	// insert_fill_test(ls);
+	// insert_range_test(ls);
+	// rbegin_rend_test(ls);
+	// const_rbegin_rend_test(ls);
+	// copy_constructor_assign_test(ls);
+	// range_constructor_assign_test(ls);
+	// assign_range_test(ls);
+	// assign_fill_test(ls);
+	// iterator_test(ls);
+	// clear_test(ls);
+	// empty_test(ls);
+	// back_front_test(ls);
+	// pop_back_pop_front_test(ls);
+	// resize_test();
+	// reverse_test();
+	// erase_test(ls);
+	// erase_range_test(ls);
+	// remove_test(ls);
+	// remove_if_test(ls);
+	// merge_test();
+	// merge_compare_test();
+	// splice_1_test();
+	// splice_2_test();
+	// splice_3_test();
+	// sort_test();
+	// sort_compare_test();
+	// swap_test();
+	// unique_test();
+
+	{
+		std::list<char> o('c', 11);
+		std::list<char> o1('b', 11);
+		ft::list<char> n('c', 11);
+		ft::list<char> n1('b', 11);
+
+		cout << (o <= o1) << endl;
+		cout << (n <= n1) << endl << endl;
+	}
+
+	{
+		std::list<char> o('a', 11);
+		std::list<char> o1('b', 11);
+		ft::list<char> n('a', 11);
+		ft::list<char> n1('b', 11);
+
+		cout << (o <= o1) << endl;
+		cout << (n <= n1) << endl << endl;
+	}
+
+	{
+		std::list<char> o('c', 110);
+		std::list<char> o1('b', 11);
+		ft::list<char> n('c', 110);
+		ft::list<char> n1('b', 11);
+
+		cout << (o <= o1) << endl;
+		cout << (n <= n1) << endl << endl;
+	}
+
+	{
+		std::list<char> o('b', 110);
+		std::list<char> o1('b', 11);
+		ft::list<char> n('b', 110);
+		ft::list<char> n1('b', 11);
+
+		cout << (o <= o1) << endl;
+		cout << (n <= n1) << endl << endl;
+	}
+
+	{
+		std::list<char> o('b', 11);
+		std::list<char> o1('b', 11);
+		ft::list<char> n('b', 11);
+		ft::list<char> n1('b', 11);
+
+		cout << (o <= o1) << endl;
+		cout << (n <= n1) << endl << endl;
+	}
 
 	cout << "End" << endl;
-
-	// std::list<int> std_ls;
-	// // std_ls.push_back(5);
-	// auto it_ = std_ls.begin();
-	// std_ls.erase(it_);
-	// // std_ls.erase(it_);
 }

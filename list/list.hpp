@@ -34,11 +34,6 @@ namespace ft {
 // ============================================================================
 	
 	public:
-
-	struct iterator;
-	struct const_iterator;
-	struct reverse_iterator;
-	struct const_reverse_iterator;
 	
 // Iterator class -------------------------------------------------------------
 
@@ -48,9 +43,6 @@ namespace ft {
 			iterator() NOEXCEPT : ptr(NULL) {}
 			iterator(list_node* new_ptr) NOEXCEPT : ptr(new_ptr) {}
 			iterator(const iterator& new_it) NOEXCEPT : ptr(new_it.ptr) {}
-			iterator(const const_iterator& new_it) NOEXCEPT : ptr(new_it.ptr) {}
-			iterator(const reverse_iterator& new_it) NOEXCEPT : ptr(new_it.ptr) {}
-			iterator(const const_reverse_iterator& new_it) NOEXCEPT : ptr(new_it.ptr) {} 
 
 			template<typename Iterator>
 			iterator
@@ -104,78 +96,15 @@ namespace ft {
 		};
 // ============================================================================
 
-// Const iterator class -------------------------------------------------------
-
-	public:
-		struct const_iterator : std::bidirectional_iterator_tag {
-			// typedef const_iterator iterator;
-
-			const list_node* ptr;
-
-			const_iterator() NOEXCEPT : ptr(NULL) {}
-			const_iterator(const list_node* new_ptr) NOEXCEPT : ptr(new_ptr) {}
-			const_iterator(const iterator& new_it) NOEXCEPT : ptr(new_it.ptr) {}
-			const_iterator(const const_iterator& new_it) NOEXCEPT : ptr(new_it.ptr) {}
-			const_iterator(const reverse_iterator& new_it) NOEXCEPT : ptr(new_it.ptr) {}
-			const_iterator(const const_reverse_iterator& new_it) NOEXCEPT : ptr(new_it.ptr) {} 
-
-			template<typename Iterator>
-			const_iterator
-			operator= (Iterator& x) { return const_iterator(x.ptr); }
-
-			const T
-			operator*() const NOEXCEPT { return this->ptr->data; }
-			
-			const T*
-			operator->() const NOEXCEPT { return &this->ptr->data; }
-
-			const_iterator
-			operator++ () NOEXCEPT {
-				this->ptr = this->ptr->next;
-				return *this;
-			}
-
-			const_iterator
-			operator++ (int) NOEXCEPT {
-				const_iterator tmp = *this;
-				this->ptr = this->ptr->next;
-				return tmp;
-			}
-			
-			const_iterator
-			operator-- () NOEXCEPT {
-				this->ptr = this->ptr->prev;
-				return *this;
-			}
-
-			const_iterator
-			operator-- (int) NOEXCEPT {
-				const_iterator tmp = *this;
-				this->ptr = this->ptr->prev;
-				return tmp;
-			}
-
-			bool
-			operator== (const const_iterator& x) NOEXCEPT { return this->ptr == x.ptr; }
-
-			bool
-			operator!= (const const_iterator& x) NOEXCEPT { return this->ptr != x.ptr; }
-		};
-// ============================================================================
-
 // Reverse iterator class -----------------------------------------------------
 
-	public:
 		struct reverse_iterator : public ft::list<T, Alloc>::iterator {
 			
 			typedef ft::list<T, Alloc>::iterator	base_iterator;
 
 			reverse_iterator() NOEXCEPT : base_iterator() {}
 			reverse_iterator(list_node* new_ptr) NOEXCEPT : base_iterator(new_ptr) {}
-			reverse_iterator(const iterator& new_it) NOEXCEPT : base_iterator(new_it.ptr) {}
-			reverse_iterator(const const_iterator& new_it) NOEXCEPT : base_iterator(new_it.ptr) {}
-			reverse_iterator(const reverse_iterator& new_it) NOEXCEPT : base_iterator(new_it.ptr) {}
-			reverse_iterator(const const_reverse_iterator& new_it) NOEXCEPT : base_iterator(new_it.ptr) {}  
+			reverse_iterator(const iterator& new_it) NOEXCEPT : base_iterator(new_it.ptr) {} 
 
 			template<typename Iterator>
 			reverse_iterator
@@ -209,53 +138,6 @@ namespace ft {
 		};
 // ============================================================================
 
-// Const reverse iterator class -----------------------------------------------
-
-	public:
-
-		struct const_reverse_iterator : public ft::list<T, Alloc>::const_iterator {
-			
-			typedef ft::list<T, Alloc>::const_iterator	base_iterator;
-			// typedef const_reverse_iterator		iterator;
-
-			const_reverse_iterator() NOEXCEPT : base_iterator() {}
-			const_reverse_iterator(list_node* new_ptr) NOEXCEPT : base_iterator(new_ptr) {}
-			const_reverse_iterator(const iterator& new_it) NOEXCEPT : base_iterator(new_it.ptr) {}
-			const_reverse_iterator(const const_iterator& new_it) NOEXCEPT : base_iterator(new_it.ptr) {}
-			const_reverse_iterator(const reverse_iterator& new_it) NOEXCEPT : base_iterator(new_it.ptr) {}
-			const_reverse_iterator(const const_reverse_iterator& new_it) NOEXCEPT : base_iterator(new_it.ptr) {} 
-
-			template<typename Iterator>
-			const_reverse_iterator
-			operator= (Iterator& x) { return iterator(x.ptr); }
-
-			const_reverse_iterator
-			operator++ () NOEXCEPT {
-				this->ptr = this->ptr->prev;
-				return *this;
-			}
-
-			const_reverse_iterator
-			operator++ (int) NOEXCEPT {
-				iterator tmp = *this;
-				this->ptr = this->ptr->prev;
-				return tmp;
-			}
-			
-			const_reverse_iterator
-			operator-- () NOEXCEPT {
-				this->ptr = this->ptr->next;
-				return *this;
-			}
-
-			const_reverse_iterator
-			operator-- (int) NOEXCEPT {
-				iterator tmp = *this;
-				this->ptr = this->ptr->next;
-				return tmp;
-			}
-		};
-// ============================================================================
 
 	private:
 		size_t list_size;
@@ -329,6 +211,10 @@ namespace ft {
 // ============================================================================
 
 	public:
+
+	typedef iterator			const_iterator;
+	typedef reverse_iterator	const_reverse_iterator;
+
 // List constructors
 
 		explicit
@@ -338,10 +224,7 @@ namespace ft {
 		explicit
 		list (size_t n, const T& val = T(), const Alloc& x = Alloc()): list_size(0), alloc(x) {
 			_list_init();
-			iterator temp = head;
-			while (n--) {
-				this->push_back(val);
-			}
+			while (n--) { this->push_back(val); }
 		}
 		
 
@@ -750,12 +633,12 @@ namespace ft {
 	template <class T, class Alloc>
 	bool
 	operator== (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
-		if (lhs.list_size != rhs.list_size)
+		if (lhs.size() != rhs.size())
 			return false;
 		typename ft::list<T>::iterator first1 = lhs.begin();
 		typename ft::list<T>::iterator first2 = rhs.begin();
 		while (first1 != lhs.end()) {
-			if (lhs.head->data != rhs.head->data)
+			if (*first1 != *first2)
 				return false;
 			++first1;
 			++first2;
@@ -776,12 +659,15 @@ namespace ft {
 		typename ft::list<T>::iterator first1 = lhs.begin();
 		typename ft::list<T>::iterator first2 = rhs.begin();
 		while (first1 != lhs.end() && first2 != rhs.end()) {
-			if (lhs.head->data >= rhs.head->data)
+			if (*first1 < *first2)
+				return true;
+			if (*first1 > *first2)
 				return false;
 			++first1;
 			++first2;
 		}
-		if (lhs.list_size > rhs.list_size)
+		if (lhs.size() > rhs.size() ||
+			(lhs.size() == rhs.size() && *first1 >= *first2))
 			return false;
 		return true;
 	}
