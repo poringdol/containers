@@ -32,17 +32,29 @@ namespace ft {
 					: data(new_data), prev(new_prev), next(new_next) {}
 		};
 // ============================================================================
+	
+	public:
 
+	struct iterator;
+	struct const_iterator;
+	struct reverse_iterator;
+	struct const_reverse_iterator;
 	
 // Iterator class -------------------------------------------------------------
 
-	public:
 		struct iterator : std::bidirectional_iterator_tag {
 			list_node* ptr;
 
 			iterator() NOEXCEPT : ptr(NULL) {}
 			iterator(list_node* new_ptr) NOEXCEPT : ptr(new_ptr) {}
-			iterator(const iterator& new_it) NOEXCEPT : ptr(new_it.ptr) {} 
+			iterator(const iterator& new_it) NOEXCEPT : ptr(new_it.ptr) {}
+			iterator(const const_iterator& new_it) NOEXCEPT : ptr(new_it.ptr) {}
+			iterator(const reverse_iterator& new_it) NOEXCEPT : ptr(new_it.ptr) {}
+			iterator(const const_reverse_iterator& new_it) NOEXCEPT : ptr(new_it.ptr) {} 
+
+			template<typename Iterator>
+			iterator
+			operator= (const Iterator& x) { return iterator(x.ptr); }
 
 			T&
 			operator*() const NOEXCEPT {
@@ -96,51 +108,58 @@ namespace ft {
 
 	public:
 		struct const_iterator : std::bidirectional_iterator_tag {
-			typedef const_iterator iterator;
+			// typedef const_iterator iterator;
 
 			const list_node* ptr;
 
 			const_iterator() NOEXCEPT : ptr(NULL) {}
 			const_iterator(const list_node* new_ptr) NOEXCEPT : ptr(new_ptr) {}
-			const_iterator(const iterator& new_it) NOEXCEPT : ptr(new_it.ptr) {} 
+			const_iterator(const iterator& new_it) NOEXCEPT : ptr(new_it.ptr) {}
+			const_iterator(const const_iterator& new_it) NOEXCEPT : ptr(new_it.ptr) {}
+			const_iterator(const reverse_iterator& new_it) NOEXCEPT : ptr(new_it.ptr) {}
+			const_iterator(const const_reverse_iterator& new_it) NOEXCEPT : ptr(new_it.ptr) {} 
 
-			const T&	operator*() const NOEXCEPT {
-				return this->ptr->data;
-			}
+			template<typename Iterator>
+			const_iterator
+			operator= (Iterator& x) { return const_iterator(x.ptr); }
+
+			const T
+			operator*() const NOEXCEPT { return this->ptr->data; }
 			
-			const T*	operator->() const NOEXCEPT {
-				return &this->ptr->data;
-			}
+			const T*
+			operator->() const NOEXCEPT { return &this->ptr->data; }
 
-			iterator	operator++ () NOEXCEPT {
+			const_iterator
+			operator++ () NOEXCEPT {
 				this->ptr = this->ptr->next;
 				return *this;
 			}
 
-			iterator	operator++ (int) NOEXCEPT {
-				iterator tmp = *this;
+			const_iterator
+			operator++ (int) NOEXCEPT {
+				const_iterator tmp = *this;
 				this->ptr = this->ptr->next;
 				return tmp;
 			}
 			
-			iterator	operator-- () NOEXCEPT {
+			const_iterator
+			operator-- () NOEXCEPT {
 				this->ptr = this->ptr->prev;
 				return *this;
 			}
 
-			iterator	operator-- (int) NOEXCEPT {
-				iterator tmp = *this;
+			const_iterator
+			operator-- (int) NOEXCEPT {
+				const_iterator tmp = *this;
 				this->ptr = this->ptr->prev;
 				return tmp;
 			}
 
-			bool		operator== (const iterator& x) NOEXCEPT {
-				return this->ptr == x.ptr;
-			}
+			bool
+			operator== (const const_iterator& x) NOEXCEPT { return this->ptr == x.ptr; }
 
-			bool		operator!= (const iterator& x) NOEXCEPT {
-				return this->ptr != x.ptr;
-			}
+			bool
+			operator!= (const const_iterator& x) NOEXCEPT { return this->ptr != x.ptr; }
 		};
 // ============================================================================
 
@@ -150,30 +169,40 @@ namespace ft {
 		struct reverse_iterator : public ft::list<T, Alloc>::iterator {
 			
 			typedef ft::list<T, Alloc>::iterator	base_iterator;
-			typedef reverse_iterator		iterator;
 
 			reverse_iterator() NOEXCEPT : base_iterator() {}
 			reverse_iterator(list_node* new_ptr) NOEXCEPT : base_iterator(new_ptr) {}
-			reverse_iterator(const iterator& new_it) NOEXCEPT : base_iterator(new_it.ptr) {} 
+			reverse_iterator(const iterator& new_it) NOEXCEPT : base_iterator(new_it.ptr) {}
+			reverse_iterator(const const_iterator& new_it) NOEXCEPT : base_iterator(new_it.ptr) {}
+			reverse_iterator(const reverse_iterator& new_it) NOEXCEPT : base_iterator(new_it.ptr) {}
+			reverse_iterator(const const_reverse_iterator& new_it) NOEXCEPT : base_iterator(new_it.ptr) {}  
 
-			iterator	operator++ () NOEXCEPT {
+			template<typename Iterator>
+			reverse_iterator
+			operator= (Iterator& x) { return reverse_iterator(x.ptr); }
+
+			reverse_iterator
+			operator++ () NOEXCEPT {
 				this->ptr = this->ptr->prev;
 				return *this;
 			}
 
-			iterator	operator++ (int) NOEXCEPT {
-				iterator tmp = *this;
+			reverse_iterator
+			operator++ (int) NOEXCEPT {
+				reverse_iterator tmp = *this;
 				this->ptr = this->ptr->prev;
 				return tmp;
 			}
 			
-			iterator	operator-- () NOEXCEPT {
+			reverse_iterator
+			operator-- () NOEXCEPT {
 				this->ptr = this->ptr->next;
 				return *this;
 			}
 
-			iterator	operator-- (int) NOEXCEPT {
-				iterator tmp = *this;
+			reverse_iterator
+			operator-- (int) NOEXCEPT {
+				reverse_iterator tmp = *this;
 				this->ptr = this->ptr->next;
 				return tmp;
 			}
@@ -187,29 +216,40 @@ namespace ft {
 		struct const_reverse_iterator : public ft::list<T, Alloc>::const_iterator {
 			
 			typedef ft::list<T, Alloc>::const_iterator	base_iterator;
-			typedef const_reverse_iterator		iterator;
+			// typedef const_reverse_iterator		iterator;
 
 			const_reverse_iterator() NOEXCEPT : base_iterator() {}
 			const_reverse_iterator(list_node* new_ptr) NOEXCEPT : base_iterator(new_ptr) {}
-			const_reverse_iterator(const iterator& new_it) NOEXCEPT : base_iterator(new_it.ptr) {} 
+			const_reverse_iterator(const iterator& new_it) NOEXCEPT : base_iterator(new_it.ptr) {}
+			const_reverse_iterator(const const_iterator& new_it) NOEXCEPT : base_iterator(new_it.ptr) {}
+			const_reverse_iterator(const reverse_iterator& new_it) NOEXCEPT : base_iterator(new_it.ptr) {}
+			const_reverse_iterator(const const_reverse_iterator& new_it) NOEXCEPT : base_iterator(new_it.ptr) {} 
 
-			iterator	operator++ () NOEXCEPT {
-				this->ptr = this->ptrptr->prev;
+			template<typename Iterator>
+			const_reverse_iterator
+			operator= (Iterator& x) { return iterator(x.ptr); }
+
+			const_reverse_iterator
+			operator++ () NOEXCEPT {
+				this->ptr = this->ptr->prev;
 				return *this;
 			}
 
-			iterator	operator++ (int) NOEXCEPT {
+			const_reverse_iterator
+			operator++ (int) NOEXCEPT {
 				iterator tmp = *this;
 				this->ptr = this->ptr->prev;
 				return tmp;
 			}
 			
-			iterator	operator-- () NOEXCEPT {
+			const_reverse_iterator
+			operator-- () NOEXCEPT {
 				this->ptr = this->ptr->next;
 				return *this;
 			}
 
-			iterator	operator-- (int) NOEXCEPT {
+			const_reverse_iterator
+			operator-- (int) NOEXCEPT {
 				iterator tmp = *this;
 				this->ptr = this->ptr->next;
 				return tmp;
@@ -227,7 +267,8 @@ namespace ft {
 
 		void
 		_list_init () NOEXCEPT {
-			this->head->prev = this->head->next = this->head = new list_node;
+			this->head = new list_node;
+			this->head->prev = this->head->next = this->head;
 		}
 
 		/* 'insert' node placed to current position, 'current' moved to next position */
@@ -241,7 +282,7 @@ namespace ft {
 		template<typename InputIterator>
 		void
 		_insert (iterator position, InputIterator first, InputIterator last, std::__false_type) {
-			for (; first != last; ++first, position) {
+			for (; first != last; ++first) {
 				this->insert(position, *first);
 			}
 		}
@@ -292,7 +333,7 @@ namespace ft {
 
 		explicit
 		list (const Alloc& x = Alloc())
-					: alloc(x), list_size(0) { _list_init(); }
+					: list_size(0), alloc(x) { _list_init(); }
 
 		explicit
 		list (size_t n, const T& val = T(), const Alloc& x = Alloc()): list_size(0), alloc(x) {
@@ -528,7 +569,6 @@ namespace ft {
 		reverse () {
 			iterator first = this->head;
 			size_t size = this->list_size;
-			list_node* temp;
 			while (size--) {
 				iterator last = -- (this->end());
 				_cut(last);
@@ -674,26 +714,33 @@ namespace ft {
 // ============================================================================
 
 // Friend functions -----------------------------------------------------------
+	template<typename _T, typename _Alloc>
 	friend bool
-	operator== (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs);
+	operator== (const list<_T,_Alloc>& lhs, const list<_T,_Alloc>& rhs);
 
+	template<typename _T, typename _Alloc>
 	friend bool
-	operator!= (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs);
+	operator!= (const list<_T,_Alloc>& lhs, const list<_T,_Alloc>& rhs);
 
+	template<typename _T, typename _Alloc>
 	friend  bool
-	operator<  (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs);
+	operator<  (const list<_T,_Alloc>& lhs, const list<_T,_Alloc>& rhs);
 
+	template<typename _T, typename _Alloc>
 	friend bool
-	operator<= (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs);
+	operator<= (const list<_T,_Alloc>& lhs, const list<_T,_Alloc>& rhs);
 
+	template<typename _T, typename _Alloc>
 	friend bool
-	operator>  (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs);
+	operator>  (const list<_T,_Alloc>& lhs, const list<_T,_Alloc>& rhs);
 
+	template<typename _T, typename _Alloc>
 	friend bool
-	operator>= (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs);
+	operator>= (const list<_T,_Alloc>& lhs, const list<_T,_Alloc>& rhs);
 
+	template<typename _T, typename _Alloc>
 	friend void
-	swap (list<T,Alloc>& x, list<T,Alloc>& y);
+	swap (list<_T,_Alloc>& x, list<_T,_Alloc>& y);
 // ============================================================================
 	};
 /**************************************************************************************/
@@ -708,7 +755,7 @@ namespace ft {
 		typename ft::list<T>::iterator first1 = lhs.begin();
 		typename ft::list<T>::iterator first2 = rhs.begin();
 		while (first1 != lhs.end()) {
-			if (lhs.ptr->data != rhs.ptr->data)
+			if (lhs.head->data != rhs.head->data)
 				return false;
 			++first1;
 			++first2;
@@ -729,7 +776,7 @@ namespace ft {
 		typename ft::list<T>::iterator first1 = lhs.begin();
 		typename ft::list<T>::iterator first2 = rhs.begin();
 		while (first1 != lhs.end() && first2 != rhs.end()) {
-			if (lhs.ptr->data >= rhs.ptr->data)
+			if (lhs.head->data >= rhs.head->data)
 				return false;
 			++first1;
 			++first2;
@@ -763,4 +810,3 @@ namespace ft {
 		x.swap(y);
 	}
 }
-
