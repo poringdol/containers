@@ -1,9 +1,16 @@
 #include <iostream>
+#include <list>
 
 int main() {
-	unsigned char uc = 128;
-	uc *= 2;
-	// std::cout << static_cast<int>(uc) << std::endl;
-	for (unsigned char q = 0; q < uc * 2; q++)
-		std::cout << q << std::endl;
+	std::list<int> l1, l2;
+	l1.push_back(1);
+	l1.push_back(2);
+	l1.push_back(3);
+
+	l2.push_back(1);
+	l2.push_back(2);
+	l2.push_back(3);
+	l2.push_back(3);
+
+	std::cout << (l1 > l2) << std::endl;
 }
