@@ -1,7 +1,5 @@
 #include <iostream>
-#include <sstream>
 #include <list>
-#include <algorithm>
 #include <vector>
 #include <cmath>
 #include "list.hpp"
@@ -671,6 +669,8 @@ void unique_test() {
 
 int main() {
 
+	cout << "ft_containers test";
+
 	ft::list<int> ls;
 
 	// ft::list<int>::iterator it = ls.begin();
@@ -703,8 +703,8 @@ int main() {
 	// splice_1_test();
 	// splice_2_test();
 	// splice_3_test();
-	// sort_test();
-	// sort_compare_test();
+	sort_test();
+	sort_compare_test();
 	// swap_test();
 	// unique_test();
 

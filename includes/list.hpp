@@ -42,7 +42,6 @@ namespace ft {
 
 			iterator() NOEXCEPT : ptr(NULL) {}
 			iterator(list_node* new_ptr) NOEXCEPT : ptr(new_ptr) {}
-			iterator(const iterator& new_it) NOEXCEPT : ptr(new_it.ptr) {}
 
 			template<typename Iterator>
 			iterator
@@ -52,7 +51,7 @@ namespace ft {
 			operator*() const NOEXCEPT {
 				return this->ptr->data;
 			}
-			
+
 			T*
 			operator->() const NOEXCEPT {
 				return &this->ptr->data;
@@ -70,7 +69,7 @@ namespace ft {
 				this->ptr = this->ptr->next;
 				return tmp;
 			}
-			
+
 			iterator
 			operator-- () NOEXCEPT {
 				this->ptr = this->ptr->prev;
@@ -99,12 +98,11 @@ namespace ft {
 // Reverse iterator class -----------------------------------------------------
 
 		struct reverse_iterator : public ft::list<T, Alloc>::iterator {
-			
+
 			typedef ft::list<T, Alloc>::iterator	base_iterator;
 
 			reverse_iterator() NOEXCEPT : base_iterator() {}
 			reverse_iterator(list_node* new_ptr) NOEXCEPT : base_iterator(new_ptr) {}
-			reverse_iterator(const iterator& new_it) NOEXCEPT : base_iterator(new_it.ptr) {} 
 
 			template<typename Iterator>
 			reverse_iterator
@@ -122,7 +120,7 @@ namespace ft {
 				this->ptr = this->ptr->prev;
 				return tmp;
 			}
-			
+
 			reverse_iterator
 			operator-- () NOEXCEPT {
 				this->ptr = this->ptr->next;
@@ -198,10 +196,7 @@ namespace ft {
 		}
 
 		static bool
-		_compare (T val1, T val2) { return val1 > val2; }
-
-		static bool
-		_compare_sort (T val1, T val2) { return val1 < val2; }
+		_compare (T val1, T val2) { return val1 < val2; }
 
 		void
 		_cut (iterator it) {
@@ -267,7 +262,7 @@ namespace ft {
 		empty () const NOEXCEPT		{ return list_size == 0; }
 
 		size_t
-		max_size () const NOEXCEPT	{ return std::numeric_limits<size_t>::max() / sizeof(list_node); }
+		max_size () const NOEXCEPT	{ return std::numeric_limits<size_t>::max() / sizeof(list_node) / 2; }
 
 		iterator
 		begin () NOEXCEPT			{ return iterator(this->head->next); }
@@ -318,6 +313,31 @@ namespace ft {
 		}
 
 		void
+		sort() {
+			this->sort(_compare);
+		}
+
+		template <class Compare>
+		void
+		sort (Compare comp) {
+			for (iterator it = begin(); it != end(); ) {
+				iterator it_min;
+				it_min = it;
+				for (iterator itt = it; itt != end(); ++itt) {
+					if (comp(*itt, *it_min)) {
+						it_min = itt;
+					}
+				}
+				if (it_min != it) {
+					_cut(it_min);
+					_node_insert(it.ptr, it_min.ptr);
+				} else {
+					++it;
+				}
+			}
+		}
+
+		void
 		merge (list& x) { this->merge(x, _compare); }
 
 		template <class Compare>
@@ -328,7 +348,7 @@ namespace ft {
 			iterator first1 = this->begin(), first2 = x.begin(),
 					  last1 = this->end(),	  last2 = x.end();
 			while (first1 != last1 && first2 != last2) {
-				if (comp(*first1, *first2 )) {
+				if (comp(*first2, *first1)) {
 					iterator temp = first2;
 					temp++;
 					_node_insert(first1.ptr, first2.ptr);
@@ -353,7 +373,7 @@ namespace ft {
 		splice (iterator position, list& x) {
 			while (x.list_size--) {
 				iterator first = x.begin();
-				iterator temp = ++ (x.begin());
+				iterator temp = ++(x.begin());
 				_cut(first);
 				_node_insert(position.ptr, first.ptr);
 				first = temp;
@@ -518,30 +538,6 @@ namespace ft {
 				++it;
 				if (comp(*temp)) {
 					this->erase(temp);
-				}
-			}
-		}
-
-		void
-		sort() {
-			this->sort(_compare_sort);
-		}
-
-		template <class Compare>
-		void
-		sort (Compare comp) {
-			for (iterator it = begin(); it != end(); ) {
-				iterator it_min = it;
-				for (iterator itt = it; itt != end(); ++itt) {
-					if (comp(itt.ptr->data, it_min.ptr->data)) {
-						it_min = itt;
-					}
-				}
-				if (it_min != it) {
-					_cut(it_min);
-					_node_insert(it.ptr, it_min.ptr);
-				} else {
-					++it;
 				}
 			}
 		}
