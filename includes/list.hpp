@@ -16,8 +16,19 @@ namespace ft {
 	template<typename T, typename Alloc = std::allocator<T> >
 	class list {
 
+	public:
+
+		typedef Alloc				allocator_type;
+		typedef ptrdiff_t			difference_type;
+		typedef size_t				size_type;
+		typedef T					value_type;
+		typedef T*					pointer;
+		typedef const T*			const_pointer;
+		typedef T&					reference;
+		typedef const T&			const_reference;
+
 	private:
-	struct list_node;
+		// struct list_node;
 
 // Supporting structure list_node ---------------------------------------------
 
@@ -26,7 +37,7 @@ namespace ft {
 			list_node *prev;
 			list_node *next;
 
-			list_node (const T& new_data = T(),
+			list_node (value_type new_data = value_type(),
 					  list_node *new_prev = NULL,
 					  list_node *new_next = NULL) NOEXCEPT
 					: data(new_data), prev(new_prev), next(new_next) {}
@@ -38,6 +49,7 @@ namespace ft {
 // Iterator class -------------------------------------------------------------
 
 		struct iterator : std::bidirectional_iterator_tag {
+
 			list_node* ptr;
 
 			iterator() NOEXCEPT : ptr(NULL) {}
@@ -47,12 +59,12 @@ namespace ft {
 			iterator
 			operator= (const Iterator& x) { return iterator(x.ptr); }
 
-			T&
+			reference
 			operator*() const NOEXCEPT {
 				return this->ptr->data;
 			}
 
-			T*
+			pointer
 			operator->() const NOEXCEPT {
 				return &this->ptr->data;
 			}
@@ -99,7 +111,8 @@ namespace ft {
 
 		struct reverse_iterator : public ft::list<T, Alloc>::iterator {
 
-			typedef ft::list<T, Alloc>::iterator	base_iterator;
+			typedef Alloc									allocator_type;
+			typedef ft::list<T, allocator_type>::iterator	base_iterator;
 
 			reverse_iterator() NOEXCEPT : base_iterator() {}
 			reverse_iterator(list_node* new_ptr) NOEXCEPT : base_iterator(new_ptr) {}
@@ -138,7 +151,7 @@ namespace ft {
 
 
 	private:
-		size_t list_size;
+		size_type list_size;
 		list_node *head;
 		Alloc alloc;
 
@@ -169,7 +182,7 @@ namespace ft {
 
 		template<typename T1>
 		void
-		_insert (iterator position, size_t n, T1 val, std::__true_type) {
+		_insert (iterator position, size_type n, T1 val, std::__true_type) {
 			while (n--) {
 				iterator temp = position;
 				this->insert(temp, val);
@@ -188,7 +201,7 @@ namespace ft {
 
 		template<typename T1>
 		void
-		_assign (size_t n, T1 val, std::__true_type) {
+		_assign (size_type n, T1 val, std::__true_type) {
 			this->clear();
 			while (n--) {
 				this->push_back(val);
@@ -207,24 +220,24 @@ namespace ft {
 
 	public:
 
-	typedef iterator			const_iterator;
-	typedef reverse_iterator	const_reverse_iterator;
+		typedef iterator			const_iterator;
+		typedef reverse_iterator	const_reverse_iterator;
 
 // List constructors
 
 		explicit
-		list (const Alloc& x = Alloc())
+		list (const allocator_type& x = allocator_type())
 					: list_size(0), alloc(x) { _list_init(); }
 
 		explicit
-		list (size_t n, const T& val = T(), const Alloc& x = Alloc()): list_size(0), alloc(x) {
+		list (size_type n, value_type val = value_type(), const allocator_type& x = allocator_type()): list_size(0), alloc(x) {
 			_list_init();
 			while (n--) { this->push_back(val); }
 		}
 		
 
 		template<typename InputIterator>
-		list (InputIterator first, InputIterator last, const Alloc& x = Alloc()): list_size(0), alloc(x) {
+		list (InputIterator first, InputIterator last, const allocator_type& x = allocator_type()): list_size(0), alloc(x) {
 			_list_init();
 			this->assign(first, last);
 		}
@@ -255,14 +268,14 @@ namespace ft {
 	
 // List methods ---------------------------------------------------------------------
 
-		size_t
+		size_type
 		size () const NOEXCEPT		{ return list_size; }
 
 		bool
 		empty () const NOEXCEPT		{ return list_size == 0; }
 
-		size_t
-		max_size () const NOEXCEPT	{ return std::numeric_limits<size_t>::max() / sizeof(list_node) / 2; }
+		size_type
+		max_size () const NOEXCEPT	{ return std::numeric_limits<size_type>::max() / sizeof(list_node) / 2; }
 
 		iterator
 		begin () NOEXCEPT			{ return iterator(this->head->next); }
@@ -288,16 +301,16 @@ namespace ft {
 		const_reverse_iterator
 		rend () const NOEXCEPT		{ return const_reverse_iterator(this->head); }
 
-		T&
+		reference
 		front () NOEXCEPT			{ return *(begin()); }
 
-		const T&
+		value_type
 		front () const NOEXCEPT		{ return *(this->begin()); }
 
-		T&
+		reference
 		back () NOEXCEPT				{ return *(-- (this->end())); }
 
-		const T&
+		value_type
 		back () const NOEXCEPT		{ return *(-- (this->end())); }
 
 		template<typename InputIterator>
@@ -308,7 +321,7 @@ namespace ft {
 		}
 
 		void
-		assign (size_t n, const T& val) {
+		assign (size_type n, value_type val) {
 			_assign(n, val, std::__true_type());
 		}
 
@@ -405,7 +418,7 @@ namespace ft {
 		}
 
 		iterator
-		insert (iterator position, const T& data) {
+		insert (iterator position, value_type data) {
 			if (position == this->begin()) {
 				push_front(data);
 				return this->begin();
@@ -418,7 +431,7 @@ namespace ft {
 		}
 
 		void
-		insert (iterator position, size_t n, const T& val) {
+		insert (iterator position, size_type n, value_type val) {
 			_insert(position, n, val, std::__true_type());
 		}
 		
@@ -430,7 +443,7 @@ namespace ft {
 		}
 
 		void
-		push_back (const T& data) {
+		push_back (value_type data) {
 			if (!list_size) {
 				list_node *temp = new list_node(data);
 				this->head->prev = this->head->next = temp;
@@ -444,7 +457,7 @@ namespace ft {
 		}
 
 		void
-		push_front (const T& data) {
+		push_front (value_type data) {
 			list_node *temp = new list_node(data, this->head, this->head->next);
 			this->head->next = this->head->next->prev = temp;
 			list_size++;
@@ -457,7 +470,7 @@ namespace ft {
 		pop_back () NOEXCEPT { this->erase(iterator(this->head->prev)); }
 
 		void
-		resize (size_t new_size, T val = T()) {
+		resize (size_type new_size, value_type val = value_type()) {
 			if (new_size < this->list_size) {
 				iterator it = this->begin();
 				while (new_size--)
@@ -471,7 +484,7 @@ namespace ft {
 		void
 		reverse () {
 			iterator first = this->head;
-			size_t size = this->list_size;
+			size_type size = this->list_size;
 			while (size--) {
 				iterator last = -- (this->end());
 				_cut(last);
@@ -518,7 +531,7 @@ namespace ft {
 		}
 
 		void
-		remove (const T& val) {
+		remove (value_type val) {
 			iterator it = this->begin();
 			while (it != this->end()) {
 				iterator temp = it;
@@ -548,7 +561,7 @@ namespace ft {
 			this->head = x.head;
 			x.head = temp;
 
-			size_t size = this->list_size;
+			size_type size = this->list_size;
 			list_size = x.list_size;
 			x.list_size = size;
 		}
