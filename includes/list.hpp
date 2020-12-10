@@ -1,8 +1,8 @@
 #pragma once
 
-#include <iterator>
 #include <bits/cpp_type_traits.h>
 #include <limits>
+#include "bidirect_iterator.hpp"
 
 #if __cplusplus <= 199711L
 	#define NOEXCEPT throw()
@@ -16,17 +16,6 @@ namespace ft {
 	template<typename T, typename Alloc = std::allocator<T> >
 	class list {
 
-	public:
-
-		typedef Alloc				allocator_type;
-		typedef ptrdiff_t			difference_type;
-		typedef size_t				size_type;
-		typedef T					value_type;
-		typedef T*					pointer;
-		typedef const T*			const_pointer;
-		typedef T&					reference;
-		typedef const T&			const_reference;
-
 	private:
 		// struct list_node;
 
@@ -37,118 +26,28 @@ namespace ft {
 			list_node *prev;
 			list_node *next;
 
-			list_node (value_type new_data = value_type(),
+			list_node (T new_data = T(),
 					  list_node *new_prev = NULL,
 					  list_node *new_next = NULL) NOEXCEPT
 					: data(new_data), prev(new_prev), next(new_next) {}
 		};
 // ============================================================================
-	
+
 	public:
-	
-// Iterator class -------------------------------------------------------------
 
-		struct iterator : std::bidirectional_iterator_tag {
-
-			list_node* ptr;
-
-			iterator() NOEXCEPT : ptr(NULL) {}
-			iterator(list_node* new_ptr) NOEXCEPT : ptr(new_ptr) {}
-
-			template<typename Iterator>
-			iterator
-			operator= (const Iterator& x) { return iterator(x.ptr); }
-
-			reference
-			operator*() const NOEXCEPT {
-				return this->ptr->data;
-			}
-
-			pointer
-			operator->() const NOEXCEPT {
-				return &this->ptr->data;
-			}
-
-			iterator
-			operator++ () NOEXCEPT {
-				this->ptr = this->ptr->next;
-				return *this;
-			}
-
-			iterator
-			operator++ (int) NOEXCEPT {
-				iterator tmp = *this;
-				this->ptr = this->ptr->next;
-				return tmp;
-			}
-
-			iterator
-			operator-- () NOEXCEPT {
-				this->ptr = this->ptr->prev;
-				return *this;
-			}
-
-			iterator
-			operator-- (int) NOEXCEPT {
-				iterator tmp = *this;
-				this->ptr = this->ptr->prev;
-				return tmp;
-			}
-
-			bool
-			operator== (const iterator& x) NOEXCEPT {
-				return this->ptr == x.ptr;
-			}
-
-			bool
-			operator!= (const iterator& x) NOEXCEPT {
-				return this->ptr != x.ptr;
-			}
-		};
-// ============================================================================
-
-// Reverse iterator class -----------------------------------------------------
-
-		struct reverse_iterator : public ft::list<T, Alloc>::iterator {
-
-			typedef Alloc									allocator_type;
-			typedef ft::list<T, allocator_type>::iterator	base_iterator;
-
-			reverse_iterator() NOEXCEPT : base_iterator() {}
-			reverse_iterator(list_node* new_ptr) NOEXCEPT : base_iterator(new_ptr) {}
-
-			template<typename Iterator>
-			reverse_iterator
-			operator= (Iterator& x) { return reverse_iterator(x.ptr); }
-
-			reverse_iterator
-			operator++ () NOEXCEPT {
-				this->ptr = this->ptr->prev;
-				return *this;
-			}
-
-			reverse_iterator
-			operator++ (int) NOEXCEPT {
-				reverse_iterator tmp = *this;
-				this->ptr = this->ptr->prev;
-				return tmp;
-			}
-
-			reverse_iterator
-			operator-- () NOEXCEPT {
-				this->ptr = this->ptr->next;
-				return *this;
-			}
-
-			reverse_iterator
-			operator-- (int) NOEXCEPT {
-				reverse_iterator tmp = *this;
-				this->ptr = this->ptr->next;
-				return tmp;
-			}
-		};
-// ============================================================================
-
+		typedef Alloc								allocator_type;
+		typedef ptrdiff_t							difference_type;
+		typedef size_t								size_type;
+		typedef T									value_type;
+		typedef T*									pointer;
+		typedef const T*							const_pointer;
+		typedef T&									reference;
+		typedef const T&							const_reference;
+		typedef ft::iterator<T, list_node>			iterator;
+		typedef ft::iterator<T, list_node>			const_iterator;
+		typedef ft::reverse_iterator<T, list_node>	reverse_iterator;
+		typedef ft::reverse_iterator<T, list_node>	const_reverse_iterator;
+		typedef ft::iterator<T, list_node>			iterator_category;
 
 	private:
 		size_type list_size;
@@ -219,9 +118,6 @@ namespace ft {
 // ============================================================================
 
 	public:
-
-		typedef iterator			const_iterator;
-		typedef reverse_iterator	const_reverse_iterator;
 
 // List constructors
 
