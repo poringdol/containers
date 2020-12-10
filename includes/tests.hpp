@@ -7,6 +7,16 @@
 #include <sstream>
 #include "list.hpp"
 
+enum test {
+	Exit,
+	List,
+	Vector,
+	Map,
+	Stack,
+	Queue,
+	All
+};
+
 void list_test();
 
 void fillContainers();
@@ -36,13 +46,3 @@ void remove_if_test();
 void swap_test();
 void unique_test();
 void operators_test();
-
-enum test {
-	Exit,
-	List,
-	Vector,
-	Map,
-	Stack,
-	Queue,
-	All
-};
