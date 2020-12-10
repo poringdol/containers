@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 #include <vector>
 #include <list>
 #include "includes/list.hpp"
@@ -22,4 +23,8 @@ int main() {
 	ft:list<int> mls;
 	cout << "List int size : " << sizeof(ls) << endl <<
 			"My list int size : " << sizeof(mls) << endl << endl;
+	
+	std::allocator<int> alloc;
+	int* arr = alloc.allocate(5);
+	alloc.deallocate(arr, 5);
 }
