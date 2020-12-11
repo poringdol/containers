@@ -48,6 +48,11 @@ void push_back_size_test(ft::list<T>& ls) {
 	cout << "Max size is " << ls.max_size() << endl << endl;
 	// std::list<int> l(ls.begin(), ls.end());
 	// std::copy(ls.begin(), ls.end(), std::ostream_iterator<int>(std::cout, ",\n"));
+
+	cout << "________________________________\n";
+	for (const auto& i : ls)
+		cout << i << " ";
+	cout << endl;
 }
 
 template<typename T>
@@ -679,7 +684,7 @@ int main() {
 	ft::list<int>::const_iterator it2;
 	it2 = it;
 	push_back_size_test(ls);
-	push_front_test(ls);
+	// push_front_test(ls);
 	// insert_test(ls);
 	// insert_fill_test(ls);
 	// insert_range_test(ls);
@@ -710,55 +715,55 @@ int main() {
 	// swap_test();
 	// unique_test();
 
-	{
-		std::list<char> o('c', 11);
-		std::list<char> o1('b', 11);
-		ft::list<char> n('c', 11);
-		ft::list<char> n1('b', 11);
+	// {
+	// 	std::list<char> o('c', 11);
+	// 	std::list<char> o1('b', 11);
+	// 	ft::list<char> n('c', 11);
+	// 	ft::list<char> n1('b', 11);
 
-		cout << (o <= o1) << endl;
-		cout << (n <= n1) << endl << endl;
-	}
+	// 	cout << (o <= o1) << endl;
+	// 	cout << (n <= n1) << endl << endl;
+	// }
 
-	{
-		std::list<char> o('a', 11);
-		std::list<char> o1('b', 11);
-		ft::list<char> n('a', 11);
-		ft::list<char> n1('b', 11);
+	// {
+	// 	std::list<char> o('a', 11);
+	// 	std::list<char> o1('b', 11);
+	// 	ft::list<char> n('a', 11);
+	// 	ft::list<char> n1('b', 11);
 
-		cout << (o <= o1) << endl;
-		cout << (n <= n1) << endl << endl;
-	}
+	// 	cout << (o <= o1) << endl;
+	// 	cout << (n <= n1) << endl << endl;
+	// }
 
-	{
-		std::list<char> o('c', 110);
-		std::list<char> o1('b', 11);
-		ft::list<char> n('c', 110);
-		ft::list<char> n1('b', 11);
+	// {
+	// 	std::list<char> o('c', 110);
+	// 	std::list<char> o1('b', 11);
+	// 	ft::list<char> n('c', 110);
+	// 	ft::list<char> n1('b', 11);
 
-		cout << (o <= o1) << endl;
-		cout << (n <= n1) << endl << endl;
-	}
+	// 	cout << (o <= o1) << endl;
+	// 	cout << (n <= n1) << endl << endl;
+	// }
 
-	{
-		std::list<char> o('b', 110);
-		std::list<char> o1('b', 11);
-		ft::list<char> n('b', 110);
-		ft::list<char> n1('b', 11);
+	// {
+	// 	std::list<char> o('b', 110);
+	// 	std::list<char> o1('b', 11);
+	// 	ft::list<char> n('b', 110);
+	// 	ft::list<char> n1('b', 11);
 
-		cout << (o <= o1) << endl;
-		cout << (n <= n1) << endl << endl;
-	}
+	// 	cout << (o <= o1) << endl;
+	// 	cout << (n <= n1) << endl << endl;
+	// }
 
-	{
-		std::list<char> o('b', 11);
-		std::list<char> o1('b', 11);
-		ft::list<char> n('b', 11);
-		ft::list<char> n1('b', 11);
+	// {
+	// 	std::list<char> o('b', 11);
+	// 	std::list<char> o1('b', 11);
+	// 	ft::list<char> n('b', 11);
+	// 	ft::list<char> n1('b', 11);
 
-		cout << (o <= o1) << endl;
-		cout << (n <= n1) << endl << endl;
-	}
+	// 	cout << (o <= o1) << endl;
+	// 	cout << (n <= n1) << endl << endl;
+	// }
 
 	cout << "End" << endl;
 }

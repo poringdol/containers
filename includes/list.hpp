@@ -1,23 +1,26 @@
 #pragma once
 
-#include <bits/cpp_type_traits.h>
+// #include <bits/cpp_type_traits.h>
 #include <limits>
+// #include "cpp_type_traits.hpp"
 #include "bidirect_iterator.hpp"
 
-#if __cplusplus <= 199711L
-	#define NOEXCEPT throw()
-#else
-	#define NOEXCEPT noexcept
+#ifndef NOEXCEPT
+	#if __cplusplus <= 199711L
+		#define NOEXCEPT throw()
+	#else
+		#define NOEXCEPT noexcept
+	#endif
 #endif
 
 
 namespace ft {
 /********************************** List container ***************************************/
-	template<typename T, typename Alloc = std::allocator<T> >
+
+	template<typename T, typename Alloc = std::allocator<T>>
 	class list {
 
 	private:
-		// struct list_node;
 
 // Supporting structure list_node ---------------------------------------------
 
