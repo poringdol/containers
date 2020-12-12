@@ -78,7 +78,7 @@ namespace ft_vector
 	void constructorRange_test();
 	void size_test();
 	void empty_test();
-// 	void max_size_test();
+	void max_size_test();
 	void begin_test();
 	void rbegin_rend_test();
 	void front_back_test();

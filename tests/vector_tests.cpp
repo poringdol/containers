@@ -101,11 +101,19 @@ namespace ft_vector
 		ASSERT_EQUAL(false, myvc2.empty());
 	}
 
-	// void max_size_test() {
+	void max_size_test() {
 		
-	// 	ft::vector<int> myvc;
-	// 	ASSERT_EQUAL(vc.max_size(), myvc.max_size());
-	// }
+		ft::vector<int> myvc;
+		ASSERT_EQUAL(vc.max_size(), myvc.max_size());
+
+		std::vector<double> vc2;
+		ft::vector<double> myvc2;
+		ASSERT_EQUAL(vc2.max_size(), myvc2.max_size());
+
+		std::vector<std::string> vc3;
+		ft::vector<std::string> myvc3;
+		ASSERT_EQUAL(vc3.max_size(), myvc3.max_size());
+	}
 
 	void begin_test() {
 		
@@ -170,7 +178,7 @@ namespace ft_vector
 		ASSERT_EQUAL(contToString(rvc), contToString(myvc));
 
 		myvc.assign(ls.begin(), ls.end());					// assign from std::list
-		ASSERT_EQUAL(contToString(vc), contToString(myvc));
+		ASSERT_EQUAL(contToString(ls), contToString(myvc));
 
 		myvc.assign(dq.begin(), dq.end());					// assign from std::deque
 		ASSERT_EQUAL(contToString(dq), contToString(myvc));

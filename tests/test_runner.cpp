@@ -79,7 +79,7 @@ namespace ft_vector
 		RUN_TEST(tr, constructorRange_test);
 		RUN_TEST(tr, size_test);
 		RUN_TEST(tr, empty_test);
-// 		RUN_TEST(tr, max_size_test);
+		RUN_TEST(tr, max_size_test);
 		RUN_TEST(tr, begin_test);
 		RUN_TEST(tr, rbegin_rend_test);
 		RUN_TEST(tr, front_back_test);

@@ -48,7 +48,7 @@ namespace ft {
 // Supporting functions -------------------------------------------------------
 
 			void
-			_allocate(size_type new_size, value_type value, ft::__true_type) {
+			_allocate(size_type new_size, const value_type& value, ft::__true_type) {
 				(void)value;
 				if (new_size) {
 					_finish = _start = _alloc.allocate(new_size + 2);
@@ -119,15 +119,16 @@ namespace ft {
 		  template<typename InputIterator>
 			void
 			_assign (InputIterator first, InputIterator last, ft::__false_type) {
-				// size_type new_size = _range_size(first, last);
-				// if (new_size <= _size)
-
-				// this->clear();
-				// while (first != last) {
-				// 	this->push_back(*first);
-				// 	++first;
-				// }
-				(void)first; (void)last;
+				size_type new_size = _range_size(first, last);
+				if (new_size <= capacity()) {
+					_destroy(first, last);
+					_construct(first, last, ft::__false_type());
+				} else {
+					_destroy(first, last);
+					_dealloc();
+					_allocate(first, last, ft::__false_type());
+					_construct(first, last, ft::__false_type());
+				}
 			}
 
 		  template<typename T1>
@@ -147,8 +148,7 @@ namespace ft {
 
 			explicit
 			vector (const allocator_type& alloc = allocator_type())
-							: _alloc(alloc),
-							  _start(), _finish(), _end_of_storage() {}
+					: _alloc(alloc), _start(), _finish(), _end_of_storage() {}
 
 			explicit
 			vector (size_type n, const value_type& val = value_type(),
@@ -165,7 +165,8 @@ namespace ft {
 				_construct(first, last, _Integral());
 			}
 			
-			vector (const vector& x) { *this = x; }
+			vector (const vector& x)
+					: _start(), _finish(), _end_of_storage() { *this = x; }
 
 // Vector destructors ---------------------------------------------------------------
 
@@ -205,49 +206,52 @@ namespace ft {
 			}
 
 			iterator
-			begin() 				{ return iterator(_start != _finish ? _start + 1 : _start); }
+			begin() NOEXCEPT			{ return iterator(_start != _finish ? _start + 1 : _start); }
 
 			const_iterator
-			begin() const NOEXCEPT	{ return const_iterator(_start != _finish ? _start + 1 : _start); }
+			begin() const NOEXCEPT		{ return const_iterator(_start != _finish ? _start + 1 : _start); }
 
 			iterator
-			end()					{ return iterator(_finish); }
+			end() NOEXCEPT				{ return iterator(_finish); }
 
 			const_iterator
-			end() const NOEXCEPT	{ return const_iterator(_finish); }
+			end() const NOEXCEPT		{ return const_iterator(_finish); }
 
 			iterator
-			rbegin() 				{ return iterator(_start != _finish ? _finish - 1 : _finish); }
+			rbegin() NOEXCEPT			{ return iterator(_start != _finish ? _finish - 1 : _finish); }
 
 			const_iterator
-			rbegin() const NOEXCEPT	{ return const_iterator(_start != _finish ? _finish - 1 : _finish); }
+			rbegin() const NOEXCEPT		{ return const_iterator(_start != _finish ? _finish - 1 : _finish); }
 
 			iterator
-			rend()					{ return iterator(_start); }
+			rend() NOEXCEPT				{ return iterator(_start); }
 
 			const_iterator
-			rend() const NOEXCEPT	{ return const_iterator(_start); }
+			rend() const NOEXCEPT		{ return const_iterator(_start); }
 
 			reference
-			back()					{ return *(rbegin()); }
+			back() NOEXCEPT				{ return *(rbegin()); }
 
 			const_reference
-			back() const NOEXCEPT	{ return *(rbegin()); }
+			back() const NOEXCEPT		{ return *(rbegin()); }
 
 			reference
-			front()					{ return *(begin()); }
+			front() NOEXCEPT			{ return *(begin()); }
 
 			const_reference
-			front() const NOEXCEPT	{ return *(begin()); }
+			front() const NOEXCEPT		{ return *(begin()); }
 
 			bool
-			empty()					{ return begin() == end(); }
+			empty() const NOEXCEPT		{ return begin() == end(); }
 
 			size_type
-			size()					{ return empty() ? 0 : _finish - (_start + 1); }
+			size() const NOEXCEPT		{ return empty() ? 0 : _finish - (_start + 1); }
 			
 			size_type
-			capacity()				{ return empty() ? 0 : _end_of_storage - (_start + 2); }
+			max_size() const NOEXCEPT	{ return __gnu_cxx::__numeric_traits<ptrdiff_t>::__max / sizeof(T); }
+
+			size_type
+			capacity() const NOEXCEPT	{ return empty() ? 0 : _end_of_storage - (_start + 2); }
 	};
 // ==============================================================================
 }
