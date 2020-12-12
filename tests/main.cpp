@@ -8,7 +8,8 @@
 #define YELLOW "\033[1;33m"
 #define PURPLE "\033[1;35m"
 
-using namespace std;
+using std::cout;
+using std::endl;
 
 int main() {
 	
@@ -29,7 +30,7 @@ int main() {
 			cout << YELLOW << "Enter index: " << BW;
 			std::cin >> index;
 			if (std::cin.eof()) {
-				std::cout << std::endl;
+				cout << std::endl;
 				exit(0);
 			}
 			if (!std::cin || index < 0 || index > 6) {
@@ -42,7 +43,7 @@ int main() {
 			}
 		}
 		if (index == test::List) {
-			list_test();
+			ft_list::list_test();
 		} else if (index == test::Vector) {
 			cout << RED << "In progress" << BW << endl;
 		} else if (index == test::Map) {

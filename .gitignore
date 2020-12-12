@@ -1,0 +1,5 @@
+/objects
+*.vscode
+test
+a.out
+main_test.cpp

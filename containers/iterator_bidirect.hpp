@@ -6,8 +6,9 @@
 namespace ft {
 // Iterator class -------------------------------------------------------------
 	template<typename T, typename Node>
-	struct iterator : std::bidirectional_iterator_tag {
+	struct bidirect_iterator : std::bidirectional_iterator_tag {
 
+		typedef bidirect_iterator	iterator;
 		typedef size_t				size_type;
 		typedef T					value_type;
 		typedef T*					pointer;
@@ -17,8 +18,8 @@ namespace ft {
 
 		Node* ptr;
 
-		iterator() throw() : ptr(NULL) {}
-		iterator(Node* new_ptr) throw() : ptr(new_ptr) {}
+		bidirect_iterator() throw() : ptr(NULL) {}
+		bidirect_iterator(Node* new_ptr) throw() : ptr(new_ptr) {}
 
 		template<typename Iterator>
 		iterator
@@ -74,18 +75,19 @@ namespace ft {
 
 // Reverse iterator class -----------------------------------------------------
 	template<typename T, typename Node>
-	struct reverse_iterator : iterator<T, Node> {
+	struct bidirect_reverse_iterator : bidirect_iterator<T, Node> {
 
-		typedef size_t					size_type;
-		typedef T						value_type;
-		typedef T*						pointer;
-		typedef const T*				const_pointer;
-		typedef T&						reference;
-		typedef const T&				const_reference;
-		typedef iterator<T, Node>		base_iterator;
+		typedef bidirect_reverse_iterator	reverse_iterator;
+		typedef size_t						size_type;
+		typedef T							value_type;
+		typedef T*							pointer;
+		typedef const T*					const_pointer;
+		typedef T&							reference;
+		typedef const T&					const_reference;
+		typedef bidirect_iterator<T, Node>	base_iterator;
 
-		reverse_iterator() throw() : base_iterator() {}
-		reverse_iterator(Node* new_ptr) throw() : base_iterator(new_ptr) {}
+		bidirect_reverse_iterator() throw() : base_iterator() {}
+		bidirect_reverse_iterator(Node* new_ptr) throw() : base_iterator(new_ptr) {}
 
 		template<typename Iterator>
 		reverse_iterator

@@ -1,9 +1,9 @@
 #pragma once
 
-// #include <bits/cpp_type_traits.h>
 #include <limits>
+// #include <bits/cpp_type_traits.h>
 // #include "cpp_type_traits.hpp"
-#include "bidirect_iterator.hpp"
+#include "iterator_bidirect.hpp"
 
 #ifndef NOEXCEPT
 	#if __cplusplus <= 199711L
@@ -17,7 +17,7 @@
 namespace ft {
 /********************************** List container ***************************************/
 
-	template<typename T, typename Alloc = std::allocator<T>>
+	template<typename T, typename Alloc = std::allocator<T> >
 	class list {
 
 	private:
@@ -35,22 +35,24 @@ namespace ft {
 					: data(new_data), prev(new_prev), next(new_next) {}
 		};
 // ============================================================================
+	private:
+
+		typedef ft::bidirect_iterator<T, list_node>			bidirect_iterator;
+		typedef ft::bidirect_reverse_iterator<T, list_node>	bidirect_reverse_iterator;
 
 	public:
 
-		typedef Alloc								allocator_type;
-		typedef ptrdiff_t							difference_type;
-		typedef size_t								size_type;
-		typedef T									value_type;
-		typedef T*									pointer;
-		typedef const T*							const_pointer;
-		typedef T&									reference;
-		typedef const T&							const_reference;
-		typedef ft::iterator<T, list_node>			iterator;
-		typedef ft::iterator<T, list_node>			const_iterator;
-		typedef ft::reverse_iterator<T, list_node>	reverse_iterator;
-		typedef ft::reverse_iterator<T, list_node>	const_reverse_iterator;
-		typedef ft::iterator<T, list_node>			iterator_category;
+		typedef Alloc										allocator_type;
+		typedef size_t										size_type;
+		typedef T											value_type;
+		typedef T*											pointer;
+		typedef const T*									const_pointer;
+		typedef T&											reference;
+		typedef const T&									const_reference;
+		typedef bidirect_iterator							iterator;
+		typedef bidirect_iterator							const_iterator;
+		typedef bidirect_reverse_iterator					reverse_iterator;
+		typedef bidirect_reverse_iterator					const_reverse_iterator;
 
 	private:
 		size_type list_size;
