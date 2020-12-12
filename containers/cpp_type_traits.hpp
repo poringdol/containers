@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef _CPP_TYPE_TRAITS_H
-#define _CPP_TYPE_TRAITS_H 1
+#ifndef _FT_CPP_TYPE_TRAITS_H
+#define _FT_CPP_TYPE_TRAITS_H 1
 
 extern "C++" {
 

@@ -46,7 +46,7 @@ clean:
 	@$(RM) $(OBJDIR)
 
 fclean:
-	@$(RM) $(OBJDIR) $(NAME) test_c98
+	@$(RM) $(OBJDIR) $(NAME) test_c98 a.out
 	@echo "$(RED) All test deleted $(B&W)"
 
 re: fclean all
