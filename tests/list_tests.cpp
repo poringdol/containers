@@ -53,7 +53,7 @@ namespace ft_list
 		ASSERT_EQUAL(vc.size(), myls2.size());
 		ASSERT_EQUAL(contToString(vc), contToString(myls2));
 
-		ft::list<int> myls3(dq.begin(), dq.end());		// list from std::set
+		ft::list<int> myls3(dq.begin(), dq.end());		// list from std::deque
 		ASSERT_EQUAL(dq.size(), myls3.size());
 		ASSERT_EQUAL(contToString(dq), contToString(myls3));
 	}

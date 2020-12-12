@@ -1,7 +1,8 @@
 #pragma once
 
-#include "iterator_random.hpp"
 #include <iterator>
+#include "iterator_random.hpp"
+#include "cpp_type_traits.hpp"
 
 #ifndef NOEXCEPT
 	#if __cplusplus >= 201103L
@@ -39,81 +40,214 @@ namespace ft {
 
 		private:
 
-			size_type		size;
-			size_type		capacity;
-			pointer			start;
-			pointer			finish;
-			pointer			end_of_storage;
-			allocator_type	alloc;
+			allocator_type	_alloc;
+			pointer			_start;
+			pointer			_finish;
+			pointer			_end_of_storage;
+
+// Supporting functions -------------------------------------------------------
 
 			void
-			_alloc_fill(size_type new_size, value_type value) {
-				size = capacity = new_size;
-				start = alloc.allocate(size + 2);
-				for (size_type i = 1; i < size + 1; i++) {
-					alloc.construct(start + i, value);
+			_allocate(size_type new_size, value_type value, ft::__true_type) {
+				(void)value;
+				if (new_size) {
+					_finish = _start = _alloc.allocate(new_size + 2);
+					_end_of_storage = _start + new_size + 2;
 				}
-				finish = start + size + 1;
-				end_of_storage = start + size + 2;
+			}
+
+		  template <class InputIterator>
+			void
+			_allocate(InputIterator first, InputIterator last, ft::__false_type) {
+				size_type new_size = _range_size(first, last);
+				if (new_size) {
+					_finish = _start = _alloc.allocate(new_size + 2);
+					_end_of_storage = _start + new_size + 2;
+				}
 			}
 
 			void
-			_alloc_range(size_type new_size, value_type value, ) {
-				size = capacity = new_size;
-				start = alloc.allocate(size + 2);
-				for (size_type i = 1; i < size + 1; i++) {
-					alloc.construct(start + i, value);
+			_construct(size_type new_size, value_type value, ft::__true_type) {
+				for (size_type i = 1; i < new_size + 1; ++i) {
+					_alloc.construct(_start + i, value);
 				}
-				finish = start + size + 1;
-				end_of_storage = start + size + 2;
+				_finish = new_size ?_start + new_size + 1 : _finish;
+			}
+
+		  template <class InputIterator>
+			void
+			_construct(InputIterator first, InputIterator last, ft::__false_type) {
+				size_type new_size = _range_size(first, last);
+				for (size_type i = 1; i < new_size + 1; ++i, ++first) {
+					_alloc.construct(_start + i, *first);
+				}
+				_finish = new_size ?_start + new_size + 1 : _finish;
+			}
+
+			// void
+			// _destroy(size_type new_size, value_type value, ft::__true_type) {
+			// 	for (size_type i = 1; i < new_size + 1; ++i) {
+			// 		_alloc.destroy(_start + i);
+			// 	}
+			// 	_finish = _start;
+			// }
+
+		  template <class InputIterator>
+			void
+			_destroy(InputIterator first, InputIterator last) {
+				size_type new_size = _range_size(first, last);
+				for (size_type i = 1; i < new_size + 1; ++i, ++first) {
+					_alloc.destroy(_start + i);
+				}
+				_finish = _start;
 			}
 
 			void
 			_dealloc() {
-				for (size_type i = 1; i < size + 1; i++) {
-					alloc.destroy(start + i);
-				}	
-				alloc.deallocate(start, capacity + 2);
+				_alloc.deallocate(_start, _end_of_storage - _start);
+				_start = _finish = _end_of_storage = NULL;
 			}
 
-			template <class InputIterator>
+		  template <class InputIterator>
 			size_type
 			_range_size(InputIterator first, InputIterator last) {
 				size_type s;
-				for (s = 0; first != last; ++first, ++s) ;
-				return s;
+				for (s = 0; first != last; ++first, ++s) ; 
+				return s; 
 			}
+
+		  template<typename InputIterator>
+			void
+			_assign (InputIterator first, InputIterator last, ft::__false_type) {
+				// size_type new_size = _range_size(first, last);
+				// if (new_size <= _size)
+
+				// this->clear();
+				// while (first != last) {
+				// 	this->push_back(*first);
+				// 	++first;
+				// }
+				(void)first; (void)last;
+			}
+
+		  template<typename T1>
+			void
+			_assign (size_type n, T1 val, ft::__true_type) {
+				(void)val; (void)n;
+				// this->clear();
+				// while (n--) {
+				// 	this->push_back(val);
+				// }
+			}
+// ==============================================================================
 
 		public:
 
+// Vector constructors ----------------------------------------------------------
+
 			explicit
 			vector (const allocator_type& alloc = allocator_type())
-							: size(0), capacity(0),
-							  start(), finish(), end_of_storage() {}
+							: _alloc(alloc),
+							  _start(), _finish(), _end_of_storage() {}
 
 			explicit
 			vector (size_type n, const value_type& val = value_type(),
-					const allocator_type& alloc = allocator_type()) {
-				_alloc_fill(n, val);
+					const allocator_type& alloc = allocator_type()):  _alloc(alloc) {
+				_allocate(n, val, __true_type());
+				_construct(n, val, ft::__true_type());
 			}
 			
 			template <class InputIterator>
 			vector (InputIterator first, InputIterator last,
-						const allocator_type& alloc = allocator_type()) {
-				typedef typename std::__is_integer<InputIterator>::__type _Integral;
-				_alloc(first, last, )
+						const allocator_type& alloc = allocator_type()): _alloc(alloc) {
+				typedef typename ft::__is_integer<InputIterator>::__type _Integral;
+				_allocate(first, last, _Integral());
+				_construct(first, last, _Integral());
 			}
 			
-			vector (const vector& x) {
+			vector (const vector& x) { *this = x; }
 
+// Vector destructors ---------------------------------------------------------------
+
+			~vector() {
+				_destroy(begin(), end());
+				_dealloc();
 			}
 
-			~vector() { _dealloc(); }
+// Vector operators -----------------------------------------------------------------
+
+			const vector&
+			operator= (const vector& x) {
+				_alloc = x._alloc;
+				_allocate(x.begin(), x.end(), ft::__false_type());
+				_construct(x.begin(), x.end(), ft::__false_type());
+				return *this;
+			}
 
 			reference
-			operator[] (size_type n) { return start[n + 1]; }
+			operator[] (size_type n) { return _start[n + 1]; }
 
 			const_reference
-			operator[] (size_type n) const { return start[n + 1]; }
+			operator[] (size_type n) const { return _start[n + 1]; }
+
+// Vector methods --------------------------------------------------------------------
+
+		  template <class InputIterator>
+			void
+			assign (InputIterator first, InputIterator last) {
+				typedef typename ft::__is_integer<InputIterator>::__type _Integral;
+				_assign(first, last, _Integral());
+			}
+
+			void
+			assign (size_type n, const value_type& val) {
+				_assign(n, val, ft::__true_type());
+			}
+
+			iterator
+			begin() 				{ return iterator(_start != _finish ? _start + 1 : _start); }
+
+			const_iterator
+			begin() const NOEXCEPT	{ return const_iterator(_start != _finish ? _start + 1 : _start); }
+
+			iterator
+			end()					{ return iterator(_finish); }
+
+			const_iterator
+			end() const NOEXCEPT	{ return const_iterator(_finish); }
+
+			iterator
+			rbegin() 				{ return iterator(_start != _finish ? _finish - 1 : _finish); }
+
+			const_iterator
+			rbegin() const NOEXCEPT	{ return const_iterator(_start != _finish ? _finish - 1 : _finish); }
+
+			iterator
+			rend()					{ return iterator(_start); }
+
+			const_iterator
+			rend() const NOEXCEPT	{ return const_iterator(_start); }
+
+			reference
+			back()					{ return *(rbegin()); }
+
+			const_reference
+			back() const NOEXCEPT	{ return *(rbegin()); }
+
+			reference
+			front()					{ return *(begin()); }
+
+			const_reference
+			front() const NOEXCEPT	{ return *(begin()); }
+
+			bool
+			empty()					{ return begin() == end(); }
+
+			size_type
+			size()					{ return empty() ? 0 : _finish - (_start + 1); }
+			
+			size_type
+			capacity()				{ return empty() ? 0 : _end_of_storage - (_start + 2); }
 	};
+// ==============================================================================
 }

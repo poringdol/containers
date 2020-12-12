@@ -69,7 +69,10 @@ namespace ft {
 		iterator
 		operator- (int n) NOEXCEPT				{ return iterator(ptr - n); }
 		
-		const iterator&
+		T*
+		base()		 NOEXCEPT					{ return ptr; }
+
+		const T*
 		base() const NOEXCEPT					{ return ptr; }
 	
 		bool

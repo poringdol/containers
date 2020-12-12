@@ -45,7 +45,7 @@ int main() {
 		if (index == test::List) {
 			ft_list::list_test();
 		} else if (index == test::Vector) {
-			cout << RED << "In progress" << BW << endl;
+			ft_vector::vector_test();
 		} else if (index == test::Map) {
 			cout << RED << "In progress" << BW << endl;
 		} else if (index == test::Stack) {
@@ -53,9 +53,16 @@ int main() {
 		} else if (index == test::Queue) {
 			cout << RED << "In progress" << BW << endl;
 		} else if (index == test::All) {
-			cout << RED << "In progress" << BW << endl;
+			ft_list::list_test();
+			ft_vector::vector_test();
 		} else
 			exit(0);
+		
+		cout << "\nEnter " << BLUE << "any key" << BW << " for continue"
+			 << "or " << BLUE << "0 " << BW << " for exit" << endl;
+		char contin = 0;
+		std::cin >> contin;
+		if (contin == '0')
+			break; 
 	}
-
 }

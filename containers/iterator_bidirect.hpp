@@ -34,34 +34,34 @@ namespace ft {
 		operator= (const Iterator& x)	{ return iterator(x.ptr); }
 
 		reference
-		operator*() const NOEXCEPT		{ return this->ptr->data; }
+		operator*() const NOEXCEPT		{ return this->ptr->_data; }
 
 		pointer
-		operator->() const NOEXCEPT 		{ return &this->ptr->data; }
+		operator->() const NOEXCEPT 		{ return &this->ptr->_data; }
 
 		iterator
 		operator++ () NOEXCEPT {
-			this->ptr = this->ptr->next;
+			this->ptr = this->ptr->_next;
 			return *this;
 		}
 
 		iterator
 		operator++ (int) NOEXCEPT {
 			iterator tmp = *this;
-			this->ptr = this->ptr->next;
+			this->ptr = this->ptr->_next;
 			return tmp;
 		}
 
 		iterator
 		operator-- () NOEXCEPT {
-			this->ptr = this->ptr->prev;
+			this->ptr = this->ptr->_prev;
 			return *this;
 		}
 
 		iterator
 		operator-- (int) NOEXCEPT {
 			iterator tmp = *this;
-			this->ptr = this->ptr->prev;
+			this->ptr = this->ptr->_prev;
 			return tmp;
 		}
 
@@ -95,27 +95,27 @@ namespace ft {
 
 		reverse_iterator
 		operator++ () NOEXCEPT {
-			this->ptr = this->ptr->prev;
+			this->ptr = this->ptr->_prev;
 			return *this;
 		}
 
 		reverse_iterator
 		operator++ (int) NOEXCEPT {
 			reverse_iterator tmp = *this;
-			this->ptr = this->ptr->prev;
+			this->ptr = this->ptr->_prev;
 			return tmp;
 		}
 
 		reverse_iterator
 		operator-- () NOEXCEPT {
-			this->ptr = this->ptr->next;
+			this->ptr = this->ptr->_next;
 			return *this;
 		}
 
 		reverse_iterator
 		operator-- (int) NOEXCEPT {
 			reverse_iterator tmp = *this;
-			this->ptr = this->ptr->next;
+			this->ptr = this->ptr->_next;
 			return tmp;
 		}
 	};
