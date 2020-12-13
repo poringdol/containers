@@ -58,8 +58,8 @@ int main() {
 		} else
 			exit(0);
 		
-		cout << "\nEnter " << BLUE << "any key" << BW << " for continue"
-			 << "or " << BLUE << "0 " << BW << " for exit" << endl;
+		cout << "\nEnter " << BLUE << "any key" << BW << " to continue"
+			 << " or " << BLUE << "0 " << BW << " to exit" << endl;
 		char contin = 0;
 		std::cin >> contin;
 		if (contin == '0')
