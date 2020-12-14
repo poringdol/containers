@@ -506,35 +506,37 @@ namespace ft {
 // ============================================================================
 
 // Friend functions -----------------------------------------------------------
-  template<typename _T, typename _Alloc>
-	friend bool
-	operator== (const list<_T,_Alloc>& lhs, const list<_T,_Alloc>& rhs);
+	  template<typename _T, typename _Alloc>
+		friend bool
+		operator== (const list<_T,_Alloc>& lhs, const list<_T,_Alloc>& rhs);
 
-  template<typename _T, typename _Alloc>
-	friend bool
-	operator!= (const list<_T,_Alloc>& lhs, const list<_T,_Alloc>& rhs);
+	  template<typename _T, typename _Alloc>
+		friend bool
+		operator!= (const list<_T,_Alloc>& lhs, const list<_T,_Alloc>& rhs);
 
-  template<typename _T, typename _Alloc>
-	friend  bool
-	operator<  (const list<_T,_Alloc>& lhs, const list<_T,_Alloc>& rhs);
+	  template<typename _T, typename _Alloc>
+		friend  bool
+		operator<  (const list<_T,_Alloc>& lhs, const list<_T,_Alloc>& rhs);
 
-  template<typename _T, typename _Alloc>
-	friend bool
-	operator<= (const list<_T,_Alloc>& lhs, const list<_T,_Alloc>& rhs);
+	  template<typename _T, typename _Alloc>
+		friend bool
+		operator<= (const list<_T,_Alloc>& lhs, const list<_T,_Alloc>& rhs);
 
-  template<typename _T, typename _Alloc>
-	friend bool
-	operator>  (const list<_T,_Alloc>& lhs, const list<_T,_Alloc>& rhs);
+	  template<typename _T, typename _Alloc>
+		friend bool
+		operator>  (const list<_T,_Alloc>& lhs, const list<_T,_Alloc>& rhs);
 
-  template<typename _T, typename _Alloc>
-	friend bool
-	operator>= (const list<_T,_Alloc>& lhs, const list<_T,_Alloc>& rhs);
+	  template<typename _T, typename _Alloc>
+		friend bool
+		operator>= (const list<_T,_Alloc>& lhs, const list<_T,_Alloc>& rhs);
 
-  template<typename _T, typename _Alloc>
-	friend void
-	swap (list<_T,_Alloc>& x, list<_T,_Alloc>& y);
-// ============================================================================
+	  template<typename _T, typename _Alloc>
+		friend void
+		swap (list<_T,_Alloc>& x, list<_T,_Alloc>& y);
+
 	};
+// ============================================================================
+
 /************************************ end of list class ***********************************/
 
 // Friend functions definitions -----------------------------------------------
@@ -542,10 +544,12 @@ namespace ft {
   template <class T, class Alloc>
 	bool
 	operator== (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
-		if (lhs.size() != rhs.size())
-			return false;
+		
+		if (lhs.size() != rhs.size()) return false;
+		
 		typename ft::list<T>::iterator first1 = lhs.begin();
 		typename ft::list<T>::iterator first2 = rhs.begin();
+		
 		while (first1 != lhs.end()) {
 			if (*first1 != *first2)
 				return false;
@@ -567,6 +571,7 @@ namespace ft {
 
 		typename ft::list<T>::iterator first1 = lhs.begin();
 		typename ft::list<T>::iterator first2 = rhs.begin();
+		
 		while (first1 != lhs.end() && first2 != rhs.end()) {
 			if (*first1 < *first2)
 				return true;
@@ -576,7 +581,7 @@ namespace ft {
 			++first2;
 		}
 		if (lhs.size() > rhs.size() ||
-			(lhs.size() == rhs.size() && *first1 >= *first2))
+			(lhs.size() == rhs.size() && *(--first1) >= *(--first2)))
 			return false;
 		return true;
 	}

@@ -97,8 +97,7 @@ namespace ft_vector
 		RUN_TEST(tr, clear_test);
 		RUN_TEST(tr, erase_test);
 		RUN_TEST(tr, swap_test);
-// 		RUN_TEST(tr, unique_test);
-// 		RUN_TEST(tr, operators_test);
+		RUN_TEST(tr, operators_test);
 		ENABLE_LOGS = 0;
 	}
 }

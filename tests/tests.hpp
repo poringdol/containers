@@ -106,6 +106,5 @@ namespace ft_vector
 	void clear_test();
 	void erase_test();
 	void swap_test();
-// 	void unique_test();
-// 	void operators_test();
+	void operators_test();
 }

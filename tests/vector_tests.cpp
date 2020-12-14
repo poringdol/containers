@@ -251,6 +251,10 @@ namespace ft_vector
 		ASSERT_EQUAL(vc.at(10), myvc.at(10));
 		ASSERT_EQUAL(vc.at(17), myvc.at(17));
 
+		ASSERT_EQUAL(vc[0], myvc[0]);
+		ASSERT_EQUAL(vc[5], myvc[5]);
+		ASSERT_EQUAL(vc[17], myvc[17]);
+
 		try { vc.at(18); } 
 		catch (std::out_of_range& ex) { except_count++; }
 		try { myvc.at(18); } 
@@ -773,73 +777,77 @@ namespace ft_vector
 		ASSERT_EQUAL(contToString(vc2), contToString(myvc2));
 	}
 
-	// void operators_test() {
-	// 	std::vector<int> vc1, vc2;
-	// 	ft::vector<int> myvc1, myvc2;
+	void operators_test() {
+		std::vector<int> vc1, vc2;
+		ft::vector<int> myvc1, myvc2;
 
-	// 	std::vector<int> v[6] = {{1,2,3,4}, {1,2,3,4,4},
-	// 							{1,2,3,1,4,1}, {1,2,3,4,5},
-	// 							{0,2,3,4,5,6}, {0}};
+		std::vector<int> v[6] = {{1,2,3,4}, {1,2,3,4,4},
+								{1,2,3,1,4,1}, {1,2,3,4,5},
+								{0,2,3,4,5,6}, {0}};
 
-	// 	for (int i = 0; i < 6; i++) {
-	// 		vc1.assign(v[i].begin(), v[i].end());
-	// 		myvc1.assign(v[i].begin(), v[i].end());
-	// 	for (int j = 0; j < 6; j++) {
-	// 			vc2.assign(v[j].begin(), v[j].end());
-	// 			myvc2.assign(v[j].begin(), v[j].end());
-	// 			ASSERT_EQUAL(vc1 == vc2, myvc1 == myvc2);
-	// 		}
-	// 	}
+		vc1.assign(v[1].begin(), v[1].end());
+		myvc1.assign(v[1].begin(), v[1].end());
+		vc2.assign(v[1].begin(), v[1].end());
+		myvc2.assign(v[1].begin(), v[1].end());
+		for (int i = 0; i < 6; i++) {
+			vc1.assign(v[i].begin(), v[i].end());
+			myvc1.assign(v[i].begin(), v[i].end());
+		for (int j = 0; j < 6; j++) {
+				vc2.assign(v[j].begin(), v[j].end());
+				myvc2.assign(v[j].begin(), v[j].end());
+				ASSERT_EQUAL(vc1 == vc2, myvc1 == myvc2);
+			}
+		}
 
-	// 	for (int i = 0; i < 6; i++) {
-	// 		vc1.assign(v[i].begin(), v[i].end());
-	// 		myvc1.assign(v[i].begin(), v[i].end());
-	// 		for (int j = 0; j < 6; j++) {
-	// 			vc2.assign(v[j].begin(), v[j].end());
-	// 			myvc2.assign(v[j].begin(), v[j].end());
-	// 			ASSERT_EQUAL(vc1 != vc2, myvc1 != myvc2);
-	// 		}
-	// 	}
+		for (int i = 0; i < 6; i++) {
+			vc1.assign(v[i].begin(), v[i].end());
+			myvc1.assign(v[i].begin(), v[i].end());
+			for (int j = 0; j < 6; j++) {
+				vc2.assign(v[j].begin(), v[j].end());
+				myvc2.assign(v[j].begin(), v[j].end());
+				ASSERT_EQUAL(vc1 != vc2, myvc1 != myvc2);
+			}
+		}
 
-	// 	for (int i = 0; i < 6; i++) {
-	// 		vc1.assign(v[i].begin(), v[i].end());
-	// 		myvc1.assign(v[i].begin(), v[i].end());
-	// 		for (int j = 0; j < 6; j++) {
-	// 			vc2.assign(v[j].begin(), v[j].end());
-	// 			myvc2.assign(v[j].begin(), v[j].end());
-	// 			ASSERT_EQUAL(vc1 < vc2, myvc1 < myvc2);
-	// 		}
-	// 	}
+		for (int i = 0; i < 6; i++) {
+			vc1.assign(v[i].begin(), v[i].end());
+			myvc1.assign(v[i].begin(), v[i].end());
+			for (int j = 0; j < 6; j++) {
+				vc2.assign(v[j].begin(), v[j].end());
+				myvc2.assign(v[j].begin(), v[j].end());
+				ASSERT_EQUAL(vc1 < vc2, myvc1 < myvc2);
+			}
+		}
 
-	// 	for (int i = 0; i < 6; i++) {
-	// 		vc1.assign(v[i].begin(), v[i].end());
-	// 		myvc1.assign(v[i].begin(), v[i].end());
-	// 		for (int j = 0; j < 6; j++) {
-	// 			vc2.assign(v[j].begin(), v[j].end());
-	// 			myvc2.assign(v[j].begin(), v[j].end());
-	// 			ASSERT_EQUAL(vc1 <= vc2, myvc1 <= myvc2);
-	// 		}
-	// 	}
+		for (int i = 0; i < 6; i++) {
+			vc1.assign(v[i].begin(), v[i].end());
+			myvc1.assign(v[i].begin(), v[i].end());
+			for (int j = 0; j < 6; j++) {
+				vc2.assign(v[j].begin(), v[j].end());
+				myvc2.assign(v[j].begin(), v[j].end());
+				ASSERT_EQUAL(vc1 <= vc2, myvc1 <= myvc2);
+			}
+		}
 
-	// 	for (int i = 0; i < 6; i++) {
-	// 		vc1.assign(v[i].begin(), v[i].end());
-	// 		myvc1.assign(v[i].begin(), v[i].end());
-	// 		for (int j = 0; j < 6; j++) {
-	// 			vc2.assign(v[j].begin(), v[j].end());
-	// 			myvc2.assign(v[j].begin(), v[j].end());
-	// 			ASSERT_EQUAL(vc1 > vc2, myvc1 > myvc2);
-	// 		}
-	// 	}
+		for (int i = 0; i < 6; i++) {
+			vc1.assign(v[i].begin(), v[i].end());
+			myvc1.assign(v[i].begin(), v[i].end());
+			for (int j = 0; j < 6; j++) {
+				vc2.assign(v[j].begin(), v[j].end());
+				myvc2.assign(v[j].begin(), v[j].end());
+				ASSERT_EQUAL(vc1 > vc2, myvc1 > myvc2);
+			}
+		}
 
-	// 		for (int i = 0; i < 6; i++) {
-	// 		vc1.assign(v[i].begin(), v[i].end());
-	// 		myvc1.assign(v[i].begin(), v[i].end());
-	// 		for (int j = 0; j < 6; j++) {
-	// 			vc2.assign(v[j].begin(), v[j].end());
-	// 			myvc2.assign(v[j].begin(), v[j].end());
-	// 			ASSERT_EQUAL(vc1 >= vc2, myvc1 >= myvc2);
-	// 		}
-	// 	}
+			for (int i = 0; i < 6; i++) {
+			vc1.assign(v[i].begin(), v[i].end());
+			myvc1.assign(v[i].begin(), v[i].end());
+			for (int j = 0; j < 6; j++) {
+				vc2.assign(v[j].begin(), v[j].end());
+				myvc2.assign(v[j].begin(), v[j].end());
+				ASSERT_EQUAL(vc1 >= vc2, myvc1 >= myvc2);
+			}
+		}
 		
-	// }
+	}
 }

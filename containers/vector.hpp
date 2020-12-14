@@ -512,6 +512,99 @@ namespace ft {
 			_swap(_finish, x._finish);
 			_swap(_end_of_storage, x._end_of_storage);
 		}
+
+	// Out if class operators ---------------------------------------------------------------
+
+	  template <class _T, class _Alloc>
+		friend bool operator== (const vector<_T,_Alloc>& lhs, const vector<_T,_Alloc>& rhs);
+
+	  template <class _T, class _Alloc>
+		friend bool operator!= (const vector<_T,_Alloc>& lhs, const vector<_T,_Alloc>& rhs);
+
+	  template <class _T, class _Alloc>
+		friend bool operator<  (const vector<_T,_Alloc>& lhs, const vector<_T,_Alloc>& rhs);
+
+	  template <class _T, class _Alloc>
+		friend bool operator<= (const vector<_T,_Alloc>& lhs, const vector<_T,_Alloc>& rhs);
+
+	  template <class _T, class _Alloc>
+		friend bool operator> (const vector<_T,_Alloc>& lhs, const vector<_T,_Alloc>& rhs);
+
+	  template <class _T, class _Alloc>
+		friend bool operator>= (const vector<_T,_Alloc>& lhs, const vector<_T,_Alloc>& rhs);
+
+	  template<typename _T, typename _Alloc>
+		friend void
+		swap (list<_T,_Alloc>& x, list<_T,_Alloc>& y);
+
 	};
 // ==============================================================================
+
+/************************************ end of list class ***********************************/
+
+// Friend functions definitions -------------------------------------------------
+
+
+  template <class T, class Alloc>
+	bool operator== (const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) {
+		
+		if (lhs.size() != rhs.size()) return false;
+		
+		typename ft::vector<T>::iterator first1 = lhs.begin();
+		typename ft::vector<T>::iterator first2 = rhs.begin();
+		while (first1 != lhs.end()) {
+			if (*first1 != *first2)
+				return false;
+			++first1;
+			++first2;
+		}
+		return true;
+	}
+
+  template <class T, class Alloc>
+	bool operator!= (const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) {
+		return !(lhs == rhs);
+	}
+
+  template <class T, class Alloc>
+	bool operator<  (const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) {
+
+		typename ft::vector<T>::iterator first1 = lhs.begin();
+		typename ft::vector<T>::iterator first2 = rhs.begin();
+		
+		while (first1 != lhs.end() && first2 != rhs.end()) {
+			if (*first1 < *first2)
+				return true;
+			if (*first1 > *first2)
+				return false;
+			++first1;
+			++first2;
+		}
+		if (lhs.size() > rhs.size() ||
+			(lhs.size() == rhs.size() && *(--first1) >= *(--first2)))
+				return false;
+		return true;
+	}
+
+  template <class T, class Alloc>
+	bool operator<= (const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) {
+		return !(rhs < lhs);
+	}
+
+  template <class T, class Alloc>
+	bool operator> (const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) {
+		return rhs < lhs;
+	}
+
+  template <class T, class Alloc>
+	bool operator>= (const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) {
+		return !(lhs < rhs);
+	}
+
+  template <class T, class Alloc>
+	void
+	swap (vector<T,Alloc>& x, vector<T,Alloc>& y) {
+		x.swap(y);
+	}
+
 }
