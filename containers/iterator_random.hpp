@@ -130,7 +130,7 @@ namespace ft {
 	};
 // ============================================================================
 
-// Out of class relations for random iterator
+// Non-member relations for random iterator
   template<typename IteratorL, typename IteratorR>
 	inline bool
 	operator==(const random_iterator<IteratorL>& lhs,
@@ -178,7 +178,7 @@ namespace ft {
 	operator+(Iterator n, const random_iterator<Iterator>& i) NOEXCEPT
 	{ return random_iterator<Iterator>(i.base() + n); }
 
-// Out of class relations for reverse random iterator
+// Non-member relations for reverse random iterator
 
 template<typename IteratorL, typename IteratorR>
 	inline bool

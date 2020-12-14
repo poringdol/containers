@@ -46,7 +46,7 @@ int main() {
 				break;
 			}
 		}
-		void (*last_test)();
+		void (*last_test)() = NULL;
 	
 		if (index == test::List) {
 			last_test = ft_list::list_test;
@@ -57,6 +57,7 @@ int main() {
 		} else if (index == test::Map) {
 			cout << RED << "In progress" << BW << endl;
 		} else if (index == test::Stack) {
+			last_test = ft_stack::stack_test;
 			ft_stack::stack_test();
 		} else if (index == test::Queue) {
 			cout << RED << "In progress" << BW << endl;
@@ -73,8 +74,12 @@ int main() {
 		cout << YELLOW << "0. " << BLUE << "Exit" << BW << endl << endl;
 		cin >> index;
 		if (index == 1) {
-			ENABLE_LOGS = 1;
-			last_test();
+			if (last_test == NULL) {
+				cout << RED << "Displaying logs enable only in single test mode. Return to the main menu and select one test" << BW << endl;
+			} else {
+				ENABLE_LOGS = 1;
+				last_test();
+			}
 		} else if (index == 2) {
 			continue;
 		} else if (index == 0)

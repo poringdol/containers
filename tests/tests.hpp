@@ -6,6 +6,8 @@
 #include <iostream>
 #include <sstream>
 #include "list.hpp"
+#include "vector.hpp"
+#include "stack.hpp"
 
 enum test {
 	Exit,
@@ -36,6 +38,22 @@ std::string contToString(const T& cont) {
 		if (i == 50)
 			std::cout << " ... too long output";
 		std::cout << std::endl;
+	}
+	return os.str();
+}
+
+template<typename T>
+std::string stackToString(T& cont) {
+
+	std::ostringstream os;
+	size_t size = cont.size();
+
+	while (size--) {
+		os << cont.top() << " ";
+		cont.pop();
+	}
+	if (ENABLE_LOGS) {
+		std::cout << os.str() << std::endl;
 	}
 	return os.str();
 }
@@ -114,10 +132,10 @@ namespace ft_stack
 	void stack_test();
 
 	void constructorDefault_test();
-	// void size_test();
-	// void empty_test();
-	// void push_test();
-	// void begin_test();
-	// void pop_test();
-	// void operators_test();
+	void size_test();
+	void empty_test();
+	void push_test();
+	void begin_test();
+	void pop_test();
+	void operators_test();
 }

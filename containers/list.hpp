@@ -55,7 +55,7 @@ namespace ft {
 	private:
 
 		size_type _list_size;
-		list_node *_head;
+		list_node* _head;
 		Alloc _alloc;
 
 
@@ -194,7 +194,7 @@ namespace ft {
 		const_reverse_iterator
 		rend () const NOEXCEPT		{ return const_reverse_iterator(this->_head); }
 
-	//   Capacity ----------------------------
+	// Capacity ----------------------------
 
 		bool
 		empty () const NOEXCEPT		{ return _list_size == 0; }
@@ -205,7 +205,7 @@ namespace ft {
 		size_type
 		max_size () const NOEXCEPT	{ return std::numeric_limits<size_type>::max() / sizeof(list_node) / 2; }
 
-	//   Element access -------------------------
+	// Element access -------------------------
 
 		reference
 		front () NOEXCEPT			{ return *(begin()); }
@@ -219,7 +219,7 @@ namespace ft {
 		value_type
 		back () const NOEXCEPT		{ return *(-- (this->end())); }
 
-	//   Modifiers ------------------------------
+	// Modifiers ------------------------------
 
 		template<typename InputIterator>
 		void
@@ -278,7 +278,7 @@ namespace ft {
 			_insert(position, n, val, ft::__true_type());
 		}
 		
-		template<class InputIterator>
+		template<typename InputIterator>
 		void
 		insert (iterator position, InputIterator first, InputIterator last) {
 			typedef typename ft::__is_integer<InputIterator>::__type _Integral;
@@ -341,7 +341,7 @@ namespace ft {
 			this->_head->_prev = this->_head->_next = this->_head;
 		}
 
-	//   Operations -----------------------------
+	// Operations -----------------------------
 
 		void
 		splice (iterator position, list& x) {
@@ -390,7 +390,7 @@ namespace ft {
 			}
 		}
 
-		template<class Compare>
+		template<typename Compare>
 		void
 		remove_if (Compare comp) {
 			iterator it = this->begin();
@@ -422,7 +422,7 @@ namespace ft {
 			}
 		}
 
-		template<class BinaryPredicate>
+		template<typename BinaryPredicate>
 		void
 		unique (BinaryPredicate binary_pred) {
 						iterator first = this->begin();
@@ -444,7 +444,7 @@ namespace ft {
 		void
 		merge (list& x) { this->merge(x, _compare); }
 
-		template<class Compare>
+		template<typename Compare>
 		void
 		merge (list& x, Compare comp) {
 			if (&x == this)
@@ -476,7 +476,7 @@ namespace ft {
 		void
 		sort() { this->sort(_compare); }
 
-		template<class Compare>
+		template<typename Compare>
 		void
 		sort (Compare comp) {
 			for (iterator it = begin(); it != end(); ) {
@@ -517,31 +517,15 @@ namespace ft {
 // Friend functions -----------------------------------------------------------
 		template<typename _T, typename _Alloc>
 		friend bool
-		operator== (const list<_T,_Alloc>& lhs, const list<_T,_Alloc>& rhs);
-
-		template<typename _T, typename _Alloc>
-		friend bool
-		operator!= (const list<_T,_Alloc>& lhs, const list<_T,_Alloc>& rhs);
+		operator== (const list<_T, _Alloc>&, const list<_T, _Alloc>&);
 
 		template<typename _T, typename _Alloc>
 		friend  bool
-		operator<  (const list<_T,_Alloc>& lhs, const list<_T,_Alloc>& rhs);
-
-		template<typename _T, typename _Alloc>
-		friend bool
-		operator<= (const list<_T,_Alloc>& lhs, const list<_T,_Alloc>& rhs);
-
-		template<typename _T, typename _Alloc>
-		friend bool
-		operator>  (const list<_T,_Alloc>& lhs, const list<_T,_Alloc>& rhs);
-
-		template<typename _T, typename _Alloc>
-		friend bool
-		operator>= (const list<_T,_Alloc>& lhs, const list<_T,_Alloc>& rhs);
+		operator<  (const list<_T, _Alloc>&, const list<_T, _Alloc>&);
 
 		template<typename _T, typename _Alloc>
 		friend void
-		swap (list<_T,_Alloc>& x, list<_T,_Alloc>& y);
+		swap (list<_T, _Alloc>&, list<_T, _Alloc>&);
 
 	};
 // ============================================================================
@@ -550,8 +534,8 @@ namespace ft {
 
 // Friend functions definitions -----------------------------------------------
 
-	template<class T, class Alloc>
-	bool
+	template<typename T, typename Alloc>
+	inline bool
 	operator== (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
 		
 		if (lhs.size() != rhs.size()) return false;
@@ -568,14 +552,14 @@ namespace ft {
 		return true;
 	}
 
-	template<class T, class Alloc>
-	bool
+	template<typename T, typename Alloc>
+	inline bool
 	operator!= (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
 		return !(lhs == rhs);
 	}
 
-	template<class T, class Alloc>
-	bool
+	template<typename T, typename Alloc>
+	inline bool
 	operator<  (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
 
 		typename ft::list<T>::iterator first1 = lhs.begin();
@@ -595,25 +579,25 @@ namespace ft {
 		return true;
 	}
 
-	template<class T, class Alloc>
-	bool
+	template<typename T, typename Alloc>
+	inline bool
 	operator<= (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
 		return !(rhs < lhs);
 	}
 
-	template<class T, class Alloc>
-	bool
+	template<typename T, typename Alloc>
+	inline bool
 	operator>  (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
 		return rhs < lhs;
 	}
 
-	template<class T, class Alloc>
-	bool
+	template<typename T, typename Alloc>
+	inline bool
 	operator>= (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
 		return !(lhs < rhs);
 	}
 
-	template<class T, class Alloc>
+	template<typename T, typename Alloc>
 	void
 	swap (list<T,Alloc>& x, list<T,Alloc>& y) {
 		x.swap(y);
