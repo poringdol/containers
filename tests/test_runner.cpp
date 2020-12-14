@@ -101,3 +101,31 @@ namespace ft_vector
 		ENABLE_LOGS = 0;
 	}
 }
+
+namespace ft_stack
+{
+	void stack_test() {
+		
+		fillContainers();
+
+		TestRunner tr;
+
+		std::cout << YELLOW <<
+				   "\n####################################################\n";
+		std::cout << "#                                                  #\n";
+		std::cout << "#                   Stack tests                    #\n";
+		std::cout << "#                                                  #\n";
+		std::cout << "####################################################\n\n"
+				<< BW;
+
+		// RUN_TEST(tr, constructorDefault_test);
+		// RUN_TEST(tr, size_test);
+		// RUN_TEST(tr, empty_test);
+		// RUN_TEST(tr, push_test);
+		// RUN_TEST(tr, begin_test);
+		// RUN_TEST(tr, pop_test);
+		// RUN_TEST(tr, operators_test);
+		
+		ENABLE_LOGS = 0;
+	}
+}

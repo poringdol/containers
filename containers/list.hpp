@@ -5,7 +5,7 @@
 #include "iterator_bidirect.hpp"
 
 #ifndef NOEXCEPT
-	#if __cplusplus <= 199711L
+	#if __cplusplus >= 201103L
 		#define NOEXCEPT throw()
 	#else
 		#define NOEXCEPT noexcept
@@ -16,7 +16,7 @@
 namespace ft {
 /********************************** List container ***************************************/
 
-  template<typename T, typename Alloc = std::allocator<T> >
+	template<typename T, typename Alloc = std::allocator<T> >
 	class list {
 
 	private:
@@ -75,7 +75,7 @@ namespace ft {
 			current->_prev = current->_prev->_next = insert;
 		}
 
-	  template<typename InputIterator>
+		template<typename InputIterator>
 		void
 		_insert (iterator position, InputIterator first, InputIterator last, ft::__false_type) {
 			for (; first != last; ++first) {
@@ -83,7 +83,7 @@ namespace ft {
 			}
 		}
 
-	  template<typename T1>
+		template<typename T1>
 		void
 		_insert (iterator position, size_type n, T1 val, ft::__true_type) {
 			while (n--) {
@@ -92,7 +92,7 @@ namespace ft {
 			}
 		}
 
-	  template<typename InputIterator>
+		template<typename InputIterator>
 		void
 		_assign (InputIterator first, InputIterator last, ft::__false_type) {
 			this->clear();
@@ -102,7 +102,7 @@ namespace ft {
 			}
 		}
 
-	  template<typename T1>
+		template<typename T1>
 		void
 		_assign (size_type n, T1 val, ft::__true_type) {
 			this->clear();
@@ -136,7 +136,7 @@ namespace ft {
 		}
 		
 
-	  template<typename InputIterator>
+		template<typename InputIterator>
 		list (InputIterator first, InputIterator last, const allocator_type& x = allocator_type()): _list_size(0), _alloc(x) {
 			_list_init();
 			this->assign(first, last);
@@ -159,7 +159,7 @@ namespace ft {
 			return *this;
 		}
 
-// List destructors -----------------------------------------------------------------
+// List destructor --------------------------------------------------------------
 
 		~list() {
 			clear();
@@ -168,14 +168,7 @@ namespace ft {
 	
 // List methods ---------------------------------------------------------------------
 
-		size_type
-		size () const NOEXCEPT		{ return _list_size; }
-
-		bool
-		empty () const NOEXCEPT		{ return _list_size == 0; }
-
-		size_type
-		max_size () const NOEXCEPT	{ return std::numeric_limits<size_type>::max() / sizeof(list_node) / 2; }
+	//  Iterators -------------------------------
 
 		iterator
 		begin () NOEXCEPT			{ return iterator(this->_head->_next); }
@@ -201,6 +194,19 @@ namespace ft {
 		const_reverse_iterator
 		rend () const NOEXCEPT		{ return const_reverse_iterator(this->_head); }
 
+	//   Capacity ----------------------------
+
+		bool
+		empty () const NOEXCEPT		{ return _list_size == 0; }
+
+		size_type
+		size () const NOEXCEPT		{ return _list_size; }
+
+		size_type
+		max_size () const NOEXCEPT	{ return std::numeric_limits<size_type>::max() / sizeof(list_node) / 2; }
+
+	//   Element access -------------------------
+
 		reference
 		front () NOEXCEPT			{ return *(begin()); }
 
@@ -213,7 +219,9 @@ namespace ft {
 		value_type
 		back () const NOEXCEPT		{ return *(-- (this->end())); }
 
-	  template<typename InputIterator>
+	//   Modifiers ------------------------------
+
+		template<typename InputIterator>
 		void
 		assign (InputIterator first, InputIterator last) {
 			typedef typename ft::__is_integer<InputIterator>::__type _Integral;
@@ -226,61 +234,114 @@ namespace ft {
 		}
 
 		void
-		sort() {
-			this->sort(_compare);
+		push_front (value_type data) {
+			list_node *temp = new list_node(data, this->_head, this->_head->_next);
+			this->_head->_next = this->_head->_next->_prev = temp;
+			_list_size++;
 		}
 
-	  template <class Compare>
 		void
-		sort (Compare comp) {
-			for (iterator it = begin(); it != end(); ) {
-				iterator it_min;
-				it_min = it;
-				for (iterator itt = it; itt != end(); ++itt) {
-					if (comp(*itt, *it_min)) {
-						it_min = itt;
-					}
-				}
-				if (it_min != it) {
-					_cut(it_min);
-					_node_insert(it.ptr, it_min.ptr);
-				} else {
+		pop_front () NOEXCEPT { this->erase(this->begin()); }
+
+		void
+		push_back (value_type data) {
+			if (!_list_size) {
+				list_node *temp = new list_node(data);
+				this->_head->_prev = this->_head->_next = temp;
+				temp->_prev = temp->_next = this->_head;
+			} else {
+				list_node *temp = new list_node(data, this->_head->_prev, this->_head);
+				this->_head->_prev->_next = temp;
+				this->_head->_prev = temp;
+			}
+			_list_size++;
+		}
+
+		void
+		pop_back () NOEXCEPT { this->erase(iterator(this->_head->_prev)); }
+
+		iterator
+		insert (iterator position, value_type data) {
+			if (position == this->begin()) {
+				push_front(data);
+				return this->begin();
+			}
+
+			list_node *temp = new list_node(data);
+			_node_insert(position.ptr, temp);
+			_list_size++;
+			return iterator(temp);
+		}
+
+		void
+		insert (iterator position, size_type n, value_type val) {
+			_insert(position, n, val, ft::__true_type());
+		}
+		
+		template<class InputIterator>
+		void
+		insert (iterator position, InputIterator first, InputIterator last) {
+			typedef typename ft::__is_integer<InputIterator>::__type _Integral;
+			_insert(position, first, last, _Integral());
+		}
+
+		iterator
+		erase (iterator position) {
+			if (position != this->end()) {
+				_cut(position);
+				iterator temp = position++;
+				if (temp == this->begin())
+					this->_head->_next = temp.ptr;
+				delete temp.ptr;
+				_list_size -= _list_size ? 1 : 0;
+			}
+			return position;
+		}
+
+		iterator
+		erase (iterator first, iterator last) {
+			while (first != last) {
+				first = erase(first);
+			}
+			return last;
+		}
+
+		void
+		swap (list& x) {
+			list_node* temp = this->_head;
+			this->_head = x._head;
+			x._head = temp;
+
+			size_type size = this->_list_size;
+			_list_size = x._list_size;
+			x._list_size = size;
+		}
+
+		void
+		resize (size_type new_size, value_type val = value_type()) {
+			if (new_size < this->_list_size) {
+				iterator it = this->begin();
+				while (new_size--)
 					++it;
-				}
+				erase(it, this->end());
+			} else {
+				insert(this->end(), new_size - this->_list_size, val);
 			}
 		}
 
 		void
-		merge (list& x) { this->merge(x, _compare); }
-
-	  template <class Compare>
-		void
-		merge (list& x, Compare comp) {
-			if (&x == this)
-				return;
-			iterator first1 = this->begin(), first2 = x.begin(),
-					  last1 = this->end(),	  last2 = x.end();
-			while (first1 != last1 && first2 != last2) {
-				if (comp(*first2, *first1)) {
-					iterator temp = first2;
-					temp++;
-					_node_insert(first1.ptr, first2.ptr);
-					first2 = temp;
-					this->_list_size++;
-				}
-				else
-					++first1;
+		clear () NOEXCEPT {
+			list_node *temp;
+			while (this->_list_size) {
+				temp = this->_head->_next;
+				delete this->_head;
+				this->_head = temp;
+				this->_list_size--;
 			}
-			while (first2 != last2) {
-				iterator temp = first2;
-				temp++;
-				_node_insert(first1.ptr, first2.ptr);
-				first2 = temp;
-				this->_list_size++;;
-			}
-			x._head->_next = x._head->_prev = x._head;
-			x._list_size = 0;
+			this->_head->_prev = this->_head->_next = this->_head;
 		}
+
+	//   Operations -----------------------------
 
 		void
 		splice (iterator position, list& x) {
@@ -317,119 +378,6 @@ namespace ft {
 			}
 		}
 
-		iterator
-		insert (iterator position, value_type data) {
-			if (position == this->begin()) {
-				push_front(data);
-				return this->begin();
-			}
-
-			list_node *temp = new list_node(data);
-			_node_insert(position.ptr, temp);
-			_list_size++;
-			return iterator(temp);
-		}
-
-		void
-		insert (iterator position, size_type n, value_type val) {
-			_insert(position, n, val, ft::__true_type());
-		}
-		
-	  template<class InputIterator>
-		void
-		insert (iterator position, InputIterator first, InputIterator last) {
-			typedef typename ft::__is_integer<InputIterator>::__type _Integral;
-			_insert(position, first, last, _Integral());
-		}
-
-		void
-		push_back (value_type data) {
-			if (!_list_size) {
-				list_node *temp = new list_node(data);
-				this->_head->_prev = this->_head->_next = temp;
-				temp->_prev = temp->_next = this->_head;
-			} else {
-				list_node *temp = new list_node(data, this->_head->_prev, this->_head);
-				this->_head->_prev->_next = temp;
-				this->_head->_prev = temp;
-			}
-			_list_size++;
-		}
-
-		void
-		push_front (value_type data) {
-			list_node *temp = new list_node(data, this->_head, this->_head->_next);
-			this->_head->_next = this->_head->_next->_prev = temp;
-			_list_size++;
-		}
-
-		void
-		pop_front () NOEXCEPT { this->erase(this->begin()); }
-
-		void
-		pop_back () NOEXCEPT { this->erase(iterator(this->_head->_prev)); }
-
-		void
-		resize (size_type new_size, value_type val = value_type()) {
-			if (new_size < this->_list_size) {
-				iterator it = this->begin();
-				while (new_size--)
-					++it;
-				erase(it, this->end());
-			} else {
-				insert(this->end(), new_size - this->_list_size, val);
-			}
-		}
-
-		void
-		reverse () {
-			iterator first = this->_head;
-			size_type size = this->_list_size;
-			while (size--) {
-				iterator last = -- (this->end());
-				_cut(last);
-				
-				first.ptr->_next->_prev = last.ptr;
-				last.ptr->_next = first.ptr->_next;
-				first.ptr->_next = last.ptr;
-				last.ptr->_prev = first.ptr;
-				++first;
-			}
-		}
-
-		void
-		clear () NOEXCEPT {
-			list_node *temp;
-			while (this->_list_size) {
-				temp = this->_head->_next;
-				delete this->_head;
-				this->_head = temp;
-				this->_list_size--;
-			}
-			this->_head->_prev = this->_head->_next = this->_head;
-		}
-
-		iterator
-		erase (iterator position) {
-			if (position != this->end()) {
-				_cut(position);
-				iterator temp = position++;
-				if (temp == this->begin())
-					this->_head->_next = temp.ptr;
-				delete temp.ptr;
-				_list_size -= _list_size ? 1 : 0;
-			}
-			return position;
-		}
-
-		iterator
-		erase (iterator first, iterator last) {
-			while (first != last) {
-				first = erase(first);
-			}
-			return last;
-		}
-
 		void
 		remove (value_type val) {
 			iterator it = this->begin();
@@ -442,7 +390,7 @@ namespace ft {
 			}
 		}
 
-	  template <class Compare>
+		template<class Compare>
 		void
 		remove_if (Compare comp) {
 			iterator it = this->begin();
@@ -455,16 +403,6 @@ namespace ft {
 			}
 		}
 
-		void
-		swap (list& x) {
-			list_node* temp = this->_head;
-			this->_head = x._head;
-			x._head = temp;
-
-			size_type size = this->_list_size;
-			_list_size = x._list_size;
-			x._list_size = size;
-		}
 
 		void
 		unique() {
@@ -484,7 +422,7 @@ namespace ft {
 			}
 		}
 
-	  template <class BinaryPredicate>
+		template<class BinaryPredicate>
 		void
 		unique (BinaryPredicate binary_pred) {
 						iterator first = this->begin();
@@ -503,34 +441,105 @@ namespace ft {
 			}
 		}
 
+		void
+		merge (list& x) { this->merge(x, _compare); }
+
+		template<class Compare>
+		void
+		merge (list& x, Compare comp) {
+			if (&x == this)
+				return;
+			iterator first1 = this->begin(), first2 = x.begin(),
+					  last1 = this->end(),	  last2 = x.end();
+			while (first1 != last1 && first2 != last2) {
+				if (comp(*first2, *first1)) {
+					iterator temp = first2;
+					temp++;
+					_node_insert(first1.ptr, first2.ptr);
+					first2 = temp;
+					this->_list_size++;
+				}
+				else
+					++first1;
+			}
+			while (first2 != last2) {
+				iterator temp = first2;
+				temp++;
+				_node_insert(first1.ptr, first2.ptr);
+				first2 = temp;
+				this->_list_size++;;
+			}
+			x._head->_next = x._head->_prev = x._head;
+			x._list_size = 0;
+		}
+
+		void
+		sort() { this->sort(_compare); }
+
+		template<class Compare>
+		void
+		sort (Compare comp) {
+			for (iterator it = begin(); it != end(); ) {
+				iterator it_min;
+				it_min = it;
+				for (iterator itt = it; itt != end(); ++itt) {
+					if (comp(*itt, *it_min)) {
+						it_min = itt;
+					}
+				}
+				if (it_min != it) {
+					_cut(it_min);
+					_node_insert(it.ptr, it_min.ptr);
+				} else {
+					++it;
+				}
+			}
+		}
+
+		void
+		reverse () {
+			iterator first = this->_head;
+			size_type size = this->_list_size;
+			while (size--) {
+				iterator last = -- (this->end());
+				_cut(last);
+				
+				first.ptr->_next->_prev = last.ptr;
+				last.ptr->_next = first.ptr->_next;
+				first.ptr->_next = last.ptr;
+				last.ptr->_prev = first.ptr;
+				++first;
+			}
+		}
+
 // ============================================================================
 
 // Friend functions -----------------------------------------------------------
-	  template<typename _T, typename _Alloc>
+		template<typename _T, typename _Alloc>
 		friend bool
 		operator== (const list<_T,_Alloc>& lhs, const list<_T,_Alloc>& rhs);
 
-	  template<typename _T, typename _Alloc>
+		template<typename _T, typename _Alloc>
 		friend bool
 		operator!= (const list<_T,_Alloc>& lhs, const list<_T,_Alloc>& rhs);
 
-	  template<typename _T, typename _Alloc>
+		template<typename _T, typename _Alloc>
 		friend  bool
 		operator<  (const list<_T,_Alloc>& lhs, const list<_T,_Alloc>& rhs);
 
-	  template<typename _T, typename _Alloc>
+		template<typename _T, typename _Alloc>
 		friend bool
 		operator<= (const list<_T,_Alloc>& lhs, const list<_T,_Alloc>& rhs);
 
-	  template<typename _T, typename _Alloc>
+		template<typename _T, typename _Alloc>
 		friend bool
 		operator>  (const list<_T,_Alloc>& lhs, const list<_T,_Alloc>& rhs);
 
-	  template<typename _T, typename _Alloc>
+		template<typename _T, typename _Alloc>
 		friend bool
 		operator>= (const list<_T,_Alloc>& lhs, const list<_T,_Alloc>& rhs);
 
-	  template<typename _T, typename _Alloc>
+		template<typename _T, typename _Alloc>
 		friend void
 		swap (list<_T,_Alloc>& x, list<_T,_Alloc>& y);
 
@@ -541,7 +550,7 @@ namespace ft {
 
 // Friend functions definitions -----------------------------------------------
 
-  template <class T, class Alloc>
+	template<class T, class Alloc>
 	bool
 	operator== (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
 		
@@ -559,13 +568,13 @@ namespace ft {
 		return true;
 	}
 
-  template <class T, class Alloc>
+	template<class T, class Alloc>
 	bool
 	operator!= (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
 		return !(lhs == rhs);
 	}
 
-  template <class T, class Alloc>
+	template<class T, class Alloc>
 	bool
 	operator<  (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
 
@@ -586,25 +595,25 @@ namespace ft {
 		return true;
 	}
 
-  template <class T, class Alloc>
+	template<class T, class Alloc>
 	bool
 	operator<= (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
 		return !(rhs < lhs);
 	}
 
-  template <class T, class Alloc>
+	template<class T, class Alloc>
 	bool
 	operator>  (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
 		return rhs < lhs;
 	}
 
-  template <class T, class Alloc>
+	template<class T, class Alloc>
 	bool
 	operator>= (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
 		return !(lhs < rhs);
 	}
 
-  template <class T, class Alloc>
+	template<class T, class Alloc>
 	void
 	swap (list<T,Alloc>& x, list<T,Alloc>& y) {
 		x.swap(y);

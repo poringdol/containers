@@ -108,3 +108,16 @@ namespace ft_vector
 	void swap_test();
 	void operators_test();
 }
+
+namespace ft_stack
+{
+	void stack_test();
+
+	void constructorDefault_test();
+	// void size_test();
+	// void empty_test();
+	// void push_test();
+	// void begin_test();
+	// void pop_test();
+	// void operators_test();
+}

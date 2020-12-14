@@ -57,12 +57,13 @@ int main() {
 		} else if (index == test::Map) {
 			cout << RED << "In progress" << BW << endl;
 		} else if (index == test::Stack) {
-			cout << RED << "In progress" << BW << endl;
+			ft_stack::stack_test();
 		} else if (index == test::Queue) {
 			cout << RED << "In progress" << BW << endl;
 		} else if (index == test::All) {
 			ft_list::list_test();
 			ft_vector::vector_test();
+			ft_stack::stack_test();
 		} else if (index == test::Exit)
 			exit(0);
 		
