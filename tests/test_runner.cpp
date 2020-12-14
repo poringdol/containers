@@ -54,6 +54,7 @@ namespace ft_list
 		RUN_TEST(tr, swap_test);
 		RUN_TEST(tr, unique_test);
 		RUN_TEST(tr, operators_test);
+		ENABLE_LOGS = 0;
 	}
 }
 
@@ -89,15 +90,15 @@ namespace ft_vector
 		RUN_TEST(tr, insert_range_test);
 		RUN_TEST(tr, insert_fill_test);
 		RUN_TEST(tr, insert_element_test);
-// 		RUN_TEST(tr, push_back_front_test);
-// 		RUN_TEST(tr, pop_back_front_test);
-// 		RUN_TEST(tr, resize_test);
+		RUN_TEST(tr, push_back_test);
+		RUN_TEST(tr, pop_back_test);
+		RUN_TEST(tr, reserve_test);
+		RUN_TEST(tr, resize_test);
 		RUN_TEST(tr, clear_test);
 		RUN_TEST(tr, erase_test);
-// 		RUN_TEST(tr, remove_test);
-// 		RUN_TEST(tr, remove_if_test);
-// 		RUN_TEST(tr, swap_test);
+		RUN_TEST(tr, swap_test);
 // 		RUN_TEST(tr, unique_test);
 // 		RUN_TEST(tr, operators_test);
+		ENABLE_LOGS = 0;
 	}
 }

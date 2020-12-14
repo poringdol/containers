@@ -48,14 +48,21 @@ namespace ft {
 
 // Supporting functions -------------------------------------------------------
 
+		size_type
+		_check_max_len (size_type n) const {
+			if (n >= max_size())
+				throw std::out_of_range("cannot create ft::vector larger than max_size()");
+			return n;
+		}
+
 		void
-		_range_check(size_type n) const {
+		_check_range (size_type n) const {
 			if (n >= size())
 				throw std::out_of_range("Index is out of range");
 		}
 
 		void
-		_allocate(size_type new_size, const value_type& value, ft::__true_type) {
+		_allocate (size_type new_size, const value_type& value, ft::__true_type) {
 			(void)value;
 			if (new_size) {
 				_finish = _start = _alloc.allocate(new_size + 2);
@@ -65,7 +72,7 @@ namespace ft {
 
 	  template <class InputIterator>
 		void
-		_allocate(InputIterator first, InputIterator last, ft::__false_type) {
+		_allocate (InputIterator first, InputIterator last, ft::__false_type) {
 			size_type new_size = _range_size(first, last);
 			if (new_size) {
 				_finish = _start = _alloc.allocate(new_size + 2);
@@ -74,7 +81,7 @@ namespace ft {
 		}
 
 		void
-		_construct(size_type new_size, const value_type& value, ft::__true_type) {
+		_construct (size_type new_size, const value_type& value, ft::__true_type) {
 			for (size_type i = 1; i < new_size + 1; ++i) {
 				_alloc.construct(_start + i, value);
 			}
@@ -83,7 +90,7 @@ namespace ft {
 
 	  template <class InputIterator>
 		void
-		_construct(InputIterator first, InputIterator last, ft::__false_type) {
+		_construct (InputIterator first, InputIterator last, ft::__false_type) {
 			size_type new_size = _range_size(first, last);
 			for (size_type i = 1; i < new_size + 1; ++i, ++first) {
 				_alloc.construct(_start + i, *first);
@@ -93,7 +100,7 @@ namespace ft {
 
 	  template <class InputIterator>
 		void
-		_destroy(InputIterator first, InputIterator last) {
+		_destroy (InputIterator first, InputIterator last) {
 			if (_finish != _start) {
 				for (size_type i = 1; first != last; ++i, ++first) {
 					_alloc.destroy(_start + i);
@@ -102,15 +109,25 @@ namespace ft {
 			}
 		}
 
+	  template <class InputIterator>
 		void
-		_dealloc(pointer start, pointer finish, pointer end_of_store) {
+		_destroy_simple (InputIterator first, InputIterator last) {
+			if (_finish != _start) {
+				for (size_type i = 1; first != last; ++i, ++first) {
+					_alloc.destroy(_start + i);
+				}
+			}
+		}
+
+		void
+		_dealloc (pointer start, pointer finish, pointer end_of_store) {
 			_alloc.deallocate(start, end_of_store - start);
 			start = finish = end_of_store = NULL;
 		}
 
 	  template <class InputIterator>
 		size_type
-		_range_size(InputIterator first, InputIterator last) {
+		_range_size (InputIterator first, InputIterator last) const {
 			size_type s;
 			for (s = 0; first != last; ++first, ++s) ; 
 			return s; 
@@ -140,13 +157,13 @@ namespace ft {
 			} else {
 				_destroy(this->begin(), this->end());
 				_dealloc(_start, _finish, _end_of_storage);
-				_allocate(new_size, val, ft::__true_type());
+				_allocate(_check_max_len(new_size), val, ft::__true_type());
 				_construct(new_size, val, ft::__true_type());
 			}
 		}
 
 		iterator
-		_copy_range(iterator dst, iterator first, iterator last) {
+		_copy_range (iterator dst, iterator first, iterator last) {
 			for ( ; first != last; ++first, ++dst) {
 				_alloc.construct(dst.base(), *first);
 			}
@@ -155,7 +172,7 @@ namespace ft {
 
 	  template<typename T1>
 		iterator
-		_copy_fill(iterator dst, size_type n, const T1& val) {
+		_copy_fill (iterator dst, size_type n, const T1& val) {
 			for (size_type _size = 0 ; _size < n; ++dst, ++_size) {
 				_alloc.construct(dst.base(), val);
 			}
@@ -163,7 +180,7 @@ namespace ft {
 		}
 
 		iterator
-		_copy_to_end(iterator position, size_t size) {
+		_copy_to_end (iterator position, size_t size) {
 			iterator first = --end();
 			iterator last = first + size;
 			iterator res = end() + size;
@@ -186,7 +203,7 @@ namespace ft {
 
 			if (_size > this->capacity()) {
 				size_type _alloc_size = !size() ? _size : (size() * 2 > _size ? size() * 2 : _size);
-				_allocate(_alloc_size, T(), ft::__true_type());
+				_allocate(_check_max_len(_alloc_size), T(), ft::__true_type());
 
 				if (_start_old == _finish_old) {
 					_end = _copy_range(_start + 1, iterator(first.base()), iterator(last.base())); 
@@ -195,8 +212,8 @@ namespace ft {
 					_end = _copy_range(_end, iterator(first.base()), iterator(last.base()));
 					_end = _copy_range(_end, position, iterator(_finish_old));
 					_destroy(iterator(_start_old + 1), iterator(_finish_old));
-					_dealloc(_start_old, _finish_old, _end_of_s_old);
 				}
+				_dealloc(_start_old, _finish_old, _end_of_s_old);
 			} else {
 				if (_start_old == _finish_old) {
 					_end = _copy_range(_start + 1, iterator(first.base()), iterator(last.base()));
@@ -219,8 +236,8 @@ namespace ft {
 			pointer	_end_of_s_old = _end_of_storage;
 
 			if (_size > this->capacity()) {
-				size_type _alloc_size = !size() ? _size : (size() * 2 > _size ? size() * 2 : _size);
-				_allocate(_alloc_size, T1(), ft::__true_type());
+				size_type _alloc_size = !size() ? _size : _max(size() * 2, _size);
+				_allocate(_check_max_len(_alloc_size), T1(), ft::__true_type());
 
 				if (_start_old == _finish_old) {
 					_end = _copy_fill(_start + 1, n, val);
@@ -246,6 +263,16 @@ namespace ft {
 			return _res;
 		}
 
+		size_type
+		_max (size_type val1, size_type val2) const { return val1 > val2 ? val1 : val2; }
+
+	  template<typename T1>
+		void
+		_swap (T1& val1, T1& val2) {
+			T1 temp = val1;
+			val1 = val2;
+			val2 = temp;
+		}
 // ==============================================================================
 
 	public:
@@ -259,7 +286,7 @@ namespace ft {
 		explicit
 		vector (size_type n, const value_type& val = value_type(),
 				const allocator_type& alloc = allocator_type()):  _alloc(alloc) {
-			_allocate(n, val, __true_type());
+			_allocate(_check_max_len(n), val, __true_type());
 			_construct(n, val, ft::__true_type());
 		}
 		
@@ -276,7 +303,7 @@ namespace ft {
 
 // Vector destructors ---------------------------------------------------------------
 
-		~vector() {
+		~vector () {
 			_destroy(begin(), end());
 			_dealloc(_start, _finish, _end_of_storage);
 		}
@@ -301,13 +328,13 @@ namespace ft {
 
 		reference
 		at (size_type n) {
-			_range_check(n);
+			_check_range(n);
 			return (*this)[n];
 		}
 
 		const_reference
 		at (size_type n) const {
-			_range_check(n);
+			_check_max_len(n);
 			return (*this)[n];
 		}
 
@@ -324,55 +351,55 @@ namespace ft {
 		}
 
 		iterator
-		begin() NOEXCEPT			{ return iterator(_start != _finish ? _start + 1 : _start); }
+		begin () NOEXCEPT			{ return iterator(_start != _finish ? _start + 1 : _start); }
 
 		const_iterator
-		begin() const NOEXCEPT		{ return const_iterator(_start != _finish ? _start + 1 : _start); }
+		begin () const NOEXCEPT		{ return const_iterator(_start != _finish ? _start + 1 : _start); }
 
 		iterator
-		end() NOEXCEPT				{ return iterator(_finish); }
+		end () NOEXCEPT				{ return iterator(_finish); }
 
 		const_iterator
-		end() const NOEXCEPT		{ return const_iterator(_finish); }
+		end () const NOEXCEPT		{ return const_iterator(_finish); }
 
 		reverse_iterator
-		rbegin() NOEXCEPT			{ return reverse_iterator(_start != _finish ? _finish - 1 : _finish); }
+		rbegin () NOEXCEPT			{ return reverse_iterator(_start != _finish ? _finish - 1 : _finish); }
 
 		const_reverse_iterator
-		rbegin() const NOEXCEPT		{ return const_reverse_iterator(_start != _finish ? _finish - 1 : _finish); }
+		rbegin () const NOEXCEPT		{ return const_reverse_iterator(_start != _finish ? _finish - 1 : _finish); }
 
 		reverse_iterator
-		rend() NOEXCEPT				{ return reverse_iterator(_start); }
+		rend () NOEXCEPT				{ return reverse_iterator(_start); }
 
 		const_reverse_iterator
-		rend() const NOEXCEPT		{ return const_reverse_iterator(_start); }
+		rend () const NOEXCEPT		{ return const_reverse_iterator(_start); }
 
 		reference
-		back() NOEXCEPT				{ return *(rbegin()); }
+		back () NOEXCEPT				{ return *(rbegin()); }
 
 		const_reference
-		back() const NOEXCEPT		{ return *(rbegin()); }
+		back () const NOEXCEPT		{ return *(rbegin()); }
 
 		reference
-		front() NOEXCEPT			{ return *(begin()); }
+		front () NOEXCEPT			{ return *(begin()); }
 
 		const_reference
-		front() const NOEXCEPT		{ return *(begin()); }
+		front () const NOEXCEPT		{ return *(begin()); }
 
 		bool
-		empty() const NOEXCEPT		{ return begin() == end(); }
+		empty () const NOEXCEPT		{ return begin() == end(); }
 
 		size_type
-		size() const NOEXCEPT		{ return empty() ? 0 : _finish - (_start + 1); }
+		size () const NOEXCEPT		{ return empty() ? 0 : _finish - (_start + 1); }
 		
 		size_type
-		max_size() const NOEXCEPT	{ return __gnu_cxx::__numeric_traits<ptrdiff_t>::__max / sizeof(T); }
+		max_size () const NOEXCEPT	{ return __gnu_cxx::__numeric_traits<ptrdiff_t>::__max / sizeof(T); }
 
 		size_type
-		capacity() const NOEXCEPT	{ return _end_of_storage == _start ? 0 : _end_of_storage - (_start + 2); }
+		capacity () const NOEXCEPT	{ return _end_of_storage == _start ? 0 : _end_of_storage - (_start + 2); }
 
 		void
-		clear() NOEXCEPT			{ _destroy(begin(), end()); }
+		clear () NOEXCEPT			{ _destroy(begin(), end()); }
 
 		iterator
 		erase (iterator position) NOEXCEPT {
@@ -420,6 +447,71 @@ namespace ft {
 			_insert(position, first, last, _Integral());
 		}
 
+		void
+		pop_back () NOEXCEPT							{ _alloc.destroy(--_finish); }
+
+		void
+		push_back (const value_type& val) NOEXCEPT	{ insert(end(), 1, val); }
+
+		void
+		reserve (size_type new_size) {
+			if (new_size > max_size()) {
+				throw std::length_error("ft::vector::reserve::Requested size is larger than max_size()");
+			}
+			if (new_size <= capacity()) return;
+
+			pointer	_start_old = _start;
+			pointer _finish_old = _finish;
+			pointer	_end_of_s_old = _end_of_storage;
+			iterator _begin_old = iterator(_start == _finish ? _start : _start + 1);
+			iterator _end_old = iterator(_finish);
+			iterator _new_finish;
+
+			_allocate(new_size, T(), ft::__true_type());
+			_new_finish = _copy_range(_start + 1, _begin_old, _end_old);
+			_destroy(_begin_old, _end_old);
+			_dealloc(_start_old, _finish_old, _end_of_s_old);
+			_finish = _new_finish.base();
+		}
+
+		void
+		resize (size_type n, value_type val = value_type()) {
+			if (n == size()) return;
+
+			size_type _size;
+			if (n < size()) {
+				_size = size() - n;
+				_destroy_simple(begin() + _size, iterator(_finish));
+				_finish -= _size;
+			} else {
+				_size = n - size();
+				if (n <= capacity()) {
+					this->insert(this->end(), _size, val);
+				} else {
+					pointer _start_old = _start;
+					pointer _finish_old = _finish;
+					pointer	_end_of_s_old = _end_of_storage;
+
+					size_type _alloc_size = !size() ? n : _max(size() * 2, n);
+					_allocate(_alloc_size, val, ft::__true_type());
+					iterator _end = _start + 1;
+					if (_start_old != _finish_old)
+						_end = _copy_range(_start + 1, iterator(_start_old + 1), iterator(_finish_old));
+					_end = _copy_fill(_end, _size, val);
+					if (_start_old != _finish_old)
+						_destroy(iterator(_start_old + 1), iterator(_finish_old));
+					_dealloc(_start_old, _finish_old, _end_of_s_old);
+					_finish = _end.base();
+				}
+			}
+		}
+
+		void
+		swap (vector& x) NOEXCEPT {
+			_swap(_start, x._start);
+			_swap(_finish, x._finish);
+			_swap(_end_of_storage, x._end_of_storage);
+		}
 	};
 // ==============================================================================
 }

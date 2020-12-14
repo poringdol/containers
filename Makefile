@@ -29,8 +29,18 @@ DEP = $(OBJ:.o=.d)
 all: $(NAME)
 
 $(NAME): $(OBJ) $(MAIN)
+# Tests created
 	@$(CC) $(OBJ) -o test -I$(INCLUDES) $(CFLAGS)
-	@echo "$(GREEN) Tests created  $(B&W)\n For start tests:$(GREEN) ./test $(B&W)"
+	@echo ""
+	@echo "$(GREEN)~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~$(B&W)"
+	@echo "$(GREEN)^						^$(B&W)"
+	@echo "$(GREEN)^	 $(B&W)Project: ft_services by $(GREEN)pdemocri	^$(B&W)"
+	@echo "$(GREEN)^						^$(B&W)"
+	@echo "$(GREEN)^						^$(B&W)"
+	@echo "$(GREEN)^ [Tests created]				^$(B&W)"
+	@echo "$(GREEN)^ $(RED)[For start tests]:$(B&W) $(GREEN)./test$(B&W)$(GREEN)			^$(B&W)"
+	@echo "$(GREEN)~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~$(B&W)"
+	@echo ""
 
 c98:
 	$(CC) $(MAIN98) -o test_c98 -I$(INCLUDES) $(CFLAGS) $(STD)

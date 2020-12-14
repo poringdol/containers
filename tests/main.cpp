@@ -8,12 +8,16 @@
 #define YELLOW "\033[1;33m"
 #define PURPLE "\033[1;35m"
 
+using std::cin;
 using std::cout;
 using std::endl;
+
+int ENABLE_LOGS = 0;
 
 int main() {
 	
 	while (1) {
+	
 		cout << YELLOW << "\nSelect tests to run" << BW << endl << endl;
 
 		cout << YELLOW << "1. " << BLUE << "List" <<  BW <<endl;
@@ -28,23 +32,27 @@ int main() {
 		int index = 10;
 		while (1) {
 			cout << YELLOW << "Enter index: " << BW;
-			std::cin >> index;
-			if (std::cin.eof()) {
+			cin >> index;
+			if (cin.eof()) {
 				cout << std::endl;
 				exit(0);
 			}
-			if (!std::cin || index < 0 || index > 6) {
+			if (!cin || index < 0 || index > 6) {
 				cout << RED << "\nIncorrect input\n" << BW << endl;
-				std::cin.clear();
-				while (std::cin.get() != '\n');
+				cin.clear();
+				while (cin.get() != '\n');
 			} else {
-				std::cin.ignore();
+				cin.ignore();
 				break;
 			}
 		}
+		void (*last_test)();
+	
 		if (index == test::List) {
+			last_test = ft_list::list_test;
 			ft_list::list_test();
 		} else if (index == test::Vector) {
+			last_test = ft_vector::vector_test;
 			ft_vector::vector_test();
 		} else if (index == test::Map) {
 			cout << RED << "In progress" << BW << endl;
@@ -55,14 +63,27 @@ int main() {
 		} else if (index == test::All) {
 			ft_list::list_test();
 			ft_vector::vector_test();
-		} else
+		} else if (index == test::Exit)
 			exit(0);
 		
-		cout << "\nEnter " << BLUE << "any key" << BW << " to continue"
-			 << " or " << BLUE << "0 " << BW << " to exit" << endl;
-		char contin = 0;
-		std::cin >> contin;
-		if (contin == '0')
+		cout << endl;
+		cout << YELLOW << "1. " << BLUE << "Relanch last test and show logs" <<  BW <<endl;
+		cout << YELLOW << "2. " << BLUE << "Return to the test selection menu" << BW << endl;
+		cout << YELLOW << "0. " << BLUE << "Exit" << BW << endl << endl;
+		cin >> index;
+		if (index == 1) {
+			ENABLE_LOGS = 1;
+			last_test();
+		} else if (index == 2) {
+			continue;
+		} else if (index == 0)
+			exit(0);
+
+		cout << "\nEnter " << BLUE << "1" << BW << " to continue"
+			 << " or " << BLUE << "0 " << BW << "to exit" << endl;
+		index = 0;
+		cin >> index;
+		if (index == '0')
 			break; 
 	}
 }

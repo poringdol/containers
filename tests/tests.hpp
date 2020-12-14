@@ -17,16 +17,26 @@ enum test {
 	All
 };
 
+extern int ENABLE_LOGS;
 static std::list<int> ls {1,2,3,4,5,6,7,8,9,0};
 static std::vector<int> vc {1,2,3,4,5,6,7,8,9,0};
 static std::deque<int> dq {1,2,3,4,5,6,7,8,9,0};
-static std::vector<std::string> str {"one", "two", "three", "four", "five"};
+static std::vector<std::string> str {"one", "two", "three", "four", "five",
+									"six", "seven", "eight", "nine", "zero"};
 
 template<typename T>
 std::string contToString(const T& cont) {
 	std::ostringstream os;
 	for(auto it = cont.begin(); it != cont.end(); ++it)
 		os << *it << " ";
+	if (ENABLE_LOGS) {
+		int i = 0;
+		for(auto it = cont.begin(); it != cont.end() && i < 50; ++it, ++i)
+			std::cout << *it << " ";
+		if (i == 50)
+			std::cout << " ... too long output";
+		std::cout << std::endl;
+	}
 	return os.str();
 }
 
@@ -89,15 +99,13 @@ namespace ft_vector
 	void insert_range_test();
 	void insert_fill_test();
 	void insert_element_test();
-
-// 	void push_back_front_test();
-// 	void pop_back_front_test();
-// 	void resize_test();
+	void push_back_test();
+	void pop_back_test();
+	void reserve_test();
+	void resize_test();
 	void clear_test();
 	void erase_test();
-// 	void remove_test();
-// 	void remove_if_test();
-// 	void swap_test();
+	void swap_test();
 // 	void unique_test();
 // 	void operators_test();
 }

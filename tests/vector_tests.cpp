@@ -434,20 +434,14 @@ namespace ft_vector
 		ASSERT_EQUAL(vc1.capacity(), myvc1.capacity());
 		ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
 
-		vc1.insert(++vc1.begin(), 10, 0);
-		myvc1.insert(++myvc1.begin(), 10, 0);
+		vc1.insert(++(vc1.begin()), 10, 0);
+		myvc1.insert(++(myvc1.begin()), 10, 0);
 		ASSERT_EQUAL(vc1.size(), myvc1.size());
 		ASSERT_EQUAL(vc1.capacity(), myvc1.capacity());
 		ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
 
-		vc1.insert(++vc1.begin(), 60, 0);
-		myvc1.insert(++myvc1.begin(), 60, 0);
-		ASSERT_EQUAL(vc1.size(), myvc1.size());
-		ASSERT_EQUAL(vc1.capacity(), myvc1.capacity());
-		ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
-
-		vc1.insert(vc1.end(), 60, 0);
-		myvc1.insert(myvc1.end(), 60, 0);
+		vc1.insert(++(vc1.begin()), 60, 0);
+		myvc1.insert(++(myvc1.begin()), 60, 0);
 		ASSERT_EQUAL(vc1.size(), myvc1.size());
 		ASSERT_EQUAL(vc1.capacity(), myvc1.capacity());
 		ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
@@ -471,7 +465,7 @@ namespace ft_vector
 		ft::vector<int> myvc1;
 		ft::vector<int>::iterator it2;
 
-		for (int i = 0; i < 50; i++) {
+		for (int i = 0; i < 5; i++) {
 			it1 = vc1.insert(vc1.begin(), 0);
 			it2 = myvc1.insert(myvc1.begin(), 0);
 
@@ -481,18 +475,18 @@ namespace ft_vector
 			ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
 		}
 
-		for (int i = 0; i < 50; i++) {
-			it1 = vc1.insert(++vc1.begin(), 0);
-			it2 = myvc1.insert(++myvc1.begin(), 0);
+		for (int i = 0; i < 5; i++) {
+			it1 = vc1.insert(++(vc1.begin()), 0);
+			it2 = myvc1.insert(++(myvc1.begin()), 0);
 			ASSERT_EQUAL(*it1, *it2);
 			ASSERT_EQUAL(vc1.size(), myvc1.size());
 			ASSERT_EQUAL(vc1.capacity(), myvc1.capacity());
 			ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
 		}
 
-		for (int i = 0; i < 50; i++) {
-			it1 = vc1.insert(vc1.end(), 0);
-			it2 = myvc1.insert(myvc1.end(), 0);
+		for (int i = 0; i < 5; i++) {
+			it1 = vc1.insert(--vc1.end(), 0);
+			it2 = myvc1.insert(--myvc1.end(), 0);
 			ASSERT_EQUAL(*it1, *it2);
 			ASSERT_EQUAL(vc1.size(), myvc1.size());
 			ASSERT_EQUAL(vc1.capacity(), myvc1.capacity());
@@ -505,7 +499,7 @@ namespace ft_vector
 		ft::vector<std::string>::iterator it4;
 		std::string str("Burunduk");
 
-		for (int i = 0; i < 50; i++) {
+		for (int i = 0; i < 5; i++) {
 			it3 = vc2.insert(vc2.begin(), str);
 			it4 = myvc2.insert(myvc2.begin(), str);
 			ASSERT_EQUAL(*it3, *it4);
@@ -515,74 +509,194 @@ namespace ft_vector
 		}
 	}
 
-	// void push_back_front_test() {
-	// 	std::vector<int> vc1;
-	// 	ft::vector<int> myvc1;
+	void push_back_test() {
+		std::vector<int> vc1;
+		ft::vector<int> myvc1;
+		for (int i = 0; i < 14; i++) {
+			vc1.push_back(i);
+			myvc1.push_back(i);
+			ASSERT_EQUAL(vc1.size(), myvc1.size());
+			ASSERT_EQUAL(vc1.capacity(), myvc1.capacity());
+			ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
+		}
+	}
 
-	// 	vc1.push_back(12);
-	// 	myvc1.push_back(12);
-	// 	ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
+	void pop_back_test() {
+		std::vector<int> vc1;
+		ft::vector<int> myvc1;
 
-	// 	vc1.push_back(17);
-	// 	myvc1.push_back(17);
-	// 	ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
+		vc1.assign(vc.begin(), vc.end());
+		myvc1.assign(vc.begin(), vc.end());
 
-	// 	vc1.push_front(11);
-	// 	myvc1.push_front(11);
-	// 	ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
-	// }
+		vc1.pop_back();
+		myvc1.pop_back();
+		ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
+		ASSERT_EQUAL(vc1.size(), myvc1.size());
+		ASSERT_EQUAL(vc1.capacity(), myvc1.capacity());
 
-	// void pop_back_front_test() {
-	// 	std::vector<int> vc1;
-	// 	ft::vector<int> myvc1;
+		vc1.pop_back();
+		myvc1.pop_back();
+		ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
+		ASSERT_EQUAL(vc1.size(), myvc1.size());
+		ASSERT_EQUAL(vc1.capacity(), myvc1.capacity());
 
-	// // test with empty list
-	// 	// vc1.pop_front();
-	// 	// myvc1.pop_front();
-	// 	// ASSERT_EQUAL(vc1.size(), myvc1.size());
+		vc1.pop_back();
+		myvc1.pop_back();
+		ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
+		ASSERT_EQUAL(vc1.size(), myvc1.size());
+		ASSERT_EQUAL(vc1.capacity(), myvc1.capacity());
 
-	// 	// vc1.pop_back();
-	// 	// myvc1.pop_back();
-	// 	// ASSERT_EQUAL(vc1.size(), myvc1.size());
+		vc1.pop_back();
+		myvc1.pop_back();
+		ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
+		ASSERT_EQUAL(vc1.size(), myvc1.size());
+		ASSERT_EQUAL(vc1.capacity(), myvc1.capacity());
+	}
 
-	// // test with not empty list
-	// 	vc1.assign(vc.begin(), vc.end());
-	// 	myvc1.assign(vc.begin(), vc.end());
+	void reserve_test() {
+		std::vector<int> vc1;
+		ft::vector<int> myvc1;
+		ASSERT_EQUAL(vc1.size(), myvc1.size());
+		ASSERT_EQUAL(vc1.capacity(), myvc1.capacity());
 
-	// 	vc1.pop_back();
-	// 	myvc1.pop_back();
-	// 	ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
-	// 	ASSERT_EQUAL(vc1.size(), myvc1.size());
+		vc1.reserve(2);
+		myvc1.reserve(2);
+		ASSERT_EQUAL(vc1.size(), myvc1.size());
+		ASSERT_EQUAL(vc1.capacity(), myvc1.capacity());
 
-	// 	vc1.pop_front();
-	// 	myvc1.pop_front();
-	// 	ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
-	// 	ASSERT_EQUAL(vc1.size(), myvc1.size());
-	// }
+		vc1.reserve(12);
+		myvc1.reserve(12);
+		ASSERT_EQUAL(vc1.size(), myvc1.size());
+		ASSERT_EQUAL(vc1.capacity(), myvc1.capacity());
+		
+		vc1.reserve(5);
+		myvc1.reserve(5);
+		ASSERT_EQUAL(vc1.size(), myvc1.size());
+		ASSERT_EQUAL(vc1.capacity(), myvc1.capacity());
 
-	// void resize_test() {
-	// 	std::vector<int> vc1;
-	// 	ft::vector<int> myvc1;
+		vc1.insert(vc1.begin(), vc.begin(), vc.end());
+		myvc1.insert(myvc1.begin(), vc.begin(), vc.end());
+		ASSERT_EQUAL(vc1.size(), myvc1.size());
+		ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
+		ASSERT_EQUAL(vc1.capacity(), myvc1.capacity());
 
-	// 	vc1.resize(12, 1);
-	// 	myvc1.resize(12, 1);
-	// 	ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
-	// 	ASSERT_EQUAL(vc1.size(), myvc1.size());
+		vc1.reserve(5);
+		myvc1.reserve(5);
+		ASSERT_EQUAL(vc1.size(), myvc1.size());
+		ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
+		ASSERT_EQUAL(vc1.capacity(), myvc1.capacity());
+		
+		vc1.reserve(15);
+		myvc1.reserve(15);
+		ASSERT_EQUAL(vc1.size(), myvc1.size());
+		ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
+		ASSERT_EQUAL(vc1.capacity(), myvc1.capacity());
+	}
 
-	// 	vc1.resize(17, 2);
-	// 	myvc1.resize(17, 2);
-	// 	ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
-	// 	ASSERT_EQUAL(vc1.size(), myvc1.size());
+	void resize_test() {
+		std::vector<int> vc1;
+		ft::vector<int> myvc1;
 
-	// 	vc1.resize(8, 3);
-	// 	myvc1.resize(8, 3);
-	// 	ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
-	// 	ASSERT_EQUAL(vc1.size(), myvc1.size());
-	// }
+		vc1.resize(2, 0);
+		myvc1.resize(2, 0);
+		ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
+		ASSERT_EQUAL(vc1.size(), myvc1.size());
+		ASSERT_EQUAL(vc1.capacity(), myvc1.capacity());
+
+
+		vc1.resize(12, 1);
+		myvc1.resize(12, 1);
+		ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
+		ASSERT_EQUAL(vc1.size(), myvc1.size());
+		ASSERT_EQUAL(vc1.capacity(), myvc1.capacity());
+
+		vc1.assign(vc.begin(), vc.end());
+		myvc1.assign(vc.begin(), vc.end());
+		ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
+		ASSERT_EQUAL(vc1.size(), myvc1.size());
+		ASSERT_EQUAL(vc1.capacity(), myvc1.capacity());
+
+		vc1.resize(17, 2);
+		myvc1.resize(17, 2);
+		ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
+		ASSERT_EQUAL(vc1.size(), myvc1.size());
+		ASSERT_EQUAL(vc1.capacity(), myvc1.capacity());
+
+		vc1.insert(vc1.begin(), vc.begin(), vc.end());
+		myvc1.insert(myvc1.begin(), vc.begin(), vc.end());
+		ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
+		ASSERT_EQUAL(vc1.size(), myvc1.size());
+		ASSERT_EQUAL(vc1.capacity(), myvc1.capacity());
+
+		vc1.resize(8, 3);
+		myvc1.resize(8, 3);
+		ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
+		ASSERT_EQUAL(vc1.size(), myvc1.size());
+		ASSERT_EQUAL(vc1.capacity(), myvc1.capacity());
+
+		vc1.resize(18, 4);
+		myvc1.resize(18, 4);
+		ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
+		ASSERT_EQUAL(vc1.size(), myvc1.size());
+		ASSERT_EQUAL(vc1.capacity(), myvc1.capacity());
+
+		vc1.resize(19, 5);
+		myvc1.resize(19, 5);
+		ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
+		ASSERT_EQUAL(vc1.size(), myvc1.size());
+		ASSERT_EQUAL(vc1.capacity(), myvc1.capacity());
+
+		vc1.resize(36, 6);
+		myvc1.resize(36, 6);
+		ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
+		ASSERT_EQUAL(vc1.size(), myvc1.size());
+		ASSERT_EQUAL(vc1.capacity(), myvc1.capacity());
+
+		std::vector<std::string> vc2;
+		ft::vector<std::string> myvc2;
+
+		vc2.resize(2, "1_zero");
+		myvc2.resize(2, "1_zero");
+		ASSERT_EQUAL(contToString(vc2), contToString(myvc2));
+		ASSERT_EQUAL(vc2.size(), myvc2.size());
+		ASSERT_EQUAL(vc2.capacity(), myvc2.capacity());
+
+		vc2.resize(12, "2_one");
+		myvc2.resize(12, "2_one");
+		ASSERT_EQUAL(contToString(vc2), contToString(myvc2));
+		ASSERT_EQUAL(vc2.size(), myvc2.size());
+		ASSERT_EQUAL(vc2.capacity(), myvc2.capacity());
+
+		vc2.assign(str.begin(), str.end());
+		myvc2.assign(str.begin(), str.end());
+		ASSERT_EQUAL(contToString(vc2), contToString(myvc2));
+		ASSERT_EQUAL(vc2.size(), myvc2.size());
+		ASSERT_EQUAL(vc2.capacity(), myvc2.capacity());
+
+		vc2.resize(17, "3_two");
+		myvc2.resize(17, "3_two");
+		ASSERT_EQUAL(contToString(vc2), contToString(myvc2));
+		ASSERT_EQUAL(vc2.size(), myvc2.size());
+		ASSERT_EQUAL(vc2.capacity(), myvc2.capacity());
+
+		vc2.insert(vc2.begin(), str.begin(), str.end());
+		myvc2.insert(myvc2.begin(), str.begin(), str.end());
+		ASSERT_EQUAL(contToString(vc2), contToString(myvc2));
+		ASSERT_EQUAL(vc2.size(), myvc2.size());
+		ASSERT_EQUAL(vc2.capacity(), myvc2.capacity());
+
+		vc2.resize(8, "4_three");
+		myvc2.resize(8, "4_three");
+		ASSERT_EQUAL(contToString(vc2), contToString(myvc2));
+		ASSERT_EQUAL(vc2.size(), myvc2.size());
+		ASSERT_EQUAL(vc2.capacity(), myvc2.capacity());
+	}
 
 	void clear_test() {
 		std::vector<int> vc1(vc.begin(), vc.end());
 		ft::vector<int> myvc1(vc.begin(), vc.end());
+		ASSERT_EQUAL(vc1.size(), myvc1.size());
+		ASSERT_EQUAL(vc1.capacity(), myvc1.capacity());
 
 		vc1.clear();
 		myvc1.clear();
@@ -614,6 +728,12 @@ namespace ft_vector
 		ASSERT_EQUAL(true, it2 == myvc1.end());
 		ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
 
+		it1 = vc1.erase(vc1.begin() + 4, vc1.end());
+		it2 = myvc1.erase(myvc1.begin() + 4, myvc1.end());
+		ASSERT_EQUAL(*it1, *it2);
+		ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
+		ASSERT_EQUAL(vc1.size(), myvc1.size());
+
 		it1 = vc1.erase(++(vc1.begin()), vc1.end());
 		it2 = myvc1.erase(++(myvc1.begin()), myvc1.end());
 		ASSERT_EQUAL(*it1, *it2);
@@ -628,64 +748,30 @@ namespace ft_vector
 		ASSERT_EQUAL(vc1.size(), myvc1.size());
 	}
 
-	// void remove_test() {
-	// 	std::vector<int> vc1(vc.begin(), vc.end());
-	// 	ft::vector<int> myvc1(vc.begin(), vc.end());
+	void swap_test() {
+		std::vector<int> vc1(vc.rbegin(), vc.rend());
+		ft::vector<int> myvc1(vc.rbegin(), vc.rend());
+		std::vector<int> vc2(vc.begin(), vc.end());
+		ft::vector<int> myvc2(vc.begin(), vc.end());
+		vc1.pop_back();
+		myvc1.pop_back();
 
-	// 	vc1.remove(5);
-	// 	myvc1.remove(5);
-	// 	ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
-	// 	ASSERT_EQUAL(vc1.size(), myvc1.size());
+		ASSERT_EQUAL(vc1.size(), myvc1.size());
+		ASSERT_EQUAL(vc1.capacity(), myvc1.capacity());
+		ASSERT_EQUAL(vc2.size(), myvc2.size());
+		ASSERT_EQUAL(vc2.capacity(), myvc2.capacity());
+		ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
+		ASSERT_EQUAL(contToString(vc2), contToString(myvc2));
 
-	// 	vc1.remove(105);
-	// 	myvc1.remove(105);
-	// 	ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
-	// 	ASSERT_EQUAL(vc1.size(), myvc1.size());
-	// }
-
-	// bool single_digit (const int& value) { return (value<5); }
-
-	// struct is_odd {
-	// bool operator() (const int& value) { return (value%2)==1; }
-	// };
-
-	// void remove_if_test() {
-	// 	std::vector<int> vc1(vc.begin(), vc.end());
-	// 	ft::vector<int> myvc1(vc.begin(), vc.end());
-
-	// 	vc1.remove_if(single_digit);
-	// 	myvc1.remove_if(single_digit);
-	// 	ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
-
-	// 	vc1.remove_if(is_odd());
-	// 	myvc1.remove_if(is_odd());
-	// 	ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
-	// }
-
-	// void swap_test() {
-	// 	std::vector<int> vc1(vc.begin(), vc.end());
-	// 	std::vector<int> vc2(vc.begin(), vc.end());
-	// 	ft::vector<int> myvc1(vc.begin(), vc.end());
-	// 	ft::vector<int> myvc2(vc.begin(), vc.end());
-
-	// 	vc1.swap(vc2);
-	// 	myvc1.swap(myvc2);
-	// 	ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
-	// 	ASSERT_EQUAL(contToString(vc2), contToString(myvc2));
-	// }
-
-	// void unique_test() {
-	// 	std::vector<int> vec;
-	// 	for (int i = 0; i < 20; i++) vec.push_back(rand() % 10);
-
-	// 	std::vector<int> vc1(vec.begin(), vec.end());
-	// 	ft::vector<int> myvc1(vec.begin(), vec.end());
-
-	// 	vc1.unique();
-	// 	myvc1.unique();
-	// 	ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
-	// 	ASSERT_EQUAL(vc1.size(), myvc1.size());
-	// }
+		vc1.swap(vc2);
+		myvc1.swap(myvc2);
+		ASSERT_EQUAL(vc1.size(), myvc1.size());
+		ASSERT_EQUAL(vc1.capacity(), myvc1.capacity());
+		ASSERT_EQUAL(vc2.size(), myvc2.size());
+		ASSERT_EQUAL(vc2.capacity(), myvc2.capacity());
+		ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
+		ASSERT_EQUAL(contToString(vc2), contToString(myvc2));
+	}
 
 	// void operators_test() {
 	// 	std::vector<int> vc1, vc2;
