@@ -720,8 +720,8 @@ namespace ft_vector
 		ft::vector<int> myvc1(vc.begin(), vc.end());
 		ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
 
-		auto it1 = vc1.erase(++(vc1.begin()));
-		auto it2 = myvc1.erase(++(myvc1.begin()));
+		std::vector<int>::iterator it1 = vc1.erase(++(vc1.begin()));
+		ft::vector<int>::iterator it2 = myvc1.erase(++(myvc1.begin()));
 		ASSERT_EQUAL(*it1, *it2);
 		ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
 		ASSERT_EQUAL(vc1.size(), myvc1.size());
@@ -781,9 +781,22 @@ namespace ft_vector
 		std::vector<int> vc1, vc2;
 		ft::vector<int> myvc1, myvc2;
 
-		std::vector<int> v[6] = {{1,2,3,4}, {1,2,3,4,4},
-								{1,2,3,1,4,1}, {1,2,3,4,5},
-								{0,2,3,4,5,6}, {0}};
+		int arr_str[][7] = {{1,2,3,4,-1}, {1,2,3,4,4,-1},
+								{1,2,3,1,4,1,-1}, {1,2,3,4,5,-1},
+								{0,2,3,4,5,6,-1}, {0,-1}};
+		std::vector<int> v[6];
+		for (int i = 0; i < 6; i++) {
+			for (int j = 0; arr_str[i][j] != -1; j++) {
+				v[i].push_back(arr_str[i][j]);
+			}
+		}
+
+		// cout << contToString(v[0]) << endl;
+		// cout << contToString(v[1]) << endl;
+		// cout << contToString(v[2]) << endl;
+		// cout << contToString(v[3]) << endl;
+		// cout << contToString(v[4]) << endl;
+		// cout << contToString(v[5]) << endl;
 
 		vc1.assign(v[1].begin(), v[1].end());
 		myvc1.assign(v[1].begin(), v[1].end());

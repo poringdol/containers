@@ -1,70 +1,66 @@
-#pragma once
-
-#ifndef _FT_CPP_TYPE_TRAITS_H
-#define _FT_CPP_TYPE_TRAITS_H 1
-
-// extern "C++" {
+#ifndef FT_CPP_TYPE_TRAITS_H
+#define FT_CPP_TYPE_TRAITS_H 1
 
 namespace ft {
 
-  struct __true_type { };
-  struct __false_type { };
+  struct true_type_my { };
+  struct false_type_my { };
 
   template<bool>
-    struct __truth_type
-    { typedef __false_type __type; };
+    struct truth_type_my
+    { typedef false_type_my type_my; };
 
   template<>
-    struct __truth_type<true>
-    { typedef __true_type __type; };
+    struct truth_type_my<true>
+    { typedef true_type_my type_my; };
 
   // N.B. The conversions to bool are needed due to the issue
   // explained in c++/19404.
-  template<class _Sp, class _Tp>
-    struct __traitor
+  template<class S, class T>
+    struct traitor_my
     {
-      enum { __value = bool(_Sp::__value) || bool(_Tp::__value) };
-      typedef typename __truth_type<__value>::__type __type;
+      enum { value_my = bool(S::value_my) || bool(T::value_my) };
+      typedef typename truth_type_my<value_my>::type_my type_my;
     };
 
   // Compare for equality of types.
   template<typename, typename>
-    struct __are_same
+    struct are_same_my
     {
-      enum { __value = 0 };
-      typedef __false_type __type;
+      enum { value_my = 0 };
+      typedef false_type_my type_my;
     };
 
-  template<typename _Tp>
-    struct __are_same<_Tp, _Tp>
+  template<typename T>
+    struct are_same_my<T, T>
     {
-      enum { __value = 1 };
-      typedef __true_type __type;
+      enum { value_my = 1 };
+      typedef true_type_my type_my;
     };
 
   // Holds if the template-argument is a void type.
-  template<typename _Tp>
-    struct __is_void
+  template<typename T>
+    struct is_void_my
     {
-      enum { __value = 0 };
-      typedef __false_type __type;
+      enum { value_my = 0 };
+      typedef false_type_my type_my;
     };
 
   template<>
-    struct __is_void<void>
+    struct is_void_my<void>
     {
-      enum { __value = 1 };
-      typedef __true_type __type;
+      enum { value_my = 1 };
+      typedef true_type_my type_my;
     };
 
   //
   // Integer types
   //
-  template<typename _Tp>
-    struct __is_integer
+  template<typename T>
+    struct is_integer_my
     {
-      enum { __value = 0 };
-      typedef __false_type __type;
+      enum { value_my = 0 };
+      typedef false_type_my type_my;
     };
 
   // Thirteen specializations (yes there are eleven standard integer
@@ -72,135 +68,135 @@ namespace ft {
   // supported as extensions).  Up to four target-specific __int<N>
   // types are supported as well.
   template<>
-    struct __is_integer<bool>
+    struct is_integer_my<bool>
     {
-      enum { __value = 1 };
-      typedef __true_type __type;
+      enum { value_my = 1 };
+      typedef true_type_my type_my;
     };
 
   template<>
-    struct __is_integer<char>
+    struct is_integer_my<char>
     {
-      enum { __value = 1 };
-      typedef __true_type __type;
+      enum { value_my = 1 };
+      typedef true_type_my type_my;
     };
 
   template<>
-    struct __is_integer<signed char>
+    struct is_integer_my<signed char>
     {
-      enum { __value = 1 };
-      typedef __true_type __type;
+      enum { value_my = 1 };
+      typedef true_type_my type_my;
     };
 
   template<>
-    struct __is_integer<unsigned char>
+    struct is_integer_my<unsigned char>
     {
-      enum { __value = 1 };
-      typedef __true_type __type;
+      enum { value_my = 1 };
+      typedef true_type_my type_my;
     };
 
 # ifdef _GLIBCXX_USE_WCHAR_T
   template<>
-    struct __is_integer<wchar_t>
+    struct is_integer_my<wchar_t>
     {
-      enum { __value = 1 };
-      typedef __true_type __type;
+      enum { value_my = 1 };
+      typedef true_type_my type_my;
     };
 # endif
 
 #ifdef _GLIBCXX_USE_CHAR8_T
   template<>
-    struct __is_integer<char8_t>
+    struct is_integer_my<char8_t>
     {
-      enum { __value = 1 };
-      typedef __true_type __type;
+      enum { value_my = 1 };
+      typedef true_type_my type_my;
     };
 #endif
 
 #if __cplusplus >= 201103L
   template<>
-    struct __is_integer<char16_t>
+    struct is_integer_my<char16_t>
     {
-      enum { __value = 1 };
-      typedef __true_type __type;
+      enum { value_my = 1 };
+      typedef true_type_my type_my;
     };
 
   template<>
-    struct __is_integer<char32_t>
+    struct is_integer_my<char32_t>
     {
-      enum { __value = 1 };
-      typedef __true_type __type;
+      enum { value_my = 1 };
+      typedef true_type_my type_my;
     };
 #endif
 
   template<>
-    struct __is_integer<short>
+    struct is_integer_my<short>
     {
-      enum { __value = 1 };
-      typedef __true_type __type;
+      enum { value_my = 1 };
+      typedef true_type_my type_my;
     };
 
   template<>
-    struct __is_integer<unsigned short>
+    struct is_integer_my<unsigned short>
     {
-      enum { __value = 1 };
-      typedef __true_type __type;
+      enum { value_my = 1 };
+      typedef true_type_my type_my;
     };
 
   template<>
-    struct __is_integer<int>
+    struct is_integer_my<int>
     {
-      enum { __value = 1 };
-      typedef __true_type __type;
+      enum { value_my = 1 };
+      typedef true_type_my type_my;
     };
 
   template<>
-    struct __is_integer<unsigned int>
+    struct is_integer_my<unsigned int>
     {
-      enum { __value = 1 };
-      typedef __true_type __type;
+      enum { value_my = 1 };
+      typedef true_type_my type_my;
     };
 
   template<>
-    struct __is_integer<long>
+    struct is_integer_my<long>
     {
-      enum { __value = 1 };
-      typedef __true_type __type;
+      enum { value_my = 1 };
+      typedef true_type_my type_my;
     };
 
   template<>
-    struct __is_integer<unsigned long>
+    struct is_integer_my<unsigned long>
     {
-      enum { __value = 1 };
-      typedef __true_type __type;
+      enum { value_my = 1 };
+      typedef true_type_my type_my;
     };
 
   template<>
-    struct __is_integer<long long>
+    struct is_integer_my<long long>
     {
-      enum { __value = 1 };
-      typedef __true_type __type;
+      enum { value_my = 1 };
+      typedef true_type_my type_my;
     };
 
   template<>
-    struct __is_integer<unsigned long long>
+    struct is_integer_my<unsigned long long>
     {
-      enum { __value = 1 };
-      typedef __true_type __type;
+      enum { value_my = 1 };
+      typedef true_type_my type_my;
     };
 
-#define __INT_N(TYPE) 			\
-  template<>				\
-    struct __is_integer<TYPE>		\
-    {					\
-      enum { __value = 1 };		\
-      typedef __true_type __type;	\
-    };					\
-  template<>				\
-    struct __is_integer<unsigned TYPE>	\
-    {					\
-      enum { __value = 1 };		\
-      typedef __true_type __type;	\
+#define __INT_N(TYPE) 					\
+  template<>							\
+    struct is_integer_my<TYPE>			\
+    {									\
+      enum { value_my = 1 };			\
+      typedef true_type_my type_my;		\
+    };									\
+  template<>							\
+    struct is_integer_my<unsigned TYPE>	\
+    {									\
+      enum { value_my = 1 };			\
+      typedef true_type_my type_my;		\
     };
 
 #ifdef __GLIBCXX_TYPE_INT_N_0
@@ -221,151 +217,122 @@ __INT_N(__GLIBCXX_TYPE_INT_N_3)
   //
   // Floating point types
   //
-  template<typename _Tp>
-    struct __is_floating
+  template<typename T>
+    struct is_floating_my
     {
-      enum { __value = 0 };
-      typedef __false_type __type;
+      enum { value_my = 0 };
+      typedef false_type_my type_my;
     };
 
   // three specializations (float, double and 'long double')
   template<>
-    struct __is_floating<float>
+    struct is_floating_my<float>
     {
-      enum { __value = 1 };
-      typedef __true_type __type;
+      enum { value_my = 1 };
+      typedef true_type_my type_my;
     };
 
   template<>
-    struct __is_floating<double>
+    struct is_floating_my<double>
     {
-      enum { __value = 1 };
-      typedef __true_type __type;
+      enum { value_my = 1 };
+      typedef true_type_my type_my;
     };
 
   template<>
-    struct __is_floating<long double>
+    struct is_floating_my<long double>
     {
-      enum { __value = 1 };
-      typedef __true_type __type;
+      enum { value_my = 1 };
+      typedef true_type_my type_my;
     };
 
   //
   // Pointer types
   //
-  template<typename _Tp>
-    struct __is_pointer
+  template<typename T>
+    struct is_pointer_my
     {
-      enum { __value = 0 };
-      typedef __false_type __type;
+      enum { value_my = 0 };
+      typedef false_type_my type_my;
     };
 
-  template<typename _Tp>
-    struct __is_pointer<_Tp*>
+  template<typename T>
+    struct is_pointer_my<T*>
     {
-      enum { __value = 1 };
-      typedef __true_type __type;
+      enum { value_my = 1 };
+      typedef true_type_my type_my;
     };
 
   //
   // An arithmetic type is an integer type or a floating point type
   //
-  template<typename _Tp>
-    struct __is_arithmetic
-    : public __traitor<__is_integer<_Tp>, __is_floating<_Tp> >
+  template<typename T>
+    struct is_arithmetic_my
+    : public traitor_my<is_integer_my<T>, is_floating_my<T> >
     { };
 
   //
   // A scalar type is an arithmetic type or a pointer type
   // 
-  template<typename _Tp>
-    struct __is_scalar
-    : public __traitor<__is_arithmetic<_Tp>, __is_pointer<_Tp> >
+  template<typename T>
+    struct is_scalar_my
+    : public traitor_my<is_arithmetic_my<T>, is_pointer_my<T> >
     { };
 
   //
   // For use in std::copy and std::find overloads for streambuf iterators.
   //
-  template<typename _Tp>
-    struct __is_char
+  template<typename T>
+    struct is_char_my
     {
-      enum { __value = 0 };
-      typedef __false_type __type;
+      enum { value_my = 0 };
+      typedef false_type_my type_my;
     };
 
   template<>
-    struct __is_char<char>
+    struct is_char_my<char>
     {
-      enum { __value = 1 };
-      typedef __true_type __type;
+      enum { value_my = 1 };
+      typedef true_type_my type_my;
     };
 
 #ifdef _GLIBCXX_USE_WCHAR_T
   template<>
-    struct __is_char<wchar_t>
+    struct is_char_my<wchar_t>
     {
-      enum { __value = 1 };
-      typedef __true_type __type;
+      enum { value_my = 1 };
+      typedef true_type_my type_my;
     };
 #endif
 
-  template<typename _Tp>
-    struct __is_byte
+  template<typename T>
+    struct is_byte_my
     {
-      enum { __value = 0 };
-      typedef __false_type __type;
+      enum { value_my = 0 };
+      typedef false_type_my type_my;
     };
 
   template<>
-    struct __is_byte<char>
+    struct is_byte_my<char>
     {
-      enum { __value = 1 };
-      typedef __true_type __type;
+      enum { value_my = 1 };
+      typedef true_type_my type_my;
     };
 
   template<>
-    struct __is_byte<signed char>
+    struct is_byte_my<signed char>
     {
-      enum { __value = 1 };
-      typedef __true_type __type;
+      enum { value_my = 1 };
+      typedef true_type_my type_my;
     };
 
   template<>
-    struct __is_byte<unsigned char>
+    struct is_byte_my<unsigned char>
     {
-      enum { __value = 1 };
-      typedef __true_type __type;
+      enum { value_my = 1 };
+      typedef true_type_my type_my;
     };
-
-#if __cplusplus >= 201703L
-  enum class byte : unsigned char;
-
-  template<>
-    struct __is_byte<byte>
-    {
-      enum { __value = 1 };
-      typedef __true_type __type;
-    };
-#endif // C++17
-
-  //
-  // Move iterator type
-  //
-  template<typename _Tp>
-    struct __is_move_iterator
-    {
-      enum { __value = 0 };
-      typedef __false_type __type;
-    };
-
-  // Fallback implementation of the function in bits/stl_iterator.h used to
-  // remove the move_iterator wrapper.
-  template<typename _Iterator>
-    inline _Iterator
-    __miter_base(_Iterator __it)
-    { return __it; }
 
 } // namespace
-// } // extern "C++"
 
 #endif //_CPP_TYPE_TRAITS_H

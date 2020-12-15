@@ -7,9 +7,9 @@
 
 #ifndef NOEXCEPT
 	#if __cplusplus >= 201103L
-		#define NOEXCEPT throw()
-	#else
 		#define NOEXCEPT noexcept
+	#else
+		#define NOEXCEPT throw()
 	#endif
 #endif
 
@@ -82,7 +82,7 @@ namespace ft {
 
 		template<typename InputIterator>
 		void
-		_insert (iterator position, InputIterator first, InputIterator last, ft::__false_type) {
+		_insert (iterator position, InputIterator first, InputIterator last, ft::false_type_my) {
 			for (; first != last; ++first) {
 				this->insert(position, *first);
 			}
@@ -90,7 +90,7 @@ namespace ft {
 
 		template<typename T1>
 		void
-		_insert (iterator position, size_type n, T1 val, ft::__true_type) {
+		_insert (iterator position, size_type n, T1 val, ft::true_type_my) {
 			while (n--) {
 				iterator temp = position;
 				this->insert(temp, val);
@@ -99,7 +99,7 @@ namespace ft {
 
 		template<typename InputIterator>
 		void
-		_assign (InputIterator first, InputIterator last, ft::__false_type) {
+		_assign (InputIterator first, InputIterator last, ft::false_type_my) {
 			this->clear();
 			while (first != last) {
 				this->push_back(*first);
@@ -109,7 +109,7 @@ namespace ft {
 
 		template<typename T1>
 		void
-		_assign (size_type n, T1 val, ft::__true_type) {
+		_assign (size_type n, T1 val, ft::true_type_my) {
 			this->clear();
 			while (n--) {
 				this->push_back(val);
@@ -228,13 +228,13 @@ namespace ft {
 		template<typename InputIterator>
 		void
 		assign (InputIterator first, InputIterator last) {
-			typedef typename ft::__is_integer<InputIterator>::__type _Integral;
+			typedef typename ft::is_integer_my<InputIterator>::type_my _Integral;
 			_assign(first, last, _Integral());
 		}
 
 		void
 		assign (size_type n, value_type val) {
-			_assign(n, val, ft::__true_type());
+			_assign(n, val, ft::true_type_my());
 		}
 
 		void
@@ -279,13 +279,13 @@ namespace ft {
 
 		void
 		insert (iterator position, size_type n, value_type val) {
-			_insert(position, n, val, ft::__true_type());
+			_insert(position, n, val, ft::true_type_my());
 		}
 		
 		template<typename InputIterator>
 		void
 		insert (iterator position, InputIterator first, InputIterator last) {
-			typedef typename ft::__is_integer<InputIterator>::__type _Integral;
+			typedef typename ft::is_integer_my<InputIterator>::type_my _Integral;
 			_insert(position, first, last, _Integral());
 		}
 

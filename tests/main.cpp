@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdlib>
 #include "tests.hpp"
 
 #define BW "\033[0;0m"
@@ -48,38 +49,38 @@ int main() {
 		}
 		void (*last_test)() = NULL;
 	
-		if (index == test::List) {
+		if (index == ft::List) {
 
 			last_test = ft_list::list_test;
 			ft_list::list_test();
 			
-		} else if (index == test::Vector) {
+		} else if (index == ft::Vector) {
 
 			last_test = ft_vector::vector_test;
 			ft_vector::vector_test();
 
-		} else if (index == test::Map) {
+		} else if (index == ft::Map) {
 
 			cout << RED << "In progress" << BW << endl;
 
-		} else if (index == test::Stack) {
+		} else if (index == ft::Stack) {
 
 			last_test = ft_stack::stack_test;
 			ft_stack::stack_test();
 
-		} else if (index == test::Queue) {
+		} else if (index == ft::Queue) {
 
 			last_test = ft_queue::queue_test;
 			ft_queue::queue_test();
 
-		} else if (index == test::All) {
+		} else if (index == ft::All) {
 
 			ft_list::list_test();
 			ft_vector::vector_test();
 			ft_stack::stack_test();
 			ft_queue::queue_test();
 
-		} else if (index == test::Exit)
+		} else if (index == ft::Exit)
 			exit(0);
 		
 		cout << endl;

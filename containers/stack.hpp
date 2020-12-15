@@ -4,9 +4,9 @@
 
 #ifndef NOEXCEPT
 	#if __cplusplus >= 201103L
-		#define NOEXCEPT throw()
-	#else
 		#define NOEXCEPT noexcept
+	#else
+		#define NOEXCEPT throw()
 	#endif
 #endif
 

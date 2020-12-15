@@ -3,6 +3,7 @@
 #include <deque>
 #include <iostream>
 #include <sstream>
+#include <cstdlib>
 #include "tests.hpp"
 #include "test_runner.h"
 #include "list.hpp"
@@ -443,9 +444,15 @@ namespace ft_list
 		std::list<int> ls1, ls2;
 		ft::list<int> myls1, myls2;
 
-		std::vector<int> v[6] = {{1,2,3,4}, {1,2,3,4,4},
-								{1,2,3,1,4,1}, {1,2,3,4,5},
-								{0,2,3,4,5,6}, {0}};
+		int arr_str[][7] = {{1,2,3,4,-1}, {1,2,3,4,4,-1},
+						{1,2,3,1,4,1,-1}, {1,2,3,4,5,-1},
+						{0,2,3,4,5,6,-1}, {0,-1}};
+		std::vector<int> v[6];
+		for (int i = 0; i < 6; i++) {
+			for (int j = 0; arr_str[i][j] != -1; j++) {
+				v[i].push_back(arr_str[i][j]);
+			}
+		}
 
 		for (int i = 0; i < 6; i++) {
 			ls1.assign(v[i].begin(), v[i].end());

@@ -5,9 +5,10 @@ RED  = \033[0;31m
 GREEN = \033[0;32m
 PURPLE = \033[0;35m
 	
-CC = g++
-CFLAGS = -Wall -Werror -Wextra -g
+CC = clang++
 STD = -std=c++98
+CFLAGS = -Wall -Werror -Wextra -g
+CFLAGS += $(STD)
 RM = rm -rf
 
 #-O3 -fsanitize=address
@@ -23,7 +24,6 @@ SRC = main.cpp \
 SRCDIR = ./tests/
 INCLUDES = ./containers/
 MAIN = $(SRCDIR)main.cpp
-MAIN98 = $(SRCDIR)main_c98.cpp
 
 OBJS = $(SRC:.cpp=.o)
 OBJDIR = ./objects/
@@ -34,7 +34,6 @@ DEP = $(OBJ:.o=.d)
 all: $(NAME)
 
 $(NAME): $(OBJ) $(MAIN)
-# Tests created
 	@$(CC) $(OBJ) -o test -I$(INCLUDES) $(CFLAGS)
 	@echo ""
 	@echo "$(GREEN)~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~$(B&W)"
@@ -46,10 +45,6 @@ $(NAME): $(OBJ) $(MAIN)
 	@echo "$(GREEN)^ $(RED)[For start tests]:$(B&W) $(GREEN)./test$(B&W)$(GREEN)			^$(B&W)"
 	@echo "$(GREEN)~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~$(B&W)"
 	@echo ""
-
-c98:
-	$(CC) $(MAIN98) -o test_c98 -I$(INCLUDES) $(CFLAGS) $(STD)
-	@echo "$(GREEN) Tests with c++98 standart created  $(B&W)\n For start tests:$(GREEN) ./test_c98 $(B&W)"
 
 -include $(DEP)
 

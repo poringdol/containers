@@ -6,9 +6,9 @@
 
 #ifndef NOEXCEPT
 	#if __cplusplus >= 201103L
-		#define NOEXCEPT throw()
-	#else
 		#define NOEXCEPT noexcept
+	#else
+		#define NOEXCEPT throw()
 	#endif
 #endif
 
@@ -62,7 +62,7 @@ namespace ft {
 		}
 
 		void
-		_allocate (size_type new_size, const value_type& value, ft::__true_type) {
+		_allocate (size_type new_size, const value_type& value, ft::true_type_my) {
 			(void)value;
 			if (new_size) {
 				_finish = _start = _alloc.allocate(new_size + 2);
@@ -72,7 +72,7 @@ namespace ft {
 
 		template<typename InputIterator>
 		void
-		_allocate (InputIterator first, InputIterator last, ft::__false_type) {
+		_allocate (InputIterator first, InputIterator last, ft::false_type_my) {
 			size_type new_size = _range_size(first, last);
 			if (new_size) {
 				_finish = _start = _alloc.allocate(new_size + 2);
@@ -81,7 +81,7 @@ namespace ft {
 		}
 
 		void
-		_construct (size_type new_size, const value_type& value, ft::__true_type) {
+		_construct (size_type new_size, const value_type& value, ft::true_type_my) {
 			for (size_type i = 1; i < new_size + 1; ++i) {
 				_alloc.construct(_start + i, value);
 			}
@@ -90,7 +90,7 @@ namespace ft {
 
 		template<typename InputIterator>
 		void
-		_construct (InputIterator first, InputIterator last, ft::__false_type) {
+		_construct (InputIterator first, InputIterator last, ft::false_type_my) {
 			size_type new_size = _range_size(first, last);
 			for (size_type i = 1; i < new_size + 1; ++i, ++first) {
 				_alloc.construct(_start + i, *first);
@@ -135,30 +135,30 @@ namespace ft {
 
 		template<typename InputIterator>
 		void
-		_assign (InputIterator first, InputIterator last, ft::__false_type) {
+		_assign (InputIterator first, InputIterator last, ft::false_type_my) {
 			size_type new_size = _range_size(first, last);
 			if (new_size <= capacity()) {
 				_destroy(first, last);
-				_construct(first, last, ft::__false_type());
+				_construct(first, last, ft::false_type_my());
 			} else {
 				_destroy(first, last);
 				_dealloc(_start, _finish, _end_of_storage);
-				_allocate(first, last, ft::__false_type());
-				_construct(first, last, ft::__false_type());
+				_allocate(first, last, ft::false_type_my());
+				_construct(first, last, ft::false_type_my());
 			}
 		}
 
 		template<typename T1>
 		void
-		_assign (size_type new_size, const T1& val, ft::__true_type) {
+		_assign (size_type new_size, const T1& val, ft::true_type_my) {
 			if (new_size <= this->capacity()) {
 				_destroy(this->begin(), this->end());
-				_construct(new_size, val, ft::__true_type());
+				_construct(new_size, val, ft::true_type_my());
 			} else {
 				_destroy(this->begin(), this->end());
 				_dealloc(_start, _finish, _end_of_storage);
-				_allocate(_check_max_len(new_size), val, ft::__true_type());
-				_construct(new_size, val, ft::__true_type());
+				_allocate(_check_max_len(new_size), val, ft::true_type_my());
+				_construct(new_size, val, ft::true_type_my());
 			}
 		}
 
@@ -193,7 +193,7 @@ namespace ft {
 
 		template<typename InputIterator>
 		void
-		_insert (iterator position, InputIterator first, InputIterator last, ft::__false_type) {
+		_insert (iterator position, InputIterator first, InputIterator last, ft::false_type_my) {
 			
 			size_type _size = _range_size(first, last) + this->size();
 			iterator _end;
@@ -203,7 +203,7 @@ namespace ft {
 
 			if (_size > this->capacity()) {
 				size_type _alloc_size = !size() ? _size : (size() * 2 > _size ? size() * 2 : _size);
-				_allocate(_check_max_len(_alloc_size), T(), ft::__true_type());
+				_allocate(_check_max_len(_alloc_size), T(), ft::true_type_my());
 
 				if (_start_old == _finish_old) {
 					_end = _copy_range(_start + 1, iterator(first.base()), iterator(last.base())); 
@@ -227,7 +227,7 @@ namespace ft {
 
 		template<typename T1>
 		iterator
-		_insert (iterator position, size_type n, const T1& val, ft::__true_type) {
+		_insert (iterator position, size_type n, const T1& val, ft::true_type_my) {
 			size_type _size = n + this->size();
 			iterator _end;
 			iterator _res;
@@ -237,7 +237,7 @@ namespace ft {
 
 			if (_size > this->capacity()) {
 				size_type _alloc_size = !size() ? _size : _max(size() * 2, _size);
-				_allocate(_check_max_len(_alloc_size), T1(), ft::__true_type());
+				_allocate(_check_max_len(_alloc_size), T1(), ft::true_type_my());
 
 				if (_start_old == _finish_old) {
 					_end = _copy_fill(_start + 1, n, val);
@@ -285,14 +285,14 @@ namespace ft {
 		explicit
 		vector (size_type n, const value_type& val = value_type(),
 				const allocator_type& alloc = allocator_type()):  _alloc(alloc) {
-			_allocate(_check_max_len(n), val, __true_type());
-			_construct(n, val, ft::__true_type());
+			_allocate(_check_max_len(n), val, true_type_my());
+			_construct(n, val, ft::true_type_my());
 		}
 		
 		template<typename InputIterator>
 		vector (InputIterator first, InputIterator last,
 					const allocator_type& alloc = allocator_type()): _alloc(alloc) {
-			typedef typename ft::__is_integer<InputIterator>::__type _Integral;
+			typedef typename ft::is_integer_my<InputIterator>::type_my _Integral;
 			_allocate(first, last, _Integral());
 			_construct(first, last, _Integral());
 		}
@@ -303,8 +303,8 @@ namespace ft {
 		const vector&
 		operator= (const vector& x) {
 			_alloc = x._alloc;
-			_allocate(x.begin(), x.end(), ft::__false_type());
-			_construct(x.begin(), x.end(), ft::__false_type());
+			_allocate(x.begin(), x.end(), ft::false_type_my());
+			_construct(x.begin(), x.end(), ft::false_type_my());
 			return *this;
 		}
 
@@ -350,7 +350,7 @@ namespace ft {
 		size () const NOEXCEPT		{ return empty() ? 0 : _finish - (_start + 1); }
 		
 		size_type
-		max_size () const NOEXCEPT	{ return __gnu_cxx::__numeric_traits<ptrdiff_t>::__max / sizeof(T); }
+		max_size () const NOEXCEPT	{ return std::numeric_limits<long>::max() / sizeof(T); }
 
 		void
 		resize (size_type n, value_type val = value_type()) {
@@ -371,7 +371,7 @@ namespace ft {
 					pointer	_end_of_s_old = _end_of_storage;
 
 					size_type _alloc_size = !size() ? n : _max(size() * 2, n);
-					_allocate(_alloc_size, val, ft::__true_type());
+					_allocate(_alloc_size, val, ft::true_type_my());
 					iterator _end = _start + 1;
 					if (_start_old != _finish_old)
 						_end = _copy_range(_start + 1, iterator(_start_old + 1), iterator(_finish_old));
@@ -404,7 +404,7 @@ namespace ft {
 			iterator _end_old = iterator(_finish);
 			iterator _new_finish;
 
-			_allocate(new_size, T(), ft::__true_type());
+			_allocate(new_size, T(), ft::true_type_my());
 			_new_finish = _copy_range(_start + 1, _begin_old, _end_old);
 			_destroy(_begin_old, _end_old);
 			_dealloc(_start_old, _finish_old, _end_of_s_old);
@@ -442,12 +442,12 @@ namespace ft {
 		template<typename InputIterator>
 		void
 		assign (InputIterator first, InputIterator last) {
-			typedef typename ft::__is_integer<InputIterator>::__type _Integral;
+			typedef typename ft::is_integer_my<InputIterator>::type_my _Integral;
 			_assign(first, last, _Integral());
 		}
 
 		void
-		assign (size_type n, const value_type& val) { _assign(n, val, ft::__true_type()); }
+		assign (size_type n, const value_type& val) { _assign(n, val, ft::true_type_my()); }
 
 		void
 		push_back (const value_type& val) NOEXCEPT	{ insert(end(), 1, val); }
@@ -457,18 +457,18 @@ namespace ft {
 
 		iterator
 		insert (iterator position, const value_type& val) {
-			return _insert(position, static_cast<size_type>(1), val, ft::__true_type());
+			return _insert(position, static_cast<size_type>(1), val, ft::true_type_my());
 		}
 
 		void
 		insert (iterator position, size_type n, const value_type& val) {
-			_insert(position, n, val, ft::__true_type());
+			_insert(position, n, val, ft::true_type_my());
 		}
 
 		template<typename InputIterator>
 		void
 		insert (iterator position, InputIterator first, InputIterator last) {
-			typedef typename ft::__is_integer<InputIterator>::__type _Integral;
+			typedef typename ft::is_integer_my<InputIterator>::type_my _Integral;
 			_insert(position, first, last, _Integral());
 		}
 

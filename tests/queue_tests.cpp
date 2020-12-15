@@ -13,48 +13,48 @@ namespace ft_queue
 {
 	void constructorDefault_test() {
 
-		std::queue<int, std::list<int>> qu1;
-		ft::queue<int, std::list<int>> myqu1;
+		std::queue<int, std::list<int> > qu1;
+		ft::queue<int, std::list<int> > myqu1;
 
-		std::queue<int, std::deque<int>> qu2;
-		ft::queue<int, std::deque<int>> myqu2;
+		std::queue<int, std::deque<int> > qu2;
+		ft::queue<int, std::deque<int> > myqu2;
 
-		std::queue<int, ft::list<int>> qu4;
-		ft::queue<int, ft::list<int>> myqu4;
+		std::queue<int, ft::list<int> > qu4;
+		ft::queue<int, ft::list<int> > myqu4;
 	}
 
 	void size_test() {
 
-		std::queue<int, std::list<int>> qu1;
-		ft::queue<int, std::list<int>> myqu1;
+		std::queue<int, std::list<int> > qu1;
+		ft::queue<int, std::list<int> > myqu1;
 		ASSERT_EQUAL(qu1.size(), myqu1.size());
 
-		std::queue<int, std::deque<int>> qu2;
-		ft::queue<int, std::deque<int>> myqu2;
+		std::queue<int, std::deque<int> > qu2;
+		ft::queue<int, std::deque<int> > myqu2;
 		ASSERT_EQUAL(qu2.size(), myqu2.size());
 
-		std::queue<int, ft::list<int>> qu4;
-		ft::queue<int, ft::list<int>> myqu4;
+		std::queue<int, ft::list<int> > qu4;
+		ft::queue<int, ft::list<int> > myqu4;
 		ASSERT_EQUAL(qu4.size(), myqu4.size());
 	}
 
 	void empty_test() {
 
-		std::queue<int, std::list<int>> myqu1;
+		std::queue<int, std::list<int> > myqu1;
 		ASSERT_EQUAL(true, myqu1.empty());
 		myqu1.push(1);
 		ASSERT_EQUAL(false, myqu1.empty());
 		myqu1.pop();
 		ASSERT_EQUAL(true, myqu1.empty());
 
-		std::queue<int, ft::list<int>> myqu2;
+		std::queue<int, ft::list<int> > myqu2;
 		ASSERT_EQUAL(true, myqu2.empty());
 		myqu2.push(1);
 		ASSERT_EQUAL(false, myqu2.empty());
 		myqu2.pop();
 		ASSERT_EQUAL(true, myqu2.empty());
 
-		std::queue<int, std::deque<int>> myqu3;
+		std::queue<int, std::deque<int> > myqu3;
 		ASSERT_EQUAL(true, myqu3.empty());
 		myqu3.push(1);
 		ASSERT_EQUAL(false, myqu3.empty());
@@ -63,8 +63,8 @@ namespace ft_queue
 	}
 
 	void push_test() {
-		std::queue<int, std::list<int>> qu1;
-		ft::queue<int, std::list<int>> myqu1;
+		std::queue<int, std::list<int> > qu1;
+		ft::queue<int, std::list<int> > myqu1;
 
 		qu1.push(21);
 		myqu1.push(21);
@@ -75,8 +75,8 @@ namespace ft_queue
 		ASSERT_EQUAL(qu1.size(), myqu1.size());
 		ASSERT_EQUAL(queueToString(qu1), queueToString(myqu1));
 
-		std::queue<int, ft::list<int>> qu2;
-		ft::queue<int, ft::list<int>> myqu2;
+		std::queue<int, ft::list<int> > qu2;
+		ft::queue<int, ft::list<int> > myqu2;
 
 		qu2.push(17);
 		myqu2.push(17);
@@ -88,8 +88,8 @@ namespace ft_queue
 		ASSERT_EQUAL(qu2.size(), myqu2.size());
 		ASSERT_EQUAL(qu2.empty(), myqu2.empty());
 
-		std::queue<int, std::deque<int>> qu3;
-		ft::queue<int, std::deque<int>> myqu3;
+		std::queue<int, std::deque<int> > qu3;
+		ft::queue<int, std::deque<int> > myqu3;
 		qu3.push(37);
 		myqu3.push(37);
 		qu3.push(14);
@@ -105,8 +105,8 @@ namespace ft_queue
 	void front_test() {
 		
 		{
-			std::queue<int, std::list<int>> qu1;
-			ft::queue<int, std::list<int>> myqu1;
+			std::queue<int, std::list<int> > qu1;
+			ft::queue<int, std::list<int> > myqu1;
 			qu1.push(10);
 			myqu1.push(10);
 			qu1.push(110);
@@ -116,8 +116,8 @@ namespace ft_queue
 		}
 		
 		{
-			std::queue<int, ft::list<int>> qu1;
-			ft::queue<int, ft::list<int>> myqu1;
+			std::queue<int, ft::list<int> > qu1;
+			ft::queue<int, ft::list<int> > myqu1;
 			qu1.push(11);
 			myqu1.push(11);
 			qu1.push(211);
@@ -127,8 +127,8 @@ namespace ft_queue
 		}
 		
 		{
-			std::queue<int, std::deque<int>> qu1;
-			ft::queue<int, std::deque<int>> myqu1;
+			std::queue<int, std::deque<int> > qu1;
+			ft::queue<int, std::deque<int> > myqu1;
 			qu1.push(12);
 			myqu1.push(12);
 			qu1.push(312);
@@ -140,8 +140,8 @@ namespace ft_queue
 	void back_test() {
 		
 		{
-			std::queue<int, std::list<int>> qu1;
-			ft::queue<int, std::list<int>> myqu1;
+			std::queue<int, std::list<int> > qu1;
+			ft::queue<int, std::list<int> > myqu1;
 			qu1.push(10);
 			myqu1.push(10);
 			qu1.push(110);
@@ -151,8 +151,8 @@ namespace ft_queue
 		}
 		
 		{
-			std::queue<int, ft::list<int>> qu1;
-			ft::queue<int, ft::list<int>> myqu1;
+			std::queue<int, ft::list<int> > qu1;
+			ft::queue<int, ft::list<int> > myqu1;
 			qu1.push(11);
 			myqu1.push(11);
 			qu1.push(211);
@@ -162,8 +162,8 @@ namespace ft_queue
 		}
 		
 		{
-			std::queue<int, std::deque<int>> qu1;
-			ft::queue<int, std::deque<int>> myqu1;
+			std::queue<int, std::deque<int> > qu1;
+			ft::queue<int, std::deque<int> > myqu1;
 			qu1.push(12);
 			myqu1.push(12);
 			qu1.push(312);
@@ -174,8 +174,8 @@ namespace ft_queue
 
 	void pop_test() {
 		{
-			std::queue<int, std::list<int>> qu1;
-			ft::queue<int, std::list<int>> myqu1;
+			std::queue<int, std::list<int> > qu1;
+			ft::queue<int, std::list<int> > myqu1;
 			qu1.push(17);
 			myqu1.push(17);
 			qu1.push(7);
@@ -190,8 +190,8 @@ namespace ft_queue
 		}
 
 		{
-			std::queue<int, ft::list<int>> qu1;
-			ft::queue<int, ft::list<int>> myqu1;
+			std::queue<int, ft::list<int> > qu1;
+			ft::queue<int, ft::list<int> > myqu1;
 			qu1.push(17);
 			myqu1.push(17);
 			qu1.push(7);
@@ -206,8 +206,8 @@ namespace ft_queue
 		}
 
 		{
-			std::queue<int, std::deque<int>> qu1;
-			ft::queue<int, std::deque<int>> myqu1;
+			std::queue<int, std::deque<int> > qu1;
+			ft::queue<int, std::deque<int> > myqu1;
 			qu1.push(17);
 			myqu1.push(17);
 			qu1.push(7);

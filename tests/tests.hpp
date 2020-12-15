@@ -9,31 +9,42 @@
 #include "vector.hpp"
 #include "stack.hpp"
 
-enum test {
-	Exit,
-	List,
-	Vector,
-	Map,
-	Stack,
-	Queue,
-	All
-};
+namespace ft {
+	
+	enum test {
+		Exit,
+		List,
+		Vector,
+		Map,
+		Stack,
+		Queue,
+		All
+	};
+}
 
 extern int ENABLE_LOGS;
-static std::list<int> ls {1,2,3,4,5,6,7,8,9,0};
-static std::vector<int> vc {1,2,3,4,5,6,7,8,9,0};
-static std::deque<int> dq {1,2,3,4,5,6,7,8,9,0};
-static std::vector<std::string> str {"one", "two", "three", "four", "five",
-									"six", "seven", "eight", "nine", "zero"};
+// static std::list<int> ls {1,2,3,4,5,6,7,8,9,0};
+// static std::vector<int> vc {1,2,3,4,5,6,7,8,9,0};
+// static std::deque<int> dq {1,2,3,4,5,6,7,8,9,0};
+// static std::vector<std::string> str {"one", "two", "three", "four", "five",
+// 									"six", "seven", "eight", "nine", "zero"};
+static int arr_int[11] = {1,2,3,4,5,6,7,8,9,0,-1};
+static char arr_str[][11] = {"one", "two", "three", "four", "five",
+									"six", "seven", "eight", "nine", "zero", ""};
+static std::list<int> ls(arr_int, arr_int + 10);
+static std::vector<int> vc(arr_int, arr_int + 10);
+static std::deque<int> dq(arr_int, arr_int + 10);
+static std::vector<std::string> str(arr_str, arr_str + 10);
 
 template<typename T>
 std::string contToString(const T& cont) {
 	std::ostringstream os;
-	for(auto it = cont.begin(); it != cont.end(); ++it)
+	for(typename T::const_iterator it = cont.begin(); it != cont.end(); ++it) {
 		os << *it << " ";
+	}
 	if (ENABLE_LOGS) {
 		int i = 0;
-		for(auto it = cont.begin(); it != cont.end() && i < 50; ++it, ++i)
+		for(typename T::const_iterator it = cont.begin(); it != cont.end() && i < 50; ++it, ++i)
 			std::cout << *it << " ";
 		if (i == 50)
 			std::cout << " ... too long output";
@@ -41,6 +52,24 @@ std::string contToString(const T& cont) {
 	}
 	return os.str();
 }
+
+// template<typename T>
+// std::string contToString(const ft::vector<T>& cont) {
+// 	std::ostringstream os;
+// 	for(auto it = cont.begin(); it != cont.end(); ++it) {
+// 		os << *it << " ";
+// 	}
+// 	if (ENABLE_LOGS) {
+// 		int i = 0;
+// 		for(auto it = cont.begin(); it != cont.end() && i < 50; ++it, ++i)
+// 		// for(typename T::iterator it = cont.begin(); it != cont.end() && i < 50; ++it, ++i)
+// 			std::cout << *it << " ";
+// 		if (i == 50)
+// 			std::cout << " ... too long output";
+// 		std::cout << std::endl;
+// 	}
+// 	return os.str();
+// }
 
 template<typename T>
 std::string stackToString(T& cont) {
