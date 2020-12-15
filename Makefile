@@ -14,7 +14,12 @@ RM = rm -rf
 
 NAME = test
 
-SRC = main.cpp test_runner.cpp list_tests.cpp vector_tests.cpp stack_tests.cpp
+SRC = main.cpp \
+	  test_runner.cpp \
+	  vector_tests.cpp \
+	  list_tests.cpp \
+	  stack_tests.cpp \
+	  queue_tests.cpp
 SRCDIR = ./tests/
 INCLUDES = ./containers/
 MAIN = $(SRCDIR)main.cpp

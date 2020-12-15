@@ -59,6 +59,22 @@ std::string stackToString(T& cont) {
 }
 
 template<typename T>
+std::string queueToString(T& cont) {
+
+	std::ostringstream os;
+	size_t size = cont.size();
+
+	while (size--) {
+		os << cont.front() << " ";
+		cont.pop();
+	}
+	if (ENABLE_LOGS) {
+		std::cout << os.str() << std::endl;
+	}
+	return os.str();
+}
+
+template<typename T>
 void fillCont(T& cont, size_t n) {
 	cont.erase(cont.begin(), cont.end());
 	for (size_t i = 0; i < n; i++)
@@ -135,7 +151,21 @@ namespace ft_stack
 	void size_test();
 	void empty_test();
 	void push_test();
-	void begin_test();
+	void top_test();
 	void pop_test();
+	void operators_test();
+}
+
+namespace ft_queue
+{
+	void queue_test();
+
+	void constructorDefault_test();
+	void size_test();
+	void empty_test();
+	void front_test();
+	void back_test();
+	void pop_test();
+	void push_test();
 	void operators_test();
 }

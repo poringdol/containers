@@ -124,7 +124,7 @@ namespace ft_stack
 		ASSERT_EQUAL(st4.empty(), myst4.empty());
 	}
 
-	void begin_test() {
+	void top_test() {
 		
 		{
 			std::stack<int, std::list<int>> st1;

@@ -49,22 +49,36 @@ int main() {
 		void (*last_test)() = NULL;
 	
 		if (index == test::List) {
+
 			last_test = ft_list::list_test;
 			ft_list::list_test();
+			
 		} else if (index == test::Vector) {
+
 			last_test = ft_vector::vector_test;
 			ft_vector::vector_test();
+
 		} else if (index == test::Map) {
+
 			cout << RED << "In progress" << BW << endl;
+
 		} else if (index == test::Stack) {
+
 			last_test = ft_stack::stack_test;
 			ft_stack::stack_test();
+
 		} else if (index == test::Queue) {
-			cout << RED << "In progress" << BW << endl;
+
+			last_test = ft_queue::queue_test;
+			ft_queue::queue_test();
+
 		} else if (index == test::All) {
+
 			ft_list::list_test();
 			ft_vector::vector_test();
 			ft_stack::stack_test();
+			ft_queue::queue_test();
+
 		} else if (index == test::Exit)
 			exit(0);
 		

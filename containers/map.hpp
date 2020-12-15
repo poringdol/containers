@@ -1,6 +1,7 @@
 #pragma once
 
 #include <limits>
+#include <memory>
 #include "cpp_type_traits.hpp"
 #include "iterator_bidirect.hpp"
 
@@ -14,8 +15,12 @@
 
 
 namespace ft {
-/********************************** List class ***************************************/
+/********************************** Map class ***************************************/
 
+	template <typename Key,
+			  typename T,
+			  typename Compare = less<Key>,
+			  typename Alloc = allocator<pair<const Key,T> > > class map {
 	template<typename T, typename Alloc = std::allocator<T> >
 	class list {
 

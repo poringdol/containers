@@ -3,7 +3,7 @@
 #ifndef _FT_CPP_TYPE_TRAITS_H
 #define _FT_CPP_TYPE_TRAITS_H 1
 
-extern "C++" {
+// extern "C++" {
 
 namespace ft {
 
@@ -366,6 +366,6 @@ __INT_N(__GLIBCXX_TYPE_INT_N_3)
     { return __it; }
 
 } // namespace
-} // extern "C++"
+// } // extern "C++"
 
 #endif //_CPP_TYPE_TRAITS_H
