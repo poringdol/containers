@@ -18,7 +18,7 @@
 
 using namespace std;
 
-template <class T>
+  template <class T>
 ostream& operator << (ostream& os, const vector<T>& s) {
   os << "{";
   bool first = true;
@@ -34,7 +34,7 @@ ostream& operator << (ostream& os, const vector<T>& s) {
 	return os << "}";
 }
 
-template <class T>
+  template <class T>
 ostream& operator << (ostream& os, const set<T>& s) {
 	os << "{";
 	bool first = true;
@@ -50,7 +50,7 @@ ostream& operator << (ostream& os, const set<T>& s) {
 	return os << "}";
 }
 
-template <class K, class V>
+  template <class K, class V>
 ostream& operator << (ostream& os, const map<K, V>& m) {
   os << "{";
   bool first = true;
@@ -66,7 +66,7 @@ ostream& operator << (ostream& os, const map<K, V>& m) {
   	return os << "}";
 }
 
-template<class T, class U>
+  template<class T, class U>
 void AssertEqual(const T& t, const U& u, const string& hint = string()) {
   	if (!(t == u)) {
 		ostringstream os;
@@ -89,7 +89,7 @@ inline void print_spaces(const std::string& name) {
 
 class TestRunner {
 public:
-	template <class TestFunc>
+	  template <class TestFunc>
 	void RunTest(TestFunc func, const string& test_name) {
     	try {
 			func();

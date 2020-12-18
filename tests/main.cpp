@@ -61,7 +61,8 @@ int main() {
 
 		} else if (index == ft::Map) {
 
-			cout << RED << "In progress" << BW << endl;
+			last_test = ft_map::map_test;
+			ft_map::map_test();
 
 		} else if (index == ft::Stack) {
 

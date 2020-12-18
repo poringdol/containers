@@ -1,7 +1,7 @@
 #pragma once
 
 #include <iterator>
-#include "iterator_random.hpp"
+#include "vector_iterator.hpp"
 #include "cpp_type_traits.hpp"
 
 #ifndef NOEXCEPT
@@ -15,13 +15,13 @@
 namespace ft {
 /********************************** Vector class ***************************************/
 
-	template<typename T, typename Alloc = std::allocator<T> >
+	  template<typename T, typename Alloc = std::allocator<T> >
 	class vector {
 
 	private:
 
-		typedef ft::random_iterator<T>			random_iterator;
-		typedef ft::random_reverse_iterator<T>	random_reverse_iterator;
+		typedef ft::vector_iterator<T>			vector_iterator;
+		typedef ft::vector_reverse_iterator<T>	vector_reverse_iterator;
 
 
 	public:
@@ -33,10 +33,10 @@ namespace ft {
 		typedef const T*				const_pointer;
 		typedef T&						reference;
 		typedef const T&				const_reference;
-		typedef random_iterator			iterator;
-		typedef random_iterator			const_iterator;
-		typedef random_reverse_iterator	reverse_iterator;
-		typedef random_reverse_iterator	const_reverse_iterator;
+		typedef vector_iterator			iterator;
+		typedef vector_iterator			const_iterator;
+		typedef vector_reverse_iterator	reverse_iterator;
+		typedef vector_reverse_iterator	const_reverse_iterator;
 
 	private:
 
@@ -70,7 +70,7 @@ namespace ft {
 			}
 		}
 
-		template<typename InputIterator>
+		  template<typename InputIterator>
 		void
 		_allocate (InputIterator first, InputIterator last, ft::false_type_my) {
 			size_type new_size = _range_size(first, last);
@@ -88,7 +88,7 @@ namespace ft {
 			_finish = new_size ?_start + new_size + 1 : _finish;
 		}
 
-		template<typename InputIterator>
+		  template<typename InputIterator>
 		void
 		_construct (InputIterator first, InputIterator last, ft::false_type_my) {
 			size_type new_size = _range_size(first, last);
@@ -98,7 +98,7 @@ namespace ft {
 			_finish = new_size ?_start + new_size + 1 : _finish;
 		}
 
-		template<typename InputIterator>
+		  template<typename InputIterator>
 		void
 		_destroy (InputIterator first, InputIterator last) {
 			if (_finish != _start) {
@@ -109,7 +109,7 @@ namespace ft {
 			}
 		}
 
-		template<typename InputIterator>
+		  template<typename InputIterator>
 		void
 		_destroy_simple (InputIterator first, InputIterator last) {
 			if (_finish != _start) {
@@ -125,7 +125,7 @@ namespace ft {
 			start = finish = end_of_store = NULL;
 		}
 
-		template<typename InputIterator>
+		  template<typename InputIterator>
 		size_type
 		_range_size (InputIterator first, InputIterator last) const {
 			size_type s;
@@ -133,7 +133,7 @@ namespace ft {
 			return s; 
 		}
 
-		template<typename InputIterator>
+		  template<typename InputIterator>
 		void
 		_assign (InputIterator first, InputIterator last, ft::false_type_my) {
 			size_type new_size = _range_size(first, last);
@@ -148,7 +148,7 @@ namespace ft {
 			}
 		}
 
-		template<typename T1>
+		  template<typename T1>
 		void
 		_assign (size_type new_size, const T1& val, ft::true_type_my) {
 			if (new_size <= this->capacity()) {
@@ -170,7 +170,7 @@ namespace ft {
 			return dst.base();
 		}
 
-		template<typename T1>
+		  template<typename T1>
 		iterator
 		_copy_fill (iterator dst, size_type n, const T1& val) {
 			for (size_type _size = 0 ; _size < n; ++dst, ++_size) {
@@ -191,7 +191,7 @@ namespace ft {
 			return res;
 		}
 
-		template<typename InputIterator>
+		  template<typename InputIterator>
 		void
 		_insert (iterator position, InputIterator first, InputIterator last, ft::false_type_my) {
 			
@@ -225,7 +225,7 @@ namespace ft {
 			_finish = _end.base();
 		}
 
-		template<typename T1>
+		  template<typename T1>
 		iterator
 		_insert (iterator position, size_type n, const T1& val, ft::true_type_my) {
 			size_type _size = n + this->size();
@@ -266,7 +266,7 @@ namespace ft {
 		size_type
 		_max (size_type val1, size_type val2) const { return val1 > val2 ? val1 : val2; }
 
-		template<typename T1>
+		  template<typename T1>
 		void
 		_swap (T1& val1, T1& val2) {
 			T1 temp = val1;
@@ -289,7 +289,7 @@ namespace ft {
 			_construct(n, val, ft::true_type_my());
 		}
 		
-		template<typename InputIterator>
+		  template<typename InputIterator>
 		vector (InputIterator first, InputIterator last,
 					const allocator_type& alloc = allocator_type()): _alloc(alloc) {
 			typedef typename ft::is_integer_my<InputIterator>::type_my _Integral;
@@ -439,7 +439,7 @@ namespace ft {
 
 	//  Modifiers ------------------------------------
 
-		template<typename InputIterator>
+		  template<typename InputIterator>
 		void
 		assign (InputIterator first, InputIterator last) {
 			typedef typename ft::is_integer_my<InputIterator>::type_my _Integral;
@@ -465,7 +465,7 @@ namespace ft {
 			_insert(position, n, val, ft::true_type_my());
 		}
 
-		template<typename InputIterator>
+		  template<typename InputIterator>
 		void
 		insert (iterator position, InputIterator first, InputIterator last) {
 			typedef typename ft::is_integer_my<InputIterator>::type_my _Integral;
@@ -512,15 +512,15 @@ namespace ft {
 
 	// Non-member overloads ------------------------------------------------------------
 
-		template<typename _T, typename _Alloc>
+		  template<typename _T, typename _Alloc>
 		friend bool
 		operator== (const vector<_T, _Alloc>&, const vector<_T, _Alloc>&);
 
-		template<typename _T, typename _Alloc>
+		  template<typename _T, typename _Alloc>
 		friend bool
 		operator<  (const vector<_T, _Alloc>&, const vector<_T, _Alloc>&);
 
-		template<typename _T, typename _Alloc>
+		  template<typename _T, typename _Alloc>
 		friend void
 		swap (list<_T, _Alloc>&, list<_T, _Alloc>&);
 
@@ -531,7 +531,7 @@ namespace ft {
 // Friend functions definitions -------------------------------------------------
 
 
-	template<typename T, typename Alloc>
+	  template<typename T, typename Alloc>
 	inline bool operator== (const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) {
 		
 		if (lhs.size() != rhs.size()) return false;
@@ -547,12 +547,12 @@ namespace ft {
 		return true;
 	}
 
-	template<typename T, typename Alloc>
+	  template<typename T, typename Alloc>
 	inline bool operator!= (const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) {
 		return !(lhs == rhs);
 	}
 
-	template<typename T, typename Alloc>
+	  template<typename T, typename Alloc>
 	inline bool operator<  (const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) {
 
 		typename ft::vector<T>::iterator first1 = lhs.begin();
@@ -572,25 +572,24 @@ namespace ft {
 		return true;
 	}
 
-	template<typename T, typename Alloc>
+	  template<typename T, typename Alloc>
 	inline bool operator<= (const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) {
 		return !(rhs < lhs);
 	}
 
-	template<typename T, typename Alloc>
+	  template<typename T, typename Alloc>
 	inline bool operator> (const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) {
 		return rhs < lhs;
 	}
 
-	template<typename T, typename Alloc>
+	  template<typename T, typename Alloc>
 	inline bool operator>= (const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) {
 		return !(lhs < rhs);
 	}
 
-	template<typename T, typename Alloc>
+	  template<typename T, typename Alloc>
 	void
 	swap (vector<T,Alloc>& x, vector<T,Alloc>& y) {
 		x.swap(y);
 	}
-
 }

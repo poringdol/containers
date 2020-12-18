@@ -20,7 +20,8 @@ SRC = main.cpp \
 	  vector_tests.cpp \
 	  list_tests.cpp \
 	  stack_tests.cpp \
-	  queue_tests.cpp
+	  queue_tests.cpp  \
+	  map_tests.cpp
 SRCDIR = ./tests/
 INCLUDES = ./containers/
 MAIN = $(SRCDIR)main.cpp

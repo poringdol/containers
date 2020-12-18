@@ -13,7 +13,7 @@
 namespace ft {
 /********************************** Stack class ***************************************/
 
-  template<class T, class Container = ft::list<T> >
+    template<class T, class Container = ft::list<T> >
 	class stack {
 
 	protected:
@@ -53,11 +53,11 @@ namespace ft {
 
 	// Non-member operators ---------------------------------------------------------------
 
-		template<typename _T, typename _Container>
+		  template<typename _T, typename _Container>
 		friend bool 
 		operator== (const ft::stack<_T, _Container>&, const ft::stack<_T, _Container>&);
 
-		template<typename _T, typename _Container>
+		  template<typename _T, typename _Container>
 		friend bool
 		operator< (const ft::stack<_T, _Container>&, const ft::stack<_T, _Container>&);
 
@@ -68,36 +68,36 @@ namespace ft {
 // Friend functions definitions -------------------------------------------------
 
 
-	template <typename T, typename Container>
+	  template <typename T, typename Container>
 	inline bool 
 	operator== (const ft::stack<T,Container>& lhs, const ft::stack<T,Container>& rhs) {
 		return lhs.cont == rhs.cont;
 	}
 
-	template<typename T, typename Container>
+	  template<typename T, typename Container>
 	inline bool
 	operator!= (const ft::stack<T,Container>& lhs, const ft::stack<T,Container>& rhs) {
 		return !(lhs == rhs);
 	}
 
-	template<typename T, typename Container>
+	  template<typename T, typename Container>
 	inline bool
 	operator<  (const ft::stack<T,Container>& lhs, const ft::stack<T,Container>& rhs) {
 		return lhs.cont < rhs.cont;
 	}
 
-	template<typename T, typename Container>
+	  template<typename T, typename Container>
 	inline bool
 	operator<= (const ft::stack<T,Container>& lhs, const ft::stack<T,Container>& rhs) {
 		return !(rhs < lhs);
 	}
 
-	template<typename T, typename Container>
+	  template<typename T, typename Container>
 	inline bool
 	operator>  (const ft::stack<T,Container>& lhs, const ft::stack<T,Container>& rhs) {
 		return rhs < lhs;
 	}
-	template<typename T, typename Container>
+	  template<typename T, typename Container>
 	inline bool
 	operator>= (const ft::stack<T,Container>& lhs, const ft::stack<T,Container>& rhs) {
 		return !(lhs < rhs);

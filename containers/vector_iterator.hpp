@@ -12,9 +12,11 @@
 #endif
 
 namespace ft {
+	
 // Iterator class -------------------------------------------------------------
-  template<typename T>
-	struct random_iterator : std::random_access_iterator_tag {
+
+	  template<typename T>
+	struct vector_iterator {
 
 	protected:
 
@@ -22,17 +24,17 @@ namespace ft {
 
 	public:
 
-		typedef random_iterator		iterator;
+		typedef vector_iterator		iterator;
 		typedef size_t				size_type;
 		typedef T					value_type;
 		typedef T*					pointer;
 		typedef T&					reference;
 
 
-		random_iterator() NOEXCEPT : ptr(NULL) {}
-		random_iterator(pointer new_ptr) NOEXCEPT : ptr(new_ptr) {}
+		vector_iterator() NOEXCEPT : ptr(NULL) {}
+		vector_iterator(pointer new_ptr) NOEXCEPT : ptr(new_ptr) {}
 
-	  template<typename Iterator>
+		  template<typename Iterator>
 		iterator
 		operator= (const Iterator& x)			{ return iterator(x.ptr); }
 
@@ -84,22 +86,23 @@ namespace ft {
 // ============================================================================
 
 // Reverse iterator class -----------------------------------------------------
-  template<typename T>
-	struct random_reverse_iterator : random_iterator<T> {
 
-		typedef random_reverse_iterator		reverse_iterator;
+	  template<typename T>
+	struct vector_reverse_iterator : vector_iterator<T> {
+
+		typedef vector_reverse_iterator		reverse_iterator;
 		typedef size_t						size_type;
 		typedef T							value_type;
 		typedef T*							pointer;
 		typedef const T*					const_pointer;
 		typedef T&							reference;
 		typedef const T&					const_reference;
-		typedef random_iterator<T>const		base_iterator;
+		typedef vector_iterator<T>const		base_iterator;
 
-		random_reverse_iterator() NOEXCEPT : base_iterator() {}
-		random_reverse_iterator(pointer new_ptr) NOEXCEPT : base_iterator(new_ptr) {}
+		vector_reverse_iterator() NOEXCEPT : base_iterator() {}
+		vector_reverse_iterator(pointer new_ptr) NOEXCEPT : base_iterator(new_ptr) {}
 
-	  template<typename Iterator>
+		  template<typename Iterator>
 		reverse_iterator
 		operator= (Iterator& x)					{ return reverse_iterator(x.ptr); }
 
@@ -130,88 +133,88 @@ namespace ft {
 	};
 // ============================================================================
 
-// Non-member relations for random iterator
-  template<typename IteratorL, typename IteratorR>
+// Non-member relations for vector iterator
+	  template<typename IteratorL, typename IteratorR>
 	inline bool
-	operator==(const random_iterator<IteratorL>& lhs,
-				const random_iterator<IteratorR>& rhs) NOEXCEPT
+	operator==(const vector_iterator<IteratorL>& lhs,
+				const vector_iterator<IteratorR>& rhs) NOEXCEPT
 	{ return lhs.base() == rhs.base(); }
 	
-  template<typename IteratorL, typename IteratorR>
+	  template<typename IteratorL, typename IteratorR>
 	inline bool
-	operator!=(const random_iterator<IteratorL>& lhs,
-				const random_iterator<IteratorR>& rhs) NOEXCEPT
+	operator!=(const vector_iterator<IteratorL>& lhs,
+				const vector_iterator<IteratorR>& rhs) NOEXCEPT
 	{ return lhs.base() != rhs.base(); }
 
-  template<typename IteratorL, typename IteratorR>
+	  template<typename IteratorL, typename IteratorR>
 	inline bool
-	operator<(const random_iterator<IteratorL>& lhs,
-				const random_iterator<IteratorR>& rhs) NOEXCEPT
+	operator<(const vector_iterator<IteratorL>& lhs,
+				const vector_iterator<IteratorR>& rhs) NOEXCEPT
 	{ return lhs.base() < rhs.base(); }
 
-  template<typename IteratorL, typename IteratorR>
+	  template<typename IteratorL, typename IteratorR>
 	inline bool
-	operator>(const random_iterator<IteratorL>& lhs,
-				const random_iterator<IteratorR>& rhs) NOEXCEPT
+	operator>(const vector_iterator<IteratorL>& lhs,
+				const vector_iterator<IteratorR>& rhs) NOEXCEPT
 	{ return lhs.base() > rhs.base(); }
 
-  template<typename IteratorL, typename IteratorR>
+	  template<typename IteratorL, typename IteratorR>
 	inline bool
-	operator<=(const random_iterator<IteratorL>& lhs,
-				const random_iterator<IteratorR>& rhs) NOEXCEPT
+	operator<=(const vector_iterator<IteratorL>& lhs,
+				const vector_iterator<IteratorR>& rhs) NOEXCEPT
 	{ return lhs.base() <= rhs.base(); }
 
-  template<typename IteratorL, typename IteratorR>
+	  template<typename IteratorL, typename IteratorR>
 	inline bool
-	operator>=(const random_iterator<IteratorL>& lhs,
-				const random_iterator<IteratorR>& rhs) NOEXCEPT
+	operator>=(const vector_iterator<IteratorL>& lhs,
+				const vector_iterator<IteratorR>& rhs) NOEXCEPT
 	{ return lhs.base() >= rhs.base(); }
 
-  template<typename Iterator>
+	  template<typename Iterator>
 	Iterator
-	operator-(const random_iterator<Iterator>& lhs,
-			const random_iterator<Iterator>& rhs) NOEXCEPT
+	operator-(const vector_iterator<Iterator>& lhs,
+			const vector_iterator<Iterator>& rhs) NOEXCEPT
 	{ return lhs.base() - rhs.base(); }
 
-  template<typename Iterator>
+	  template<typename Iterator>
 	Iterator
-	operator+(Iterator n, const random_iterator<Iterator>& i) NOEXCEPT
-	{ return random_iterator<Iterator>(i.base() + n); }
+	operator+(Iterator n, const vector_iterator<Iterator>& i) NOEXCEPT
+	{ return vector_iterator<Iterator>(i.base() + n); }
 
-// Non-member relations for reverse random iterator
+// Non-member relations for reverse vector iterator
 
-template<typename IteratorL, typename IteratorR>
+	  template<typename IteratorL, typename IteratorR>
 	inline bool
-	operator<(const random_reverse_iterator<IteratorL>& lhs,
-				const random_reverse_iterator<IteratorR>& rhs) NOEXCEPT
+	operator<(const vector_reverse_iterator<IteratorL>& lhs,
+				const vector_reverse_iterator<IteratorR>& rhs) NOEXCEPT
 	{ return lhs.base() > rhs.base(); }
 
-  template<typename IteratorL, typename IteratorR>
+	  template<typename IteratorL, typename IteratorR>
 	inline bool
-	operator>(const random_reverse_iterator<IteratorL>& lhs,
-				const random_reverse_iterator<IteratorR>& rhs) NOEXCEPT
+	operator>(const vector_reverse_iterator<IteratorL>& lhs,
+				const vector_reverse_iterator<IteratorR>& rhs) NOEXCEPT
 	{ return lhs.base() < rhs.base(); }
 
-  template<typename IteratorL, typename IteratorR>
+	  template<typename IteratorL, typename IteratorR>
 	inline bool
-	operator<=(const random_reverse_iterator<IteratorL>& lhs,
-				const random_reverse_iterator<IteratorR>& rhs) NOEXCEPT
+	operator<=(const vector_reverse_iterator<IteratorL>& lhs,
+				const vector_reverse_iterator<IteratorR>& rhs) NOEXCEPT
 	{ return lhs.base() >= rhs.base(); }
 
-  template<typename IteratorL, typename IteratorR>
+	  template<typename IteratorL, typename IteratorR>
 	inline bool
-	operator>=(const random_reverse_iterator<IteratorL>& lhs,
-				const random_reverse_iterator<IteratorR>& rhs) NOEXCEPT
+	operator>=(const vector_reverse_iterator<IteratorL>& lhs,
+				const vector_reverse_iterator<IteratorR>& rhs) NOEXCEPT
 	{ return lhs.base() <= rhs.base(); }
 
-  template<typename Iterator>
+	  template<typename Iterator>
 	Iterator
-	operator-(const random_reverse_iterator<Iterator>& lhs,
-			const random_reverse_iterator<Iterator>& rhs) NOEXCEPT
+	operator-(const vector_reverse_iterator<Iterator>& lhs,
+			const vector_reverse_iterator<Iterator>& rhs) NOEXCEPT
 	{ return rhs.base() - lhs.base(); }
 
-  template<typename Iterator>
+	  template<typename Iterator>
 	Iterator
-	operator+(Iterator n, const random_reverse_iterator<Iterator>& i) NOEXCEPT
-	{ return random_reverse_iterator<Iterator>(i.base() - n); }
+	operator+(Iterator n, const vector_reverse_iterator<Iterator>& i) NOEXCEPT
+	{ return vector_reverse_iterator<Iterator>(i.base() - n); }
 }
