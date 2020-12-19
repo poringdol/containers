@@ -17,77 +17,158 @@ namespace ft_map
 
 	void constructorDefault_test() {
 
-		ft::map<int, int> mymp1;
-		ASSERT_EQUAL(0u, mymp1.size());
+		ft::map<int, int> my_mp1;
+		ASSERT_EQUAL(0u, my_mp1.size());
 
-		// ft::map<int, int> mymp2(mymp1);
-		// ASSERT_EQUAL(0u, mymp2.size());
+		// ft::map<int, int> my_mp2(my_mp1);
+		// ASSERT_EQUAL(0u, my_mp2.size());
 
-		// ft::map<int, int> mymp3 = mymp1;
-		// ASSERT_EQUAL(0u, mymp3.size());
+		// ft::map<int, int> my_mp3 = my_mp1;
+		// ASSERT_EQUAL(0u, my_mp3.size());
 	}
 
-	// void constructorFill_test() {
-		
-	// 	ft::map<int, int> mp1(10, 15);
-	// 	ft::map<int, int> mymp1(10, 15);
-	// 	ASSERT_EQUAL(mp1.size(), mymp1.size());
-	// 	ASSERT_EQUAL(contToString(mp1), contToString(mymp1));
+	void constructorCopy_test() {
+		{
+			std::map<int, int> mp(map1.begin(), map1.end());
+			ft::map<int, int> my_mp(map1.begin(), map1.end());
+			ASSERT_EQUAL(mp.size(), my_mp.size());
+			ASSERT_EQUAL(mapToString(mp), mapToString(my_mp));
+		}
+	}
 
-	// 	ft::map<char> mp2(10, 'X');
-	// 	ft::map<char> mymp2(10, 'X');
-	// 	ASSERT_EQUAL(mp2.size(), mymp2.size());
-	// 	ASSERT_EQUAL(contToString(mp2), contToString(mymp2));
+	void begin_end_test() {
+		std::map<int, int> mp(map1.begin(), map1.end());
+		std::map<int, int>::iterator it;
+		std::map<int, int>::reverse_iterator r_it;
 
-	// 	ft::map<std::string> mp3(10, "Kto tut?");
-	// 	ft::map<std::string> mymp3(10, "Kto tut?");
-	// 	ASSERT_EQUAL(mp3.size(), mymp3.size());
-	// 	ASSERT_EQUAL(contToString(mp3), contToString(mymp3));
-	// }
+		ft::map<int, int> my_mp(map1.begin(), map1.end());
+		ft::map<int, int>::iterator my_it;
+		ft::map<int, int>::reverse_iterator my_r_it;
 
-	// void constructorRange_test() {
+		it = mp.begin();
+		my_it = my_mp.begin();
+		ASSERT_EQUAL(it->first, my_it->first);
+		ASSERT_EQUAL(it->second, my_it->second);
 
-	// 	ft::map<int, int> mymp1(map1.begin(), map1.end());		// map from std::map
-	// 	ASSERT_EQUAL(mp.size(), mymp1.size());
-	// 	ASSERT_EQUAL(contToString(mp), contToString(mymp1));
+		it = ++mp.begin();
+		my_it = ++my_mp.begin();
+		ASSERT_EQUAL(it->first, my_it->first);
+		ASSERT_EQUAL(it->second, my_it->second);
 
+		it = mp.begin()++;
+		my_it = my_mp.begin()++;
+		ASSERT_EQUAL(it->first, my_it->first);
+		ASSERT_EQUAL(it->second, my_it->second);
 
-	// 	ft::map<int, int> mymp2(vc.begin(), vc.end());		// map from std::vector
-	// 	ASSERT_EQUAL(vc.size(), mymp2.size());
-	// 	ASSERT_EQUAL(contToString(vc), contToString(mymp2));
+		it = --mp.end();
+		my_it = --my_mp.end();
+		ASSERT_EQUAL(it->first, my_it->first);
+		ASSERT_EQUAL(it->second, my_it->second);
 
-	// 	ft::map<int, int> mymp3(dq.begin(), dq.end());		// map from std::deque
-	// 	ASSERT_EQUAL(dq.size(), mymp3.size());
-	// 	ASSERT_EQUAL(contToString(dq), contToString(mymp3));
-	// }
+		// reverse iterator
+		r_it = mp.rbegin();
+		my_r_it = my_mp.rbegin();
+		ASSERT_EQUAL(r_it->first, my_r_it->first);
+		ASSERT_EQUAL(r_it->second, my_r_it->second);
+
+		r_it = ++mp.rbegin();
+		my_r_it = ++my_mp.rbegin();
+		ASSERT_EQUAL(r_it->first, my_r_it->first);
+		ASSERT_EQUAL(r_it->second, my_r_it->second);
+
+		r_it = mp.rbegin()++;
+		my_r_it = my_mp.rbegin()++;
+		ASSERT_EQUAL(r_it->first, my_r_it->first);
+		ASSERT_EQUAL(r_it->second, my_r_it->second);
+
+		r_it = --mp.rend();
+		my_r_it = --my_mp.rend();
+		ASSERT_EQUAL(r_it->first, my_r_it->first);
+		ASSERT_EQUAL(r_it->second, my_r_it->second);
+	}
+
+	void constructorRange_test() {
+		{
+			std::map<int, int> mp(map1.begin(), map1.end());	// map from std::map<int, int> - unsorted
+			ft::map<int, int> my_mp(map1.begin(), map1.end());
+			ASSERT_EQUAL(mp.size(), my_mp.size());
+			ASSERT_EQUAL(mapToString(mp), mapToString(my_mp));
+		}
+		{
+			std::map<int, int> mp(map2.begin(), map2.end());	// map from std::map<int, int> - sorted
+			ft::map<int, int> my_mp(map2.begin(), map2.end());
+			ASSERT_EQUAL(mp.size(), my_mp.size());
+			ASSERT_EQUAL(mapToString(mp), mapToString(my_mp));
+		}
+		{
+			std::map<std::string, int> mp(map3.begin(), map3.end());	// map from std::map<std::string, int> - unsorted
+			ft::map<std::string, int> my_mp(map3.begin(), map3.end());
+			ASSERT_EQUAL(mp.size(), my_mp.size());
+			ASSERT_EQUAL(mapToString(mp), mapToString(my_mp));
+		}
+	}
 
 	void size_test() {
 
-		ft::map<int, int> mymp1;
-		ASSERT_EQUAL(0u, mymp1.size());
+		ft::map<int, int> my_mp1;
+		ASSERT_EQUAL(0u, my_mp1.size());
 
-		ft::map<int, int> mymp2(map1.begin(), map1.end());
-		ASSERT_EQUAL(15u, mymp2.size());
+		std::map<int, int> mp2(map1.begin(), map1.end());
+		ft::map<int, int> my_mp2(map1.begin(), map1.end());
+		ASSERT_EQUAL(mp2.size(), my_mp2.size());
 	}
 
 	void empty_test() {
 
-		ft::map<int, int> mymp1;
-		ASSERT_EQUAL(true, mymp1.empty());
+		ft::map<int, int> my_mp1;
+		ASSERT_EQUAL(true, my_mp1.empty());
 
-		ft::map<int, int> mymp2(map1.begin(), map1.end());
-		ASSERT_EQUAL(false, mymp2.empty());
+		ft::map<int, int> my_mp2(map1.begin(), map1.end());
+		ASSERT_EQUAL(false, my_mp2.empty());
+	}
+
+	void find_test() {
+		std::map<int, int> mp(map1.begin(), map1.end());
+		ft::map<int, int> my_mp(map1.begin(), map1.end());
+
+		std::map<int, int>::iterator it;
+		ft::map<int, int>::iterator my_it;
+
+		it = mp.find(19);
+		my_it = my_mp.find(19);
+		ASSERT_EQUAL(it == mp.end(), my_it == my_mp.end());			// value not found
+
+		it = mp.find(75);
+		my_it = my_mp.find(75);
+		ASSERT_EQUAL(it->first, my_it->first);
+		ASSERT_EQUAL(it->second, my_it->second);
+	}
+
+		void count_test() {
+		std::map<int, int> mp(map1.begin(), map1.end());
+		ft::map<int, int> my_mp(map1.begin(), map1.end());
+
+		ASSERT_EQUAL(mp.count(16),   my_mp.count(16));			// value not found
+		ASSERT_EQUAL(mp.count(-1),   my_mp.count(-1));
+		ASSERT_EQUAL(mp.count(0),    my_mp.count(0));
+		ASSERT_EQUAL(mp.count(1000), my_mp.count(1000));
+
+		ASSERT_EQUAL(mp.count(25),  my_mp.count(25));
+		ASSERT_EQUAL(mp.count(1),   my_mp.count(1));
+		ASSERT_EQUAL(mp.count(100), my_mp.count(100));
+		ASSERT_EQUAL(mp.count(60),  my_mp.count(60));
+		ASSERT_EQUAL(mp.count(80),  my_mp.count(80));
 	}
 
 	// void max_size_test() {
 		
-	// 	ft::map<int, int> mymp;
-	// 	ASSERT_EQUAL(mp.max_size(), mymp.max_size());
+	// 	ft::map<int, int> my_mp;
+	// 	ASSERT_EQUAL(mp.max_size(), my_mp.max_size());
 	// }
 
 	// void begin_test() {
 		
-	// 	ft::map<int, int> mymp(map1.begin(), map1.end());
+	// 	ft::map<int, int> my_mp(map1.begin(), map1.end());
 	// 	ft::map<int, int>::iterator myit = mymap1.begin();
 	// 	std::map<int, int>::iterator it = map1.begin();
 	// 	ASSERT_EQUAL(*myit, *it);
@@ -96,306 +177,82 @@ namespace ft_map
 	// 	*myit = 100;
 	// 	ASSERT_EQUAL(*it, *myit);
 
-	// 	const ft::map<int, int> mymp2(map1.begin(), map1.end());
+	// 	const ft::map<int, int> my_mp2(map1.begin(), map1.end());
 	// 	ft::map<int, int>::const_iterator myit2 = mymap1.begin();
 	// 	ASSERT_EQUAL(*myit2, 100);
 	// 	*it = 0;
 	// }
 
-	// void rbegin_rend_test() {
+	void insert_range_test() {
 
-	// 	ft::map<int, int> mymp(map1.begin(), map1.end());
-	// 	ASSERT_EQUAL(contToString(mp), contToString(mymp));
+		std::map<int, int> mp1;
+		ft::map<int, int> my_mp1;
 
-	// 	ft::map<int, int> myrmp(mp.rbegin(), mp.rend());
-	// 	std::map<int, int> rmp(mp.rbegin(), mp.rend());
-	// 	ASSERT_EQUAL(contToString(rmp), contToString(myrmp));
-	// }
+		mp1.insert(map1.begin(), map1.end());
+		my_mp1.insert(map1.begin(), map1.end());
+		ASSERT_EQUAL(mapToString(mp1), mapToString(my_mp1));
 
-	// void front_back_test() {
+		mp1.insert(map2.begin(), map2.end());
+		my_mp1.insert(map2.begin(), map2.end());
+		ASSERT_EQUAL(mapToString(mp1), mapToString(my_mp1));
 
-	// 	ft::map<int, int> mymp(map1.begin(), map1.end());
-	// 	ASSERT_EQUAL(contToString(mp), contToString(mymp));
+		std::map<std::string, int> mp2;
+		ft::map<std::string, int> my_mp2;
+		mp2.insert(map3.begin(), map3.end());
+		my_mp2.insert(map3.begin(), map3.end());
+		ASSERT_EQUAL(mapToString(mp1), mapToString(my_mp1));
 
-	// 	ASSERT_EQUAL(mp.front(), mymp.front());
-	// 	ASSERT_EQUAL(mp.back(), mymp.back());
-	// }
-
-	// void assign_range_test() {
-
-	// 	ft::map<int, int> mymp;
-	// 	mymp.assign(map1.begin(), map1.end());
-	// 	ASSERT_EQUAL(contToString(mp), contToString(mymp));
-
-	// 	mymp.assign(mp.rbegin(), mp.rend());
-	// 	std::map<int, int> rmp;
-	// 	rmp.assign(mp.rbegin(), mp.rend());
-	// 	ASSERT_EQUAL(contToString(rmp), contToString(mymp));
-
-	// 	mymp.assign(vc.begin(), vc.end());
-	// 	ASSERT_EQUAL(contToString(vc), contToString(mymp));
-
-	// 	mymp.assign(dq.begin(), dq.end());
-	// 	ASSERT_EQUAL(contToString(dq), contToString(mymp));
-	// }
-
-	// void assign_fill_test() {
-
-	// 	std::map<int, int> amp;
-	// 	amp.assign(18, 100);
-	// 	ft::map<int, int> mymp;
-	// 	mymp.assign(18, 100);
-	// 	ASSERT_EQUAL(contToString(amp), contToString(mymp));
-
-	// 	std::map<double> amp2;
-	// 	amp2.assign(20, 100.);
-	// 	ft::map<double> mymp2;
-	// 	mymp2.assign(20, 100.);
-	// 	ASSERT_EQUAL(contToString(amp2), contToString(mymp2));
-
-	// 	std::map<std::string> amp3;
-	// 	amp3.assign(22, "Fart");
-	// 	ft::map<std::string> mymp3;
-	// 	mymp3.assign(22, "Fart");
-	// 	ASSERT_EQUAL(contToString(amp3), contToString(mymp3));
-	// }
-
-	// void sort_test() {
-
-	// 	std::vector<int> vect;
-	// 	for (int i = 0; i < 10; i++) { vect.push_back(rand() % 100); }
-
-	// 	std::map<int, int> smp(vect.begin(), vect.end());
-	// 	ft::map<int, int> mymp(vect.begin(), vect.end());
-	// 	ASSERT_EQUAL(contToString(smp), contToString(mymp));
-
-	// 	smp.sort();
-	// 	mymp.sort();
-	// 	ASSERT_EQUAL(contToString(smp), contToString(mymp));
-	// }
-
-	// bool mycomparison (int first, int second) { return (first % 2) < (second % 2); }
-
-	// void sort_compare_test() {
-
-	// 	std::map<int, int> emp;
-	// 	ft::map<int, int> myemp;
-	// 	emp.sort(mycomparison);
-	// 	myemp.sort(mycomparison);
-	// 	ASSERT_EQUAL(contToString(emp), contToString(myemp));
-
-	// 	std::vector<int> vect;
-	// 	for (int i = 0; i < 10; i++) { vect.push_back(rand() % 100); }
-
-	// 	std::map<int, int> smp(vect.begin(), vect.end());
-	// 	ft::map<int, int> mymp(vect.begin(), vect.end());
-	// 	ASSERT_EQUAL(contToString(smp), contToString(mymp));
-
-	// 	smp.sort(mycomparison);
-	// 	mymp.sort(mycomparison);
-	// 	ASSERT_EQUAL(contToString(smp), contToString(mymp));
-	// }
-
-	// void merge_test() {
-	// 	std::vector<int> vect1;
-	// 	std::vector<int> vect2;
-	// 	for (int i = 0; i < 10; i++) { vect1.push_back(rand() % 100); }
-	// 	for (int i = 0; i < 10; i++) { vect2.push_back(rand() % 100); }
-
-	// 	std::map<int, int> mp1(vect1.begin(), vect1.end());
-	// 	std::map<int, int> mp2(vect2.begin(), vect2.end());
-	// 	mp1.sort();
-	// 	mp2.sort();
-
-	// 	ft::map<int, int> mymp1(vect1.begin(), vect1.end());
-	// 	ft::map<int, int> mymp2(vect2.begin(), vect2.end());
-	// 	mymp1.sort();
-	// 	mymp2.sort();
-
-	// 	mp1.merge(mp2);
-	// 	mymp1.merge(mymp2);
-	// 	ASSERT_EQUAL(contToString(mp1), contToString(mymp1));
-	// 	ASSERT_EQUAL(contToString(mp2), contToString(mymp2));
-
-	// // merge compare
-	// 	mp2.assign(vect1.begin(), vect1.end());
-	// 	mymp2.assign(vect1.begin(), vect1.end());
-	// 	mp2.sort();
-	// 	mymp2.sort();
-
-	// 	mp1.merge(mp2, mycomparison);
-	// 	mymp1.merge(mymp2, mycomparison);
-	// 	ASSERT_EQUAL(contToString(mp1), contToString(mymp1));
-	// 	ASSERT_EQUAL(contToString(mp2), contToString(mymp2));
-	// }
-
-	// void splice_test() {
-
-	// // splice (iterator position, map& x)
-	// 	std::map<int, int> mp1(map1.begin(), map1.end());
-	// 	std::map<int, int> mp2(map1.begin(), map1.end());
-
-	// 	ft::map<int, int> mymp1(map1.begin(), map1.end());
-	// 	ft::map<int, int> mymp2(map1.begin(), map1.end());
-
-	// 	mp1.splice(++(mp1.begin()), mp2);
-	// 	mymp1.splice(++(mymp1.begin()), mymp2);
-
-	// 	ASSERT_EQUAL(contToString(mp1), contToString(mymp1));
-	// 	ASSERT_EQUAL(contToString(mp2), contToString(mymp2));
-
-	// // splice (iterator position, map& x, iterator i)
-	// 	mp2.assign(map1.begin(), map1.end());
-	// 	mymp2.assign(map1.begin(), map1.end());
-
-	// 	mp1.splice(mp1.begin(), mp2, ++(mp2.begin()));
-	// 	mymp1.splice(mymp1.begin(), mymp2, ++(mymp2.begin()));
-
-	// 	ASSERT_EQUAL(contToString(mp1), contToString(mymp1));
-	// 	ASSERT_EQUAL(contToString(mp2), contToString(mymp2));
-
-	// // splice (iterator position, map& x, iterator first, iterator last)
-	// 	mp2.assign(map1.begin(), map1.end());
-	// 	mymp2.assign(map1.begin(), map1.end());
-
-	// 	mp1.splice(mp1.begin(), mp2, mp2.begin(), mp2.end());
-	// 	mymp1.splice(mymp1.begin(), mymp2, mymp2.begin(), mymp2.end());
-
-	// 	ASSERT_EQUAL(contToString(mp1), contToString(mymp1));
-	// 	ASSERT_EQUAL(contToString(mp2), contToString(mymp2));
-	// }
-
-	// void insert_test() {
-	// 	std::map<int, int> mp1(map1.begin(), map1.end());
-	// 	ft::map<int, int> mymp1(map1.begin(), map1.end());
-
-	// // insert (iterator position, const T& data)
-	// 	std::map<int, int>::iterator it = mp1.insert(++(mp1.begin()), 100);
-	// 	ft::map<int, int>::iterator  myit = mymp1.insert(++(mymp1.begin()), 100);
-	// 	ASSERT_EQUAL(contToString(mp1), contToString(mymp1));
-	// 	ASSERT_EQUAL(*it, *myit);
-
-	// // insert (iterator position, size_t n, const T& val)
-	// 	mp1.insert(++(mp1.begin()), 10, 150);
-	// 	mymp1.insert(++(mymp1.begin()), 10, 150);
-	// 	ASSERT_EQUAL(contToString(mp1), contToString(mymp1));
-
-	// // insert (iterator position, InputIterator first, InputIterator last)
-	// 	mp1.insert(mp1.begin(), map1.begin(), map1.end());
-	// 	mymp1.insert(mymp1.begin(), map1.begin(), map1.end());
-	// }
-
-	// void push_back_front_test() {
-	// 	std::map<int, int> mp1;
-	// 	ft::map<int, int> mymp1;
-
-	// 	mp1.push_back(12);
-	// 	mymp1.push_back(12);
-	// 	ASSERT_EQUAL(contToString(mp1), contToString(mymp1));
-
-	// 	mp1.push_back(17);
-	// 	mymp1.push_back(17);
-	// 	ASSERT_EQUAL(contToString(mp1), contToString(mymp1));
-
-	// 	mp1.push_front(11);
-	// 	mymp1.push_front(11);
-	// 	ASSERT_EQUAL(contToString(mp1), contToString(mymp1));
-	// }
-
-	// void pop_back_front_test() {
-	// 	std::map<int, int> mp1;
-	// 	ft::map<int, int> mymp1;
-
-	// // test with empty map
-	// 	// mp1.pop_front();
-	// 	// mymp1.pop_front();
-	// 	// ASSERT_EQUAL(mp1.size(), mymp1.size());
-
-	// 	// mp1.pop_back();
-	// 	// mymp1.pop_back();
-	// 	// ASSERT_EQUAL(mp1.size(), mymp1.size());
-
-	// // test with not empty map
-	// 	mp1.assign(map1.begin(), map1.end());
-	// 	mymp1.assign(map1.begin(), map1.end());
-
-	// 	mp1.pop_back();
-	// 	mymp1.pop_back();
-	// 	ASSERT_EQUAL(contToString(mp1), contToString(mymp1));
-	// 	ASSERT_EQUAL(mp1.size(), mymp1.size());
-
-	// 	mp1.pop_front();
-	// 	mymp1.pop_front();
-	// 	ASSERT_EQUAL(contToString(mp1), contToString(mymp1));
-	// 	ASSERT_EQUAL(mp1.size(), mymp1.size());
-	// }
-
-	// void resize_test() {
-	// 	std::map<int, int> mp1;
-	// 	ft::map<int, int> mymp1;
-
-	// 	mp1.resize(12, 1);
-	// 	mymp1.resize(12, 1);
-	// 	ASSERT_EQUAL(contToString(mp1), contToString(mymp1));
-	// 	ASSERT_EQUAL(mp1.size(), mymp1.size());
-
-	// 	mp1.resize(17, 2);
-	// 	mymp1.resize(17, 2);
-	// 	ASSERT_EQUAL(contToString(mp1), contToString(mymp1));
-	// 	ASSERT_EQUAL(mp1.size(), mymp1.size());
-
-	// 	mp1.resize(8, 3);
-	// 	mymp1.resize(8, 3);
-	// 	ASSERT_EQUAL(contToString(mp1), contToString(mymp1));
-	// 	ASSERT_EQUAL(mp1.size(), mymp1.size());
-	// }
+		mp2.insert(map3.rbegin(), map3.rend());
+		my_mp2.insert(map3.rbegin(), map3.rend());
+		ASSERT_EQUAL(mapToString(mp2), mapToString(my_mp2));
+	}
 
 	// void clear_test() {
 	// 	std::map<int, int> mp1(map1.begin(), map1.end());
-	// 	ft::map<int, int> mymp1(map1.begin(), map1.end());
+	// 	ft::map<int, int> my_mp1(map1.begin(), map1.end());
 
 	// 	mp1.clear();
-	// 	mymp1.clear();
-	// 	ASSERT_EQUAL(contToString(mp1), contToString(mymp1));
-	// 	ASSERT_EQUAL(mp1.size(), mymp1.size());
+	// 	my_mp1.clear();
+	// 	ASSERT_EQUAL(mapToString(mp1), mapToString(my_mp1));
+	// 	ASSERT_EQUAL(mp1.size(), my_mp1.size());
 
 	// 	mp1.clear();
-	// 	mymp1.clear();
-	// 	ASSERT_EQUAL(contToString(mp1), contToString(mymp1));
-	// 	ASSERT_EQUAL(mp1.size(), mymp1.size());
+	// 	my_mp1.clear();
+	// 	ASSERT_EQUAL(mapToString(mp1), mapToString(my_mp1));
+	// 	ASSERT_EQUAL(mp1.size(), my_mp1.size());
 	// }
 
 	// void erase_test() {
 	// 	std::map<int, int> mp1(map1.begin(), map1.end());
-	// 	ft::map<int, int> mymp1(map1.begin(), map1.end());
+	// 	ft::map<int, int> my_mp1(map1.begin(), map1.end());
 
 	// 	mp1.erase(++(mp1.begin()));
-	// 	mymp1.erase(++(mymp1.begin()));
-	// 	ASSERT_EQUAL(contToString(mp1), contToString(mymp1));
+	// 	my_mp1.erase(++(my_mp1.begin()));
+	// 	ASSERT_EQUAL(mapToString(mp1), mapToString(my_mp1));
 
 	// 	mp1.erase(--(mp1.end()));
-	// 	mymp1.erase(--(mymp1.end()));
-	// 	ASSERT_EQUAL(contToString(mp1), contToString(mymp1));
+	// 	my_mp1.erase(--(my_mp1.end()));
+	// 	ASSERT_EQUAL(mapToString(mp1), mapToString(my_mp1));
 
 	// 	mp1.erase(++(mp1.begin()), mp1.end());
-	// 	mymp1.erase(++(mymp1.begin()), mymp1.end());
-	// 	ASSERT_EQUAL(contToString(mp1), contToString(mymp1));
-	// 	ASSERT_EQUAL(mp1.size(), mymp1.size());
+	// 	my_mp1.erase(++(my_mp1.begin()), my_mp1.end());
+	// 	ASSERT_EQUAL(mapToString(mp1), mapToString(my_mp1));
+	// 	ASSERT_EQUAL(mp1.size(), my_mp1.size());
 	// }
 
 	// void remove_test() {
 	// 	std::map<int, int> mp1(map1.begin(), map1.end());
-	// 	ft::map<int, int> mymp1(map1.begin(), map1.end());
+	// 	ft::map<int, int> my_mp1(map1.begin(), map1.end());
 
 	// 	mp1.remove(5);
-	// 	mymp1.remove(5);
-	// 	ASSERT_EQUAL(contToString(mp1), contToString(mymp1));
-	// 	ASSERT_EQUAL(mp1.size(), mymp1.size());
+	// 	my_mp1.remove(5);
+	// 	ASSERT_EQUAL(mapToString(mp1), mapToString(my_mp1));
+	// 	ASSERT_EQUAL(mp1.size(), my_mp1.size());
 
 	// 	mp1.remove(105);
-	// 	mymp1.remove(105);
-	// 	ASSERT_EQUAL(contToString(mp1), contToString(mymp1));
-	// 	ASSERT_EQUAL(mp1.size(), mymp1.size());
+	// 	my_mp1.remove(105);
+	// 	ASSERT_EQUAL(mapToString(mp1), mapToString(my_mp1));
+	// 	ASSERT_EQUAL(mp1.size(), my_mp1.size());
 	// }
 
 	// bool single_digit (const int& value) { return (value<5); }
@@ -406,27 +263,27 @@ namespace ft_map
 
 	// void remove_if_test() {
 	// 	std::map<int, int> mp1(map1.begin(), map1.end());
-	// 	ft::map<int, int> mymp1(map1.begin(), map1.end());
+	// 	ft::map<int, int> my_mp1(map1.begin(), map1.end());
 
 	// 	mp1.remove_if(single_digit);
-	// 	mymp1.remove_if(single_digit);
-	// 	ASSERT_EQUAL(contToString(mp1), contToString(mymp1));
+	// 	my_mp1.remove_if(single_digit);
+	// 	ASSERT_EQUAL(mapToString(mp1), mapToString(my_mp1));
 
 	// 	mp1.remove_if(is_odd());
-	// 	mymp1.remove_if(is_odd());
-	// 	ASSERT_EQUAL(contToString(mp1), contToString(mymp1));
+	// 	my_mp1.remove_if(is_odd());
+	// 	ASSERT_EQUAL(mapToString(mp1), mapToString(my_mp1));
 	// }
 
 	// void swap_test() {
 	// 	std::map<int, int> mp1(map1.begin(), map1.end());
 	// 	std::map<int, int> mp2(vc.begin(), vc.end());
-	// 	ft::map<int, int> mymp1(map1.begin(), map1.end());
-	// 	ft::map<int, int> mymp2(vc.begin(), vc.end());
+	// 	ft::map<int, int> my_mp1(map1.begin(), map1.end());
+	// 	ft::map<int, int> my_mp2(vc.begin(), vc.end());
 
 	// 	mp1.swap(mp2);
-	// 	mymp1.swap(mymp2);
-	// 	ASSERT_EQUAL(contToString(mp1), contToString(mymp1));
-	// 	ASSERT_EQUAL(contToString(mp2), contToString(mymp2));
+	// 	my_mp1.swap(my_mp2);
+	// 	ASSERT_EQUAL(mapToString(mp1), mapToString(my_mp1));
+	// 	ASSERT_EQUAL(mapToString(mp2), mapToString(my_mp2));
 	// }
 
 	// void unique_test() {
@@ -434,17 +291,17 @@ namespace ft_map
 	// 	for (int i = 0; i < 20; i++) vec.push_back(rand() % 10);
 
 	// 	std::map<int, int> mp1(vec.begin(), vec.end());
-	// 	ft::map<int, int> mymp1(vec.begin(), vec.end());
+	// 	ft::map<int, int> my_mp1(vec.begin(), vec.end());
 
 	// 	mp1.unique();
-	// 	mymp1.unique();
-	// 	ASSERT_EQUAL(contToString(mp1), contToString(mymp1));
-	// 	ASSERT_EQUAL(mp1.size(), mymp1.size());
+	// 	my_mp1.unique();
+	// 	ASSERT_EQUAL(mapToString(mp1), mapToString(my_mp1));
+	// 	ASSERT_EQUAL(mp1.size(), my_mp1.size());
 	// }
 
 	// void operators_test() {
 	// 	std::map<int, int> mp1, mp2;
-	// 	ft::map<int, int> mymp1, mymp2;
+	// 	ft::map<int, int> my_mp1, my_mp2;
 
 	// 	int arr_str[][7] = {{1,2,3,4,-1}, {1,2,3,4,4,-1},
 	// 					{1,2,3,1,4,1,-1}, {1,2,3,4,5,-1},
@@ -458,61 +315,61 @@ namespace ft_map
 
 	// 	for (int i = 0; i < 6; i++) {
 	// 		mp1.assign(v[i].begin(), v[i].end());
-	// 		mymp1.assign(v[i].begin(), v[i].end());
+	// 		my_mp1.assign(v[i].begin(), v[i].end());
 	// 	for (int j = 0; j < 6; j++) {
 	// 			mp2.assign(v[j].begin(), v[j].end());
-	// 			mymp2.assign(v[j].begin(), v[j].end());
-	// 			ASSERT_EQUAL(mp1 == mp2, mymp1 == mymp2);
+	// 			my_mp2.assign(v[j].begin(), v[j].end());
+	// 			ASSERT_EQUAL(mp1 == mp2, my_mp1 == my_mp2);
 	// 		}
 	// 	}
 
 	// 	for (int i = 0; i < 6; i++) {
 	// 		mp1.assign(v[i].begin(), v[i].end());
-	// 		mymp1.assign(v[i].begin(), v[i].end());
+	// 		my_mp1.assign(v[i].begin(), v[i].end());
 	// 		for (int j = 0; j < 6; j++) {
 	// 			mp2.assign(v[j].begin(), v[j].end());
-	// 			mymp2.assign(v[j].begin(), v[j].end());
-	// 			ASSERT_EQUAL(mp1 != mp2, mymp1 != mymp2);
+	// 			my_mp2.assign(v[j].begin(), v[j].end());
+	// 			ASSERT_EQUAL(mp1 != mp2, my_mp1 != my_mp2);
 	// 		}
 	// 	}
 
 	// 	for (int i = 0; i < 6; i++) {
 	// 		mp1.assign(v[i].begin(), v[i].end());
-	// 		mymp1.assign(v[i].begin(), v[i].end());
+	// 		my_mp1.assign(v[i].begin(), v[i].end());
 	// 		for (int j = 0; j < 6; j++) {
 	// 			mp2.assign(v[j].begin(), v[j].end());
-	// 			mymp2.assign(v[j].begin(), v[j].end());
-	// 			ASSERT_EQUAL(mp1 < mp2, mymp1 < mymp2);
+	// 			my_mp2.assign(v[j].begin(), v[j].end());
+	// 			ASSERT_EQUAL(mp1 < mp2, my_mp1 < my_mp2);
 	// 		}
 	// 	}
 
 	// 	for (int i = 0; i < 6; i++) {
 	// 		mp1.assign(v[i].begin(), v[i].end());
-	// 		mymp1.assign(v[i].begin(), v[i].end());
+	// 		my_mp1.assign(v[i].begin(), v[i].end());
 	// 		for (int j = 0; j < 6; j++) {
 	// 			mp2.assign(v[j].begin(), v[j].end());
-	// 			mymp2.assign(v[j].begin(), v[j].end());
-	// 			ASSERT_EQUAL(mp1 <= mp2, mymp1 <= mymp2);
+	// 			my_mp2.assign(v[j].begin(), v[j].end());
+	// 			ASSERT_EQUAL(mp1 <= mp2, my_mp1 <= my_mp2);
 	// 		}
 	// 	}
 
 	// 	for (int i = 0; i < 6; i++) {
 	// 		mp1.assign(v[i].begin(), v[i].end());
-	// 		mymp1.assign(v[i].begin(), v[i].end());
+	// 		my_mp1.assign(v[i].begin(), v[i].end());
 	// 		for (int j = 0; j < 6; j++) {
 	// 			mp2.assign(v[j].begin(), v[j].end());
-	// 			mymp2.assign(v[j].begin(), v[j].end());
-	// 			ASSERT_EQUAL(mp1 > mp2, mymp1 > mymp2);
+	// 			my_mp2.assign(v[j].begin(), v[j].end());
+	// 			ASSERT_EQUAL(mp1 > mp2, my_mp1 > my_mp2);
 	// 		}
 	// 	}
 
 	// 		for (int i = 0; i < 6; i++) {
 	// 		mp1.assign(v[i].begin(), v[i].end());
-	// 		mymp1.assign(v[i].begin(), v[i].end());
+	// 		my_mp1.assign(v[i].begin(), v[i].end());
 	// 		for (int j = 0; j < 6; j++) {
 	// 			mp2.assign(v[j].begin(), v[j].end());
-	// 			mymp2.assign(v[j].begin(), v[j].end());
-	// 			ASSERT_EQUAL(mp1 >= mp2, mymp1 >= mymp2);
+	// 			my_mp2.assign(v[j].begin(), v[j].end());
+	// 			ASSERT_EQUAL(mp1 >= mp2, my_mp1 >= my_mp2);
 	// 		}
 	// 	}
 		

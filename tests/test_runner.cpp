@@ -160,20 +160,14 @@ namespace ft_map
 				<< BW;
 
 		RUN_TEST(tr, constructorDefault_test);
-		// RUN_TEST(tr, constructorFill_test);
-		// RUN_TEST(tr, constructorRange_test);
+		RUN_TEST(tr, constructorRange_test);
+		RUN_TEST(tr, begin_end_test);
 		RUN_TEST(tr, size_test);
 		RUN_TEST(tr, empty_test);
 		// RUN_TEST(tr, max_size_test);
-		// RUN_TEST(tr, begin_test);
-		// RUN_TEST(tr, rbegin_rend_test);
-		// RUN_TEST(tr, front_back_test);
-		// RUN_TEST(tr, assign_range_test);
-		// RUN_TEST(tr, assign_fill_test);
-		// RUN_TEST(tr, sort_test);
-		// RUN_TEST(tr, sort_compare_test);
-		// RUN_TEST(tr, merge_test);
-		// RUN_TEST(tr, splice_test);
+		RUN_TEST(tr, insert_range_test);
+		RUN_TEST(tr, find_test);
+		RUN_TEST(tr, count_test);
 		// RUN_TEST(tr, insert_test);
 		// RUN_TEST(tr, push_back_front_test);
 		// RUN_TEST(tr, pop_back_front_test);

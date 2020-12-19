@@ -5,7 +5,7 @@ RED  = \033[0;31m
 GREEN = \033[0;32m
 PURPLE = \033[0;35m
 	
-CC = clang++
+CC = g++
 STD = -std=c++98
 CFLAGS = -Wall -Werror -Wextra -g
 CFLAGS += $(STD)

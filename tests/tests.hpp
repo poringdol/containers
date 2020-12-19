@@ -107,6 +107,23 @@ std::string queueToString(T& cont) {
 	return os.str();
 }
 
+  template<typename T>
+std::string mapToString(const T& cont) {
+	std::ostringstream os;
+	for(typename T::const_iterator it = cont.begin(); it != cont.end(); ++it) {
+		os << it->first << " " << it->second << ", ";
+	}
+	if (ENABLE_LOGS) {
+		int i = 0;
+		for(typename T::const_iterator it = cont.begin(); it != cont.end() && i < 50; ++it, ++i)
+			std::cout << it->first << " " << it->second << ", ";
+		if (i == 50)
+			std::cout << " ... too long output";
+		std::cout << std::endl;
+	}
+	return os.str();
+}
+
 namespace ft_list
 {
 	void list_test();
@@ -201,24 +218,15 @@ namespace ft_map
 	void map_test();
 
 	void constructorDefault_test();
-	// void constructorFill_test();
-	// void constructorRange_test();
+	void constructorRange_test();
+	void begin_end_test();
 	void size_test();
 	void empty_test();
+	void find_test();
+	void count_test();
 	// void max_size_test();
-	// void begin_test();
-	// void rbegin_rend_test();
-	// void front_back_test();
-	// void assign_range_test();
-	// void assign_fill_test();
-	// void sort_test();
-	// void sort_compare_test();
-	// void merge_test();
-	// void splice_test();
+	void insert_range_test();
 	// void insert_test();
-	// void push_back_front_test();
-	// void pop_back_front_test();
-	// void resize_test();
 	// void clear_test();
 	// void erase_test();
 	// void remove_test();

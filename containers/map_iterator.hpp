@@ -94,7 +94,7 @@ namespace ft {
 		operator-- () NOEXCEPT {
 
 			if (ptr->_last_node) {
-				ptr == ptr->_parent;
+				ptr = ptr->_parent;
 			} else if (ptr->_left) {
 				ptr = ptr->_left;
 				while (ptr->_right)
@@ -117,7 +117,7 @@ namespace ft {
 			Node* temp = this->ptr;
 		
 			if (ptr->_last_node) {
-				ptr == ptr->_parent;
+				ptr = ptr->_parent;
 			} else if (ptr->_left) {
 				ptr = ptr->_left;
 				while (ptr->_right)
@@ -139,6 +139,9 @@ namespace ft {
 
 		bool
 		operator!= (const iterator& x) NOEXCEPT { return this->ptr != x.ptr; }
+
+		Node*
+		base() { return ptr; }
 	};
 
 // Reverse iterator class -------------------------------------------------------------
@@ -213,7 +216,7 @@ namespace ft {
 		operator-- () NOEXCEPT {
 
 			if (ptr->_last_node) {
-				ptr == ptr->_parent;
+				ptr = ptr->_parent;
 			} else if (ptr->_right) {
 				ptr = ptr->_right;
 				while (ptr->_left)
@@ -236,7 +239,7 @@ namespace ft {
 			Node* temp = this->ptr;
 
 			if (ptr->_last_node) {
-				ptr == ptr->_parent;
+				ptr = ptr->_parent;
 			} else if (ptr->_right) {
 				ptr = ptr->_right;
 				while (ptr->_left)

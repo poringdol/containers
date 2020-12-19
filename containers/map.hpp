@@ -119,14 +119,14 @@ namespace ft {
 			}
 			if (root->_data.first == new_data.first) {
 				return;
-			} else if (_comp_val(new_data, root->_data) && root->_left ) {
+			} else if (_comp_val(new_data, root->_data) && root->_left && !root->_left->_last_node) {
 				_add_node(root->_left, new_data);
-			} else if (_comp_val(new_data, root->_data) && !root->_left) {
-				_insert_node(root->_left, new_data);
-			} else if (!_comp_val(new_data, root->_data) && root->_right) {
+			} else if (_comp_val(new_data, root->_data)) {
+				_insert_node(root, new_data);
+			} else if (!_comp_val(new_data, root->_data) && root->_right && !root->_right->_last_node) {
 				_add_node(root->_right, new_data);
-			} else if (!_comp_val(new_data, root->_data) && !root->_right) {
-				_insert_node(root->_right, new_data);
+			} else if (!_comp_val(new_data, root->_data)) {
+				_insert_node(root, new_data);
 			}
 		}
 
@@ -134,19 +134,58 @@ namespace ft {
 		_insert_node (node* root, const value_type& new_data) {
 			if (!root) {
 				_root = new _rb_tree_node(new_data, _black_node);
-			} else {
-				node* new_node = new _rb_tree_node(new_data, _red_node, root);
-				if (_comp_val(new_node->_data, root->_data)) {
-					root->_left = new_node; 
+			} else if (_comp_val(new_data, root->_data)) {	// new_data < current root data
+				if (root->_left) {									// root->left == rend
+					root->_left = new _rb_tree_node(new_data, _red_node, root, _rend);
+					_rend->_parent = root->_left;
 				} else {
-					root->_right = new_node;
+					root->_left = new _rb_tree_node(new_data, _red_node, root);
+				}
+			} else {												// new_data > current root data
+				if (root->_right) {									// root->right == end
+					root->_right = new _rb_tree_node(new_data, _red_node, root, NULL, _end);
+					_end->_parent = root->_right;
+				} else {
+					root->_right = new _rb_tree_node(new_data, _red_node, root);
 				}
 			}
+			
+			// } else if (!root || root->_last_node) {
+			// 	if (root == _end) {
+			// 		node* temp = new _rb_tree_node(new_data, _red_node, root->_parent, NULL, _end);
+			// 		root->_parent->_right = temp;
+			// 		_end->_parent = temp;
+			// 	} else {
+			// 		node* temp = new _rb_tree_node(new_data, _red_node, root->_parent, _rend);
+			// 		root->_parent->_left = temp;
+			// 		_rend -> _parent = temp;
+			// 	}
+			// } else {
+			// 	node* new_node = new _rb_tree_node(new_data, _red_node, root);
+			// 	if (_comp_val(new_node->_data, root->_data)) {
+			// 		root->_left = new_node; 
+			// 	} else {
+			// 		root->_right = new_node;
+			// 	}
+			// }
 			_node_count++;
 		}
 
-		bool
-		_is_end(node* current) { return current->right == _root; }
+		node*
+		_find(const key_type& k) const {
+
+			iterator it = begin();
+
+			while (it != end()) {
+				if (it->first == k)
+					return it.base();
+				++it;
+			}
+			return it.base();
+		}
+
+		void
+		_clear() {}
 
 	public:
 
@@ -186,6 +225,7 @@ namespace ft {
 		map (const map& x) {
 
 			typename ft::map<Key, T>::iterator first = x.begin();
+	
 			while (first != x.end()) {
 					_add_node(_root, first->ptr);
 					// _balance(current);
@@ -195,10 +235,7 @@ namespace ft {
 
 // Map destructor --------------------------------------------------------------
 
-		~map () {
-			// clear();
-			// delete this->_head;
-		}
+		~map () { _clear(); }
 	
 // Map methods ---------------------------------------------------------------------
 
@@ -208,7 +245,7 @@ namespace ft {
 		begin () NOEXCEPT			{ return iterator(_rend->_parent); }
 
 		const_iterator
-		begin () const NOEXCEPT		{ return iterator(_rend->parent); }
+		begin () const NOEXCEPT		{ return iterator(_rend->_parent); }
 
 		iterator
 		end () NOEXCEPT				{ return iterator(_end); }
@@ -228,6 +265,15 @@ namespace ft {
 		const_reverse_iterator
 		rend () const NOEXCEPT		{ return const_reverse_iterator(_rend); }
 
+		iterator
+		find (const key_type& k)		{ return iterator(_find(k)); }
+
+		const_iterator
+		find (const key_type& k) const	{ return const_iterator(_find(k)); }
+
+		size_type
+		count (const key_type& k) const	{ return (_find(k) == _end ? 0 : 1); }
+
 		// pair<iterator,bool>
 		void
 		insert (const value_type& val) {
@@ -239,7 +285,13 @@ namespace ft {
 
 		  template <class InputIterator>
 		void
-		insert (InputIterator first, InputIterator last);
+		insert (InputIterator first, InputIterator last) {
+			while (first != last) {
+				_add_node(_root, *first);
+				// _balance(current);
+				++first;
+			}
+		}
 
 
 	// // Capacity ----------------------------
