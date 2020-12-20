@@ -62,11 +62,6 @@ namespace ft {
 							bool last_node 			= false)
 								: _data(data),_color(color), _parent(parent),
 								  _left(left), _right(right), _last_node(last_node) {}
-			
-			// inline bool
-			// operator< (_rb_tree_color& x, _rb_tree_color& y) { return x->_data < y->data; }
-			// inline bool
-			// operator== (_rb_tree_color& x, _rb_tree_color& y) { return x->_data == y->data; }
 		};
 // ----------------------------------------------------------------------------
 
@@ -105,79 +100,97 @@ namespace ft {
 
 // Supporting functions -------------------------------------------------------
 		
+		bool
+		_is_key_equal (const value_type& k1, const value_type& k2) const {
+			return !_comp_val(k1, k2) &&
+				   !_comp_val(k2, k1);
+		}
+
 		// _add_node(root, node) recursively searches for a place to insert a node
 		void
 		// node*
 		_add_node (node* root, const value_type& new_data) {
+		
+		// non recursive
 			if (!root) {
 				_insert_node(root, new_data);
-				_end = new node(value_type(), _red_node, _root, NULL, NULL, true);
-				_rend = new node(value_type(), _red_node, _root, NULL, NULL, true);
+				_end->_parent = _root;
+				_rend->_parent = _root;
 				_root->_left = _rend;
 				_root->_right = _end;
 				return;
 			}
-			if (root->_data.first == new_data.first) {
-				return;
-			} else if (_comp_val(new_data, root->_data) && root->_left && !root->_left->_last_node) {
-				_add_node(root->_left, new_data);
-			} else if (_comp_val(new_data, root->_data)) {
-				_insert_node(root, new_data);
-			} else if (!_comp_val(new_data, root->_data) && root->_right && !root->_right->_last_node) {
-				_add_node(root->_right, new_data);
-			} else if (!_comp_val(new_data, root->_data)) {
-				_insert_node(root, new_data);
-			}
-		}
+			while ((root->_left && !root->_left->_last_node && _comp_val(new_data, root->_data))
+				|| (root->_right && !root->_right->_last_node && !_comp_val(new_data, root->_data))) {
+				
+				if (_is_key_equal(new_data, root->_data))
+					return;
 
-		void
-		_insert_node (node* root, const value_type& new_data) {
-			if (!root) {
-				_root = new _rb_tree_node(new_data, _black_node);
-			} else if (_comp_val(new_data, root->_data)) {	// new_data < current root data
-				if (root->_left) {									// root->left == rend
-					root->_left = new _rb_tree_node(new_data, _red_node, root, _rend);
-					_rend->_parent = root->_left;
-				} else {
-					root->_left = new _rb_tree_node(new_data, _red_node, root);
-				}
-			} else {												// new_data > current root data
-				if (root->_right) {									// root->right == end
-					root->_right = new _rb_tree_node(new_data, _red_node, root, NULL, _end);
-					_end->_parent = root->_right;
-				} else {
-					root->_right = new _rb_tree_node(new_data, _red_node, root);
-				}
+				if (_comp_val(new_data, root->_data))
+					root = root->_left;
+				else
+					root = root->_right;
 			}
-			
-			// } else if (!root || root->_last_node) {
-			// 	if (root == _end) {
-			// 		node* temp = new _rb_tree_node(new_data, _red_node, root->_parent, NULL, _end);
-			// 		root->_parent->_right = temp;
-			// 		_end->_parent = temp;
-			// 	} else {
-			// 		node* temp = new _rb_tree_node(new_data, _red_node, root->_parent, _rend);
-			// 		root->_parent->_left = temp;
-			// 		_rend -> _parent = temp;
-			// 	}
-			// } else {
-			// 	node* new_node = new _rb_tree_node(new_data, _red_node, root);
-			// 	if (_comp_val(new_node->_data, root->_data)) {
-			// 		root->_left = new_node; 
-			// 	} else {
-			// 		root->_right = new_node;
-			// 	}
+
+			if (_is_key_equal(new_data, root->_data))
+				return;
+			_insert_node(root, new_data);
+
+		// recursive (need to fix)
+			// if (_is_key_equal(new_data, root->_data)) {
+			// 	return;
+			// } else if (_comp_val(new_data, root->_data) && root->_left && !root->_left->_last_node) {
+			// 	_add_node(root->_left, new_data);
+			// } else if (_comp_val(new_data, root->_data)) {
+			// 	_insert_node(root, new_data);
+			// } else if (!_comp_val(new_data, root->_data) && root->_right && !root->_right->_last_node) {
+			// 	_add_node(root->_right, new_data);
+			// } else if (!_comp_val(new_data, root->_data)) {
+			// 	_insert_node(root, new_data);
 			// }
-			_node_count++;
 		}
 
 		node*
-		_find(const key_type& k) const {
+		_insert_node (node* root, const value_type& new_data) {
+			
+			node* res;
+
+			if (!root) {
+				_root = new _rb_tree_node(new_data, _black_node);
+				res = _root;
+			} else if (_is_key_equal(new_data, root->_data)) {
+				return (root);
+			} else if (_comp_val(new_data, root->_data)) {			// new_data < current root data
+				if (root->_left) {									// root->_left == rend
+					root->_left = new _rb_tree_node(new_data, _red_node, root, _rend);
+					_rend->_parent = root->_left;
+					res = root->_left;
+				} else {
+					root->_left = new _rb_tree_node(new_data, _red_node, root);
+					res = root->_left;
+				}
+			} else {												// new_data > current root data
+				if (root->_right) {									// root->_right == end
+					root->_right = new _rb_tree_node(new_data, _red_node, root, NULL, _end);
+					_end->_parent = root->_right;
+					res = root->_right;
+				} else {
+					root->_right = new _rb_tree_node(new_data, _red_node, root);
+					res = root->_right;
+				}
+			}
+			_balance(res);
+			_node_count++;
+			return (res);
+		}
+
+		node*
+		_find (const key_type& k) const {
 
 			iterator it = begin();
-
+			value_type temp(k, 0);
 			while (it != end()) {
-				if (it->first == k)
+				if (_is_key_equal(*it, temp))
 					return it.base();
 				++it;
 			}
@@ -185,7 +198,376 @@ namespace ft {
 		}
 
 		void
-		_clear() {}
+		_erase (iterator position) {
+			deleteNode(position.base());
+			// _delete_one_child(position.base());
+		}
+
+		void
+		_clear () { erase(begin(), end()); }
+
+		void
+		_print (node* p, int indent = 0) {
+			if(p != NULL) {
+				if (indent)
+					std::cout << std::setw(indent) << ' ';
+				std::cout << (p->_color ? "\033[1;31m" : "") <<
+					"[" << p->_data.first << " " << p->_data.second << "]" <<
+					"\033[0;0m" << "\n ";
+				if(p->_left && p->_left != _rend)
+					_print(p->_left, indent + 5);
+				if(p->_right && p->_right != _end)
+					_print(p->_right, indent + 5);
+			}
+		}
+
+		void
+		_print_tree () { std::cout << std::endl; _print(_root); std::cout << std::endl; }
+
+	// Balancing ----------------------------------------------------------------
+
+		node*
+		_grand_parent (node* n) {
+			if (n && n->_parent)
+				return n->_parent->_parent;
+			return NULL;
+		}
+
+		node*
+		_uncle (node* n) {
+			node* g = _grand_parent(n);
+			if (!g)
+				return NULL;			// No grandparent means no uncle
+			if (n->_parent == g->_left)
+				return g->_right;
+			return g->_left;
+		}
+
+		void
+		_rotate_left (node *n) {
+
+			node *pivot = n->_right;
+			
+			pivot->_parent = n->_parent; // pivot может стать корнем дерева
+			if (n->_parent) {
+				if (n->_parent->_left == n)
+					n->_parent->_left = pivot;
+				else
+					n->_parent->_right = pivot;
+			} else {
+				_root = pivot;
+			}
+			n->_right = pivot->_left;
+			if (pivot->_left)
+				pivot->_left->_parent = n;
+
+			n->_parent = pivot;
+			pivot->_left = n;
+		}
+
+		void
+		_rotate_right (node *n) {
+
+			node *pivot = n->_left;
+			
+			pivot->_parent = n->_parent; /* при этом, возможно, pivot становится корнем дерева */
+			if (n->_parent) {
+				if (n->_parent->_left == n)
+					n->_parent->_left = pivot;
+				else
+					n->_parent->_right = pivot;
+			} else {
+				_root = pivot;
+			}
+			n->_left = pivot->_right;
+			if (pivot->_right)
+				pivot->_right->_parent = n;
+
+			n->_parent = pivot;
+			pivot->_right = n;
+		}
+
+		void
+		_balance (node *n) { 
+			_insert_case1(n);
+		}
+
+		void
+		_insert_case1 (node *n) {
+
+			if (n->_parent == NULL)
+				n->_color = _black_node;
+			else
+				_insert_case2(n);
+		}
+
+		void
+		_insert_case2 (node *n) {
+
+			if (n->_parent->_color == _black_node)
+				return; 				// Tree is still valid
+			_insert_case3(n);
+		}
+
+
+		void
+		_insert_case3 (node* n) {
+			node* u = _uncle(n);
+			node* g;
+
+			if (u && !u->_last_node && u->_color == _red_node) {		 // && (n->_parent->_color == _red_node) проверяется в insert_case2
+				n->_parent->_color = _black_node;
+				u->_color = _black_node;
+				g = _grand_parent(n);
+				g->_color = _red_node;
+				_insert_case1(g);
+			} else {
+				_insert_case4(n);
+			}
+		}
+
+		void
+		_insert_case4 (node* n) {
+
+			node* g = _grand_parent(n);
+ 
+			if ((n == n->_parent->_right) && (n->_parent == g->_left)) {
+				_rotate_left(n->_parent);
+				n = n->_left;
+			} else if ((n == n->_parent->_left) && (n->_parent == g->_right)) {
+				_rotate_right(n->_parent);
+				n = n->_right;
+			}
+			_insert_case5(n);
+		}
+
+		void
+		_insert_case5 (node* n) {
+			node* g = _grand_parent(n);
+
+			n->_parent->_color = _black_node;
+			g->_color = _red_node;
+			if ((n == n->_parent->_left) && (n->_parent == g->_left)) {
+				_rotate_right(g);
+			} else { 				// (n == n->_parent->_right) && (n->_parent == g->_right)
+				_rotate_left(g);
+			}
+		}
+
+	// Deleting ----------------------------------------------------------------
+
+		void deleteFixup(node *x) {
+
+			while (x != _root && x->_color == _black_node) {
+				if (x == x->_parent->_left) {
+					node *w = x->_parent->_right;
+					if (w->_color == _red_node) {
+						w->_color = _black_node;
+						x->_parent->_color = _red_node;
+						_rotate_left (x->_parent);
+						w = x->_parent->_right;
+					}
+					if (w->_left->_color == _black_node && w->_right->_color == _black_node) {
+						w->_color = _red_node;
+						x = x->_parent;
+					} else {
+						if (w->_right->_color == _black_node) {
+							w->_left->_color = _black_node;
+							w->_color = _red_node;
+							_rotate_right (w);
+							w = x->_parent->_right;
+						}
+						w->_color = x->_parent->_color;
+						x->_parent->_color = _black_node;
+						w->_right->_color = _black_node;
+						_rotate_left (x->_parent);
+						x = _root;
+					}
+				} else {
+					node *w = x->_parent->_left;
+					if (w->_color == _red_node) {
+						w->_color = _black_node;
+						x->_parent->_color = _red_node;
+						_rotate_right (x->_parent);
+						w = x->_parent->_left;
+					}
+					if (w->_right->_color == _black_node && w->_left->_color == _black_node) {
+						w->_color = _red_node;
+						x = x->_parent;
+					} else {
+						if (w->_left->_color == _black_node) {
+							w->_right->_color = _black_node;
+							w->_color = _red_node;
+							_rotate_left (w);
+							w = x->_parent->_left;
+						}
+						w->_color = x->_parent->_color;
+						x->_parent->_color = _black_node;
+						w->_left->_color = _black_node;
+						_rotate_right (x->_parent);
+						x = _root;
+					}
+				}
+			}
+			x->_color = _black_node;
+		}
+
+		void deleteNode(node *z) {
+			node *x, *y;
+
+		/*****************************
+			*  delete node z from tree  *
+			*****************************/
+
+			if (!z || z == NULL) return;
+
+
+			if (z->_left == NULL || z->_right == NULL) {
+				/* y has a NULL node as a child */
+				y = z;
+			} else {
+				/* find tree successor with a NULL node as a child */
+				y = z->_right;
+				while (y->_left != NULL) y = y->_left;
+			}
+
+			/* x is y's only child */
+			if (y->_left != NULL)
+				x = y->_left;
+			else
+				x = y->_right;
+
+			/* remove y from the parent chain */
+			x->_parent = y->_parent;
+			if (y->_parent)
+				if (y == y->_parent->_left)
+					y->_parent->_left = x;
+				else
+					y->_parent->_right = x;
+			else
+				_root = x;
+
+			if (y != z) {
+				z->_data.first = y->_data.first;
+				z->_data.second = y->_data.second;
+			}
+
+			if (y->_color == _black_node)
+				deleteFixup (x);
+
+			free (y);
+		}
+
+		// node *
+		// _brother(node *n) {
+		// 	if (n == n->_parent->_left)
+		// 		return n->_parent->_right;
+		// 	return n->_parent->_left;
+		// }
+
+		// void 
+		// _replace_node(node* n, node* child) {
+		// 	child->_parent = n->_parent;
+		// 	if (n == n->_parent->_left) {
+		// 		n->_parent->_left = child;
+		// 	} else {
+		// 		n->_parent->_right = child;
+		// 	}
+		// }
+
+		// void
+		// _delete_one_child(node* n) {
+		// 	node* child = (!(n->_right) || n->_right->_last_node) ? n->_left : n->_right;
+			
+		// 	_replace_node(n, child);
+		// 	if (n->_color == _black_node) {
+		// 		if (child->_color == _red_node)
+		// 			child->_color = _black_node;
+		// 		else
+		// 			_delete_case1(child);
+		// 	}
+		// 	delete n;
+		// }
+
+		// void
+		// _delete_case1(node* n) { if (n->_parent != NULL) _delete_case2(n); }
+
+		// void
+		// _delete_case2(node* n) {
+		// 	node* s = _brother(n);
+
+		// 	if (s->_color == _red_node) {
+		// 		n->_parent->_color = _red_node;
+		// 		s->_color = _black_node;
+		// 		if (n == n->_parent->_left)
+		// 			_rotate_left(n->_parent);
+		// 		else
+		// 			_rotate_right(n->_parent);
+		// 	} 
+		// 	_delete_case3(n);
+		// }
+
+		// void _delete_case3(node* n) {
+		// 	node* s = _brother(n);
+
+		// 	if ((n->_parent->_color == _black_node) &&
+		// 		(s->_color == _black_node) &&
+		// 		(s->_left->_color == _black_node) &&
+		// 		(s->_right->_color == _black_node)) {
+		// 		s->_color = _red_node;
+		// 		_delete_case1(n->_parent);
+		// 	} else
+		// 		_delete_case4(n);
+		// }
+
+		// void _delete_case4(node* n) {
+		// 	node* s = _brother(n);
+
+		// 	if ((n->_parent->_color == _red_node) &&
+		// 		(s->_color == _black_node) &&
+		// 		(s->_left->_color == _black_node) &&
+		// 		(s->_right->_color == _black_node)) {
+		// 		s->_color = _red_node;
+		// 		n->_parent->_color = _black_node;
+		// 	} else
+		// 		_delete_case5(n);
+		// }
+
+		// void _delete_case5(node* n) {
+		// 	node* s = _brother(n);
+
+		// 	if  (s->_color == _black_node) {
+		// 		if ((n == n->_parent->_left) &&
+		// 			(s->_right->_color == _black_node) &&
+		// 			(s->_left->_color == _red_node)) {
+		// 			s->_color = _red_node;
+		// 			s->_left->_color = _black_node;
+		// 			_rotate_right(s);
+		// 		} else if ((n == n->_parent->_right) &&
+		// 				(s->_left->_color == _black_node) &&
+		// 				(s->_right->_color == _red_node)) {
+		// 			s->_color = _red_node;
+		// 			s->_right->_color = _black_node;
+		// 			_rotate_left(s);
+		// 		}
+		// 	}
+		// 	_delete_case6(n);
+		// }
+
+		// void _delete_case6(node* n) {
+		// 	node* s = _brother(n);
+
+		// 	s->_color = n->_parent->_color;
+		// 	n->_parent->_color = _black_node;
+
+		// 	if (n == n->_parent->_left) {
+		// 		s->_right->_color = _black_node;
+		// 		_rotate_left(n->_parent);
+		// 	} else {
+		// 		s->_left->_color = _black_node;
+		// 		_rotate_right(n->_parent);
+		// 	}
+		// }
 
 	public:
 
@@ -200,7 +582,11 @@ namespace ft {
 				  _node_count(),
 				  _comp_val(comp),
 				  _end(),
-				  _rend() {}
+				  _rend() {
+
+			_end = new node(value_type(), _black_node, NULL, NULL, NULL, true);
+			_rend = new node(value_type(), _black_node, NULL, NULL, NULL, true);
+		}
 
 		  template <typename InputIterator>
 		map (InputIterator first,
@@ -215,6 +601,9 @@ namespace ft {
 				  _end(),
 				  _rend() {
 				
+				_end = new node(value_type(), _black_node, NULL, NULL, NULL, true);
+				_rend = new node(value_type(), _black_node, NULL, NULL, NULL, true);
+
 				while (first != last) {
 					_add_node(_root, *first);
 					// _balance(current);
@@ -222,20 +611,25 @@ namespace ft {
 				}
 			}
 
-		map (const map& x) {
+		// map (const map& x) {
 
-			typename ft::map<Key, T>::iterator first = x.begin();
+		// 	typename ft::map<Key, T>::iterator first = x.begin();
 	
-			while (first != x.end()) {
-					_add_node(_root, first->ptr);
-					// _balance(current);
-					++first;
-				}
-		}
+		// 	while (first != x.end()) {
+		// 			_add_node(_root, first->ptr);
+		// 			// _balance(current);
+		// 			++first;
+		// 		}
+		// }
 
 // Map destructor --------------------------------------------------------------
 
-		~map () { _clear(); }
+		// ~map () { _clear(); }
+		~map () {
+			// clear();
+			delete _end;
+			delete _rend;
+		}
 	
 // Map methods ---------------------------------------------------------------------
 
@@ -272,16 +666,20 @@ namespace ft {
 		find (const key_type& k) const	{ return const_iterator(_find(k)); }
 
 		size_type
-		count (const key_type& k) const	{ return (_find(k) == _end ? 0 : 1); }
+		count (const key_type& k) const	{ return (_find(k) == _end ? 0u : 1u); }
 
-		// pair<iterator,bool>
-		void
+		pair<iterator,bool>
 		insert (const value_type& val) {
+			size_t old_size = size();
 			_add_node(_root, val);
+			return std::make_pair(find(val.first), old_size != size());
 		}
 
 		iterator
-		insert (iterator position, const value_type& val);
+		insert (iterator position, const value_type& val) {
+			_add_node(position.ptr, val);
+			return find(val.first);
+		}
 
 		  template <class InputIterator>
 		void
@@ -292,6 +690,28 @@ namespace ft {
 				++first;
 			}
 		}
+
+		void
+		erase (iterator position) { _erase(position); }
+
+		size_type
+		erase (const key_type& k) { 
+			iterator temp = find(k);
+			if (temp != end()) {
+				_erase(temp);
+				return 1u;
+			}
+			return 0u;
+		}
+
+		void
+		erase (iterator first, iterator last) {
+			while (first != last) {
+				erase(first);
+				++first;
+			}
+		}
+
 
 
 	// // Capacity ----------------------------
@@ -522,13 +942,13 @@ namespace ft {
 	// 		}
 	// 	}
 
-	// 	  template<typename BinaryPredicate>
+	// 	  template<typename BinaryP_red_nodeicate>
 	// 	void
-	// 	unique (BinaryPredicate binary_pred) {
+	// 	unique (BinaryP_red_nodeicate binary_p_red_node) {
 	// 					iterator first = this->begin();
 	// 		++first;
 	// 		while (first != this->end()) {
-	// 			if (binary_pred(first.ptr->_data, first.ptr->_prev->_data)) {
+	// 			if (binary_p_red_node(first.ptr->_data, first.ptr->_prev->_data)) {
 	// 				iterator temp = first;
 	// 				++temp;
 	// 				_cut(first);
@@ -625,6 +1045,9 @@ namespace ft {
 		// friend void
 		// swap (Map<_T, _Alloc>&, Map<_T, _Alloc>&);
 
+		  template<typename U>
+		friend void
+		print_tree(U& tree);
 	};
 
 /************************************ end of Map class ***********************************/

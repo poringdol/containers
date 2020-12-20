@@ -9,6 +9,8 @@
 #include "vector.hpp"
 #include "stack.hpp"
 
+extern int ENABLE_LOGS;
+
 namespace ft {
 	
 	enum test {
@@ -20,9 +22,11 @@ namespace ft {
 		Queue,
 		All
 	};
-}
 
-extern int ENABLE_LOGS;
+	template<typename U>
+	void
+	print_tree(U& tree) { if (ENABLE_LOGS) tree._print_tree(); }
+}
 
 static int arr_int[11] = {1,2,3,4,5,6,7,8,9,0,-1};
 static char arr_str[][11] = {"one", "two", "three", "four", "five",
@@ -226,7 +230,11 @@ namespace ft_map
 	void count_test();
 	// void max_size_test();
 	void insert_range_test();
-	// void insert_test();
+	void insert_single_test();
+	void insert_hint_test();
+	void erase_single_test();
+	void erase_key_test();
+	void erase_range_test();
 	// void clear_test();
 	// void erase_test();
 	// void remove_test();

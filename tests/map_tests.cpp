@@ -14,7 +14,6 @@
 /*********************************************************************/
 namespace ft_map
 {
-
 	void constructorDefault_test() {
 
 		ft::map<int, int> my_mp1;
@@ -93,18 +92,31 @@ namespace ft_map
 			ft::map<int, int> my_mp(map1.begin(), map1.end());
 			ASSERT_EQUAL(mp.size(), my_mp.size());
 			ASSERT_EQUAL(mapToString(mp), mapToString(my_mp));
+			print_tree(my_mp);
 		}
 		{
 			std::map<int, int> mp(map2.begin(), map2.end());	// map from std::map<int, int> - sorted
 			ft::map<int, int> my_mp(map2.begin(), map2.end());
 			ASSERT_EQUAL(mp.size(), my_mp.size());
 			ASSERT_EQUAL(mapToString(mp), mapToString(my_mp));
+			print_tree(my_mp);
 		}
 		{
 			std::map<std::string, int> mp(map3.begin(), map3.end());	// map from std::map<std::string, int> - unsorted
 			ft::map<std::string, int> my_mp(map3.begin(), map3.end());
 			ASSERT_EQUAL(mp.size(), my_mp.size());
 			ASSERT_EQUAL(mapToString(mp), mapToString(my_mp));
+			print_tree(my_mp);
+		}
+		{
+			std::vector<std::pair<int, int> > v;
+			for (int i = 0; i < 20; i++) v.push_back(make_pair(i, rand() % 50));
+
+			std::map<int, int> mp(v.begin(), v.end());	// map from std::map<int, int> - unsorted
+			ft::map<int, int> my_mp(v.begin(), v.end());
+			ASSERT_EQUAL(mp.size(), my_mp.size());
+			ASSERT_EQUAL(mapToString(mp), mapToString(my_mp));
+			print_tree(my_mp);
 		}
 	}
 
@@ -195,6 +207,7 @@ namespace ft_map
 		mp1.insert(map2.begin(), map2.end());
 		my_mp1.insert(map2.begin(), map2.end());
 		ASSERT_EQUAL(mapToString(mp1), mapToString(my_mp1));
+		print_tree(my_mp1);
 
 		std::map<std::string, int> mp2;
 		ft::map<std::string, int> my_mp2;
@@ -205,6 +218,238 @@ namespace ft_map
 		mp2.insert(map3.rbegin(), map3.rend());
 		my_mp2.insert(map3.rbegin(), map3.rend());
 		ASSERT_EQUAL(mapToString(mp2), mapToString(my_mp2));
+	}
+
+	void insert_single_test() {
+		{
+			std::map<int, int> mp;
+			ft::map<int, int> my_mp;
+			
+			std::map<int, int>::iterator it;
+			ft::map<int, int>::iterator my_it;
+
+			std::pair<std::map<int, int>::iterator, bool> pr;
+			std::pair<ft::map<int, int>::iterator, bool> my_pr;
+
+			pr = mp.insert(std::make_pair(10, 5));
+			my_pr = my_mp.insert(std::make_pair(10, 5));
+			
+			ASSERT_EQUAL(pr.first->first, my_pr.first->first);
+			ASSERT_EQUAL(pr.first->second, my_pr.first->second);
+			ASSERT_EQUAL(pr.second, my_pr.second);
+			ASSERT_EQUAL(mp.size(), my_mp.size());
+
+			pr = mp.insert(std::make_pair(10, 5));
+			my_pr = my_mp.insert(std::make_pair(10, 5));
+			ASSERT_EQUAL(pr.first->first, my_pr.first->first);
+			ASSERT_EQUAL(pr.first->second, my_pr.first->second);
+			ASSERT_EQUAL(mp.size(), my_mp.size());
+
+			pr = mp.insert(std::make_pair(10, 15));
+			my_pr = my_mp.insert(std::make_pair(10, 15));
+			ASSERT_EQUAL(pr.first->first, my_pr.first->first);
+			ASSERT_EQUAL(pr.first->second, my_pr.first->second);
+			ASSERT_EQUAL(mp.size(), my_mp.size());
+
+			pr = mp.insert(std::make_pair(15, 15));
+			my_pr = my_mp.insert(std::make_pair(15, 15));
+			ASSERT_EQUAL(pr.first->first, my_pr.first->first);
+			ASSERT_EQUAL(pr.first->second, my_pr.first->second);
+			ASSERT_EQUAL(mp.size(), my_mp.size());
+		}
+		{
+			std::map<int, int> mp(map1.begin(), map1.end());
+			ft::map<int, int> my_mp(map1.begin(), map1.end());
+
+			std::map<int, int>::iterator it;
+			ft::map<int, int>::iterator my_it;
+
+			std::pair<std::map<int, int>::iterator, bool> pr;
+			std::pair<ft::map<int, int>::iterator, bool> my_pr;
+
+			pr = mp.insert(std::make_pair(10, 5));
+			my_pr = my_mp.insert(std::make_pair(10, 5));
+			
+			ASSERT_EQUAL(pr.first->first, my_pr.first->first);
+			ASSERT_EQUAL(pr.first->second, my_pr.first->second);
+			ASSERT_EQUAL(pr.second, my_pr.second);
+			ASSERT_EQUAL(mp.size(), my_mp.size());
+
+			pr = mp.insert(std::make_pair(10, 5));
+			my_pr = my_mp.insert(std::make_pair(10, 5));
+			ASSERT_EQUAL(pr.first->first, my_pr.first->first);
+			ASSERT_EQUAL(pr.first->second, my_pr.first->second);
+			ASSERT_EQUAL(mp.size(), my_mp.size());
+
+			pr = mp.insert(std::make_pair(10, 15));
+			my_pr = my_mp.insert(std::make_pair(10, 15));
+			ASSERT_EQUAL(pr.first->first, my_pr.first->first);
+			ASSERT_EQUAL(pr.first->second, my_pr.first->second);
+			ASSERT_EQUAL(mp.size(), my_mp.size());
+
+			pr = mp.insert(std::make_pair(15, 15));
+			my_pr = my_mp.insert(std::make_pair(15, 15));
+			ASSERT_EQUAL(pr.first->first, my_pr.first->first);
+			ASSERT_EQUAL(pr.first->second, my_pr.first->second);
+			ASSERT_EQUAL(mp.size(), my_mp.size());
+		}
+	}
+
+	void insert_hint_test() {
+		{
+			std::pair<int, int> pr1(12, 1);
+			std::pair<int, int> pr2(11, 1);
+
+			std::map<int, int> mp(map1.begin(), map1.end());
+			ft::map<int, int> my_mp(map1.begin(), map1.end());
+
+			std::map<int, int>::iterator it;
+			ft::map<int, int>::iterator my_it;
+
+			it = mp.find(8);
+			my_it = my_mp.find(8);
+			it = mp.insert(it, pr1);
+			my_it = my_mp.insert(my_it, pr1);
+			ASSERT_EQUAL(it->first, my_it->first);
+			ASSERT_EQUAL(it->second, my_it->second);
+			ASSERT_EQUAL(mp.size(), my_mp.size());
+
+			it = mp.find(8);
+			my_it = my_mp.find(8);
+			it = mp.insert(it, pr2);
+			my_it = my_mp.insert(my_it, pr2);
+			ASSERT_EQUAL(it->first, my_it->first);
+			ASSERT_EQUAL(it->second, my_it->second);
+			ASSERT_EQUAL(mp.size(), my_mp.size());
+		}
+	}
+
+	void erase_single_test() {
+		{
+			std::map<int, int> mp(map1.begin(), map1.end());
+			ft::map<int, int> my_mp(map1.begin(), map1.end());
+			
+			mp.erase(mp.begin());
+			my_mp.erase(my_mp.begin());
+
+			mp.erase(++mp.begin());
+			my_mp.erase(++my_mp.begin());
+
+			mp.erase(--mp.end());
+			my_mp.erase(--my_mp.end());
+
+			std::pair<std::map<int, int>::iterator, bool> pr = mp.insert(make_pair(64, 1));
+			std::pair<ft::map<int, int>::iterator, bool> my_pr = my_mp.insert(make_pair(64, 1));
+
+			std::map<int, int>::iterator it = pr.first;
+			ft::map<int, int>::iterator my_it = my_pr.first;
+
+			mp.erase(it);
+			my_mp.erase(my_it);
+
+			ASSERT_EQUAL(mp.size(), my_mp.size());
+			ASSERT_EQUAL(mapToString(mp), mapToString(my_mp));
+
+			print_tree(my_mp);
+		}
+		{
+			std::map<std::string, int> mp(map3.begin(), map3.end());
+			ft::map<std::string, int> my_mp(map3.begin(), map3.end());
+
+			mp.erase(mp.begin());
+			my_mp.erase(my_mp.begin());
+
+			mp.erase(++mp.begin());
+			my_mp.erase(++my_mp.begin());
+
+			mp.erase(--mp.end());
+			my_mp.erase(--my_mp.end());
+
+			std::pair<std::map<std::string, int>::iterator, bool> pr = mp.insert(make_pair("odin", 1));
+			std::pair<ft::map<std::string, int>::iterator, bool> my_pr = my_mp.insert(make_pair("odin", 1));
+
+			std::map<std::string, int>::iterator it = pr.first;
+			ft::map<std::string, int>::iterator my_it = my_pr.first;
+
+			mp.erase(it);
+			my_mp.erase(my_it);
+
+			ASSERT_EQUAL(mp.size(), my_mp.size());
+			ASSERT_EQUAL(mapToString(mp), mapToString(my_mp));
+
+			print_tree(my_mp);
+		}
+	}
+
+	void erase_key_test() {
+		{
+			std::map<int, int> mp(map1.begin(), map1.end());
+			ft::map<int, int> my_mp(map1.begin(), map1.end());
+
+			size_t t1, t2;
+			
+			t1 = mp.erase(100);
+			t2 = my_mp.erase(100);
+			ASSERT_EQUAL(t1, t2);
+			ASSERT_EQUAL(mp.size(), my_mp.size());
+			
+			t1 = mp.erase(0);
+			t2 = my_mp.erase(0);
+			ASSERT_EQUAL(t1, t2);
+			ASSERT_EQUAL(mp.size(), my_mp.size());
+
+			t1 = mp.erase(12);
+			t2 = my_mp.erase(12);
+			ASSERT_EQUAL(t1, t2);
+			ASSERT_EQUAL(mp.size(), my_mp.size());
+
+			t1 = mp.erase(35);
+			t2 = my_mp.erase(35);
+			ASSERT_EQUAL(t1, t2);
+			ASSERT_EQUAL(mp.size(), my_mp.size());
+
+			t1 = mp.erase(14);
+			t2 = my_mp.erase(14);
+			ASSERT_EQUAL(t1, t2);
+			ASSERT_EQUAL(mp.size(), my_mp.size());
+
+			t1 = mp.erase(140);
+			t2 = my_mp.erase(140);
+			ASSERT_EQUAL(t1, t2);
+			ASSERT_EQUAL(mp.size(), my_mp.size());
+			
+			t1 = mp.erase(-140);
+			t2 = my_mp.erase(-140);
+			ASSERT_EQUAL(t1, t2);
+			ASSERT_EQUAL(mp.size(), my_mp.size());
+
+			ASSERT_EQUAL(mapToString(mp), mapToString(my_mp));
+
+			print_tree(my_mp);
+		}
+	}
+
+	void erase_range_test() {
+		{
+			std::map<int, int> mp(map1.begin(), map1.end());
+			ft::map<int, int> my_mp(map1.begin(), map1.end());
+
+			std::map<int, int>::iterator it = mp.insert(make_pair(64, 10)).first;
+			ft::map<int, int>::iterator my_it = my_mp.insert(make_pair(64, 10)).first;
+
+			mp.erase(++mp.begin(), it);
+			my_mp.erase(++my_mp.begin(), my_it);
+			ASSERT_EQUAL(mapToString(mp), mapToString(my_mp));
+
+			mp.erase(it, --mp.end());
+			my_mp.erase(my_it, --my_mp.end());
+			ASSERT_EQUAL(mapToString(mp), mapToString(my_mp));
+			
+			
+			mp.erase(mp.begin(), mp.end());
+			my_mp.erase(my_mp.begin(), my_mp.end());
+			ASSERT_EQUAL(mapToString(mp), mapToString(my_mp));
+		}
 	}
 
 	// void clear_test() {
