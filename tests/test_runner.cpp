@@ -171,7 +171,7 @@ namespace ft_map
 		RUN_TEST(tr, insert_hint_test);
 		RUN_TEST(tr, erase_single_test);
 		RUN_TEST(tr, erase_key_test);
-		RUN_TEST(tr, erase_range_test);
+		// RUN_TEST(tr, erase_range_test);
 		// RUN_TEST(tr, max_size_test);
 		// RUN_TEST(tr, push_back_front_test);
 		// RUN_TEST(tr, pop_back_front_test);

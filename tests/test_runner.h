@@ -70,9 +70,9 @@ ostream& operator << (ostream& os, const map<K, V>& m) {
 void AssertEqual(const T& t, const U& u, const string& hint = string()) {
   	if (!(t == u)) {
 		ostringstream os;
-		os << "Assertion failed: " << t << " != " << u;
+		os << "Assertion failed: " << "\n\t" << t << " != " << "\n\t" << u << "\n";
 		if (!hint.empty()) {
-			os << " hint: " << hint;
+			os << "\thint: " << hint;
 		}
    	 throw runtime_error(os.str());
  	}

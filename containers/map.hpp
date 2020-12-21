@@ -2,6 +2,7 @@
 
 #include <limits>
 #include <memory>
+#include <cstring>
 #include "map_iterator.hpp"
 #include "cpp_type_traits.hpp"
 
@@ -38,30 +39,29 @@ namespace ft {
 		typedef size_t										size_type;
 
 // Enum for coloring nodes
-		enum _rb_tree_color { _black_node = false, _red_node = true };
+		enum _rb_tree_color { _BLACK = false, _RED = true };
 // ----------------------------------------------------------------------------
 
 // Supporting structure tree node
 		struct _rb_tree_node {
 
-			value_type			_data;
-			_rb_tree_color		_color;
-			_rb_tree_node*		_parent;
-			_rb_tree_node*		_left;
-			_rb_tree_node*		_right;
-			bool				_last_node;
-
-			// _rb_tree_node (): _data() _color(), _parent(),
-			// 				  _left(), _right(){}
+			value_type				_data;
+			_rb_tree_color			_color;
+			_rb_tree_node*			_parent;
+			_rb_tree_node*			_left;
+			_rb_tree_node*			_right;
+			bool					_last_node;
+			bool					_null;
 
 			_rb_tree_node (value_type data			= value_type(),
-							_rb_tree_color color	= _red_node,
+							_rb_tree_color color	= _RED,
 							_rb_tree_node* parent	= NULL,
 							_rb_tree_node* left		= NULL,
 							_rb_tree_node* right	= NULL,
-							bool last_node 			= false)
+							bool last_node 			= false,
+							bool null	 			= false)
 								: _data(data),_color(color), _parent(parent),
-								  _left(left), _right(right), _last_node(last_node) {}
+								  _left(left), _right(right), _last_node(last_node), _null(null) {}
 		};
 // ----------------------------------------------------------------------------
 
@@ -97,6 +97,7 @@ namespace ft {
 		value_compare	_comp_val;
 		node*			_end;
 		node*			_rend;
+		node*			_null;
 
 // Supporting functions -------------------------------------------------------
 		
@@ -111,7 +112,6 @@ namespace ft {
 		// node*
 		_add_node (node* root, const value_type& new_data) {
 		
-		// non recursive
 			if (!root) {
 				_insert_node(root, new_data);
 				_end->_parent = _root;
@@ -120,8 +120,12 @@ namespace ft {
 				_root->_right = _end;
 				return;
 			}
-			while ((root->_left && !root->_left->_last_node && _comp_val(new_data, root->_data))
-				|| (root->_right && !root->_right->_last_node && !_comp_val(new_data, root->_data))) {
+			while ((root->_left != _null
+					&& !root->_left->_last_node
+					&& _comp_val(new_data, root->_data))
+				|| (root->_right != _null
+					&& !root->_right->_last_node
+					&& !_comp_val(new_data, root->_data))) {
 				
 				if (_is_key_equal(new_data, root->_data))
 					return;
@@ -131,23 +135,9 @@ namespace ft {
 				else
 					root = root->_right;
 			}
-
 			if (_is_key_equal(new_data, root->_data))
 				return;
 			_insert_node(root, new_data);
-
-		// recursive (need to fix)
-			// if (_is_key_equal(new_data, root->_data)) {
-			// 	return;
-			// } else if (_comp_val(new_data, root->_data) && root->_left && !root->_left->_last_node) {
-			// 	_add_node(root->_left, new_data);
-			// } else if (_comp_val(new_data, root->_data)) {
-			// 	_insert_node(root, new_data);
-			// } else if (!_comp_val(new_data, root->_data) && root->_right && !root->_right->_last_node) {
-			// 	_add_node(root->_right, new_data);
-			// } else if (!_comp_val(new_data, root->_data)) {
-			// 	_insert_node(root, new_data);
-			// }
 		}
 
 		node*
@@ -156,26 +146,26 @@ namespace ft {
 			node* res;
 
 			if (!root) {
-				_root = new _rb_tree_node(new_data, _black_node);
+				_root = new _rb_tree_node(new_data, _BLACK, _null, _rend, _end);
 				res = _root;
 			} else if (_is_key_equal(new_data, root->_data)) {
 				return (root);
 			} else if (_comp_val(new_data, root->_data)) {			// new_data < current root data
-				if (root->_left) {									// root->_left == rend
-					root->_left = new _rb_tree_node(new_data, _red_node, root, _rend);
+				if (root->_left != _null) {									// root->_left == rend
+					root->_left = new _rb_tree_node(new_data, _RED, root, _rend, _null);
 					_rend->_parent = root->_left;
 					res = root->_left;
 				} else {
-					root->_left = new _rb_tree_node(new_data, _red_node, root);
+					root->_left = new _rb_tree_node(new_data, _RED, root, _null, _null);
 					res = root->_left;
 				}
 			} else {												// new_data > current root data
-				if (root->_right) {									// root->_right == end
-					root->_right = new _rb_tree_node(new_data, _red_node, root, NULL, _end);
+				if (root->_right != _null) {									// root->_right == end
+					root->_right = new _rb_tree_node(new_data, _RED, root, _null, _end);
 					_end->_parent = root->_right;
 					res = root->_right;
 				} else {
-					root->_right = new _rb_tree_node(new_data, _red_node, root);
+					root->_right = new _rb_tree_node(new_data, _RED, root, _null, _null);
 					res = root->_right;
 				}
 			}
@@ -199,8 +189,9 @@ namespace ft {
 
 		void
 		_erase (iterator position) {
-			deleteNode(position.base());
-			// _delete_one_child(position.base());
+			(void)position;
+			_delete_node(position.base());
+			_node_count--;
 		}
 
 		void
@@ -208,11 +199,11 @@ namespace ft {
 
 		void
 		_print (node* p, int indent = 0) {
-			if(p != NULL) {
+			if(p != _null) {
 				if (indent)
 					std::cout << std::setw(indent) << ' ';
 				std::cout << (p->_color ? "\033[1;31m" : "") <<
-					"[" << p->_data.first << " " << p->_data.second << "]" <<
+					"[" << p->_data.first << " "	 << p->_data.second << "]" <<
 					"\033[0;0m" << "\n ";
 				if(p->_left && p->_left != _rend)
 					_print(p->_left, indent + 5);
@@ -222,22 +213,42 @@ namespace ft {
 		}
 
 		void
-		_print_tree () { std::cout << std::endl; _print(_root); std::cout << std::endl; }
+		_set_rend(node* n) {
+			while (n->_left != _null)
+				n = n->_left;
+			if (n != _rend) {
+				n->_left = _rend;
+				_rend->_parent = n;
+			}
+		}
+
+		void
+		_set_end(node* n) {
+			while (n->_right != _null)
+				n = n->_right;
+			if (n != _end) {
+				n->_right = _end;
+				_end->_parent = n;
+			}
+		}
+
+		void
+		_print_tree () { std::cout << "\n"; _print(_root); std::cout << "\n"; }
 
 	// Balancing ----------------------------------------------------------------
 
 		node*
 		_grand_parent (node* n) {
-			if (n && n->_parent)
+			if (n != _null && n->_parent != _null)
 				return n->_parent->_parent;
-			return NULL;
+			return _null;
 		}
 
 		node*
 		_uncle (node* n) {
 			node* g = _grand_parent(n);
-			if (!g)
-				return NULL;			// No grandparent means no uncle
+			if (g == _null)
+				return _null;			// No grandparent means no uncle
 			if (n->_parent == g->_left)
 				return g->_right;
 			return g->_left;
@@ -249,7 +260,7 @@ namespace ft {
 			node *pivot = n->_right;
 			
 			pivot->_parent = n->_parent; // pivot может стать корнем дерева
-			if (n->_parent) {
+			if (n->_parent != _null) {
 				if (n->_parent->_left == n)
 					n->_parent->_left = pivot;
 				else
@@ -258,7 +269,7 @@ namespace ft {
 				_root = pivot;
 			}
 			n->_right = pivot->_left;
-			if (pivot->_left)
+			if (pivot->_left != _null)
 				pivot->_left->_parent = n;
 
 			n->_parent = pivot;
@@ -271,7 +282,7 @@ namespace ft {
 			node *pivot = n->_left;
 			
 			pivot->_parent = n->_parent; /* при этом, возможно, pivot становится корнем дерева */
-			if (n->_parent) {
+			if (n->_parent != _null) {
 				if (n->_parent->_left == n)
 					n->_parent->_left = pivot;
 				else
@@ -280,7 +291,7 @@ namespace ft {
 				_root = pivot;
 			}
 			n->_left = pivot->_right;
-			if (pivot->_right)
+			if (pivot->_right != _null)
 				pivot->_right->_parent = n;
 
 			n->_parent = pivot;
@@ -295,8 +306,8 @@ namespace ft {
 		void
 		_insert_case1 (node *n) {
 
-			if (n->_parent == NULL)
-				n->_color = _black_node;
+			if (n->_parent == _null)
+				n->_color = _BLACK;
 			else
 				_insert_case2(n);
 		}
@@ -304,7 +315,7 @@ namespace ft {
 		void
 		_insert_case2 (node *n) {
 
-			if (n->_parent->_color == _black_node)
+			if (n->_parent->_color == _BLACK)
 				return; 				// Tree is still valid
 			_insert_case3(n);
 		}
@@ -315,11 +326,11 @@ namespace ft {
 			node* u = _uncle(n);
 			node* g;
 
-			if (u && !u->_last_node && u->_color == _red_node) {		 // && (n->_parent->_color == _red_node) проверяется в insert_case2
-				n->_parent->_color = _black_node;
-				u->_color = _black_node;
+			if (u != _null && !u->_last_node && u->_color == _RED) {		 // && (n->_parent->_color == _RED) проверяется в insert_case2
+				n->_parent->_color = _BLACK;
+				u->_color = _BLACK;
 				g = _grand_parent(n);
-				g->_color = _red_node;
+				g->_color = _RED;
 				_insert_case1(g);
 			} else {
 				_insert_case4(n);
@@ -345,8 +356,8 @@ namespace ft {
 		_insert_case5 (node* n) {
 			node* g = _grand_parent(n);
 
-			n->_parent->_color = _black_node;
-			g->_color = _red_node;
+			n->_parent->_color = _BLACK;
+			g->_color = _RED;
 			if ((n == n->_parent->_left) && (n->_parent == g->_left)) {
 				_rotate_right(g);
 			} else { 				// (n == n->_parent->_right) && (n->_parent == g->_right)
@@ -356,218 +367,122 @@ namespace ft {
 
 	// Deleting ----------------------------------------------------------------
 
-		void deleteFixup(node *x) {
+		void 
+		_replace_node(node* n, node* child) {
+			child->_parent = n->_parent;
+			if (n == n->_parent->_left) {
+				n->_parent->_left = child;
+			} else {
+				n->_parent->_right = child;
+			}
+			child->_left = n->_left;
+			child->_right = n->_right;
 
-			while (x != _root && x->_color == _black_node) {
+			child->_left->_parent = child;
+			child->_right->_parent = child;
+
+			_rb_tree_color temp = child->_color;
+			child->_color = n->_color;
+			n->_color = temp;
+			if (n == _root)
+				_root = child;
+		}
+
+		void _delete_balance(node* x) {
+
+			while (x != _root && x->_color == _BLACK) {
 				if (x == x->_parent->_left) {
 					node *w = x->_parent->_right;
-					if (w->_color == _red_node) {
-						w->_color = _black_node;
-						x->_parent->_color = _red_node;
+					if (w->_color == _RED) {
+						w->_color = _BLACK;
+						x->_parent->_color = _RED;
 						_rotate_left (x->_parent);
 						w = x->_parent->_right;
 					}
-					if (w->_left->_color == _black_node && w->_right->_color == _black_node) {
-						w->_color = _red_node;
+					if (w->_left->_color == _BLACK && w->_right->_color == _BLACK) {
+						w->_color = _RED;
 						x = x->_parent;
 					} else {
-						if (w->_right->_color == _black_node) {
-							w->_left->_color = _black_node;
-							w->_color = _red_node;
+						if (w->_right->_color == _BLACK) {
+							w->_left->_color = _BLACK;
+							w->_color = _RED;
 							_rotate_right (w);
 							w = x->_parent->_right;
 						}
 						w->_color = x->_parent->_color;
-						x->_parent->_color = _black_node;
-						w->_right->_color = _black_node;
+						x->_parent->_color = _BLACK;
+						w->_right->_color = _BLACK;
 						_rotate_left (x->_parent);
 						x = _root;
 					}
 				} else {
 					node *w = x->_parent->_left;
-					if (w->_color == _red_node) {
-						w->_color = _black_node;
-						x->_parent->_color = _red_node;
+					if (w->_color == _RED) {
+						w->_color = _BLACK;
+						x->_parent->_color = _RED;
 						_rotate_right (x->_parent);
 						w = x->_parent->_left;
 					}
-					if (w->_right->_color == _black_node && w->_left->_color == _black_node) {
-						w->_color = _red_node;
+					if (w->_right->_color == _BLACK && w->_left->_color == _BLACK) {
+						w->_color = _RED;
 						x = x->_parent;
 					} else {
-						if (w->_left->_color == _black_node) {
-							w->_right->_color = _black_node;
-							w->_color = _red_node;
+						if (w->_left->_color == _BLACK) {
+							w->_right->_color = _BLACK;
+							w->_color = _RED;
 							_rotate_left (w);
 							w = x->_parent->_left;
 						}
 						w->_color = x->_parent->_color;
-						x->_parent->_color = _black_node;
-						w->_left->_color = _black_node;
+						x->_parent->_color = _BLACK;
+						w->_left->_color = _BLACK;
 						_rotate_right (x->_parent);
 						x = _root;
 					}
 				}
 			}
-			x->_color = _black_node;
+			x->_color = _BLACK;
 		}
 
-		void deleteNode(node *z) {
-			node *x, *y;
+		void _delete_node(node* n) {
+			node* child;
+			node* child_child;
 
-		/*****************************
-			*  delete node z from tree  *
-			*****************************/
+			if (!n || n == _null) return;
 
-			if (!z || z == NULL) return;
-
-
-			if (z->_left == NULL || z->_right == NULL) {
-				/* y has a NULL node as a child */
-				y = z;
+			if (n->_left == _null || (n->_left->_last_node)
+			 || n->_right == _null || (n->_right->_last_node)) {		// n has a _null node as a child
+				child = n;
 			} else {
-				/* find tree successor with a NULL node as a child */
-				y = z->_right;
-				while (y->_left != NULL) y = y->_left;
+				child = n->_right;
+				while (child->_left != _null)
+					child = child->_left;
 			}
 
-			/* x is y's only child */
-			if (y->_left != NULL)
-				x = y->_left;
+			if (child->_left != _null)							/* child_child is child's only child */
+				child_child = child->_left;
 			else
-				x = y->_right;
+				child_child = child->_right;
 
-			/* remove y from the parent chain */
-			x->_parent = y->_parent;
-			if (y->_parent)
-				if (y == y->_parent->_left)
-					y->_parent->_left = x;
+			child_child->_parent = child->_parent;
+			if (child->_parent != _null)
+				if (child == child->_parent->_left)
+					child->_parent->_left = child_child;
 				else
-					y->_parent->_right = x;
+					child->_parent->_right = child_child;
 			else
-				_root = x;
+				_root = child_child;
 
-			if (y != z) {
-				z->_data.first = y->_data.first;
-				z->_data.second = y->_data.second;
-			}
+			if (child != n)
+				_replace_node(n, child);
 
-			if (y->_color == _black_node)
-				deleteFixup (x);
 
-			free (y);
+			if (n->_color == _BLACK)
+				_delete_balance (child_child);
+			_set_end(_root);
+			_set_rend(_root);
+			delete n;
 		}
-
-		// node *
-		// _brother(node *n) {
-		// 	if (n == n->_parent->_left)
-		// 		return n->_parent->_right;
-		// 	return n->_parent->_left;
-		// }
-
-		// void 
-		// _replace_node(node* n, node* child) {
-		// 	child->_parent = n->_parent;
-		// 	if (n == n->_parent->_left) {
-		// 		n->_parent->_left = child;
-		// 	} else {
-		// 		n->_parent->_right = child;
-		// 	}
-		// }
-
-		// void
-		// _delete_one_child(node* n) {
-		// 	node* child = (!(n->_right) || n->_right->_last_node) ? n->_left : n->_right;
-			
-		// 	_replace_node(n, child);
-		// 	if (n->_color == _black_node) {
-		// 		if (child->_color == _red_node)
-		// 			child->_color = _black_node;
-		// 		else
-		// 			_delete_case1(child);
-		// 	}
-		// 	delete n;
-		// }
-
-		// void
-		// _delete_case1(node* n) { if (n->_parent != NULL) _delete_case2(n); }
-
-		// void
-		// _delete_case2(node* n) {
-		// 	node* s = _brother(n);
-
-		// 	if (s->_color == _red_node) {
-		// 		n->_parent->_color = _red_node;
-		// 		s->_color = _black_node;
-		// 		if (n == n->_parent->_left)
-		// 			_rotate_left(n->_parent);
-		// 		else
-		// 			_rotate_right(n->_parent);
-		// 	} 
-		// 	_delete_case3(n);
-		// }
-
-		// void _delete_case3(node* n) {
-		// 	node* s = _brother(n);
-
-		// 	if ((n->_parent->_color == _black_node) &&
-		// 		(s->_color == _black_node) &&
-		// 		(s->_left->_color == _black_node) &&
-		// 		(s->_right->_color == _black_node)) {
-		// 		s->_color = _red_node;
-		// 		_delete_case1(n->_parent);
-		// 	} else
-		// 		_delete_case4(n);
-		// }
-
-		// void _delete_case4(node* n) {
-		// 	node* s = _brother(n);
-
-		// 	if ((n->_parent->_color == _red_node) &&
-		// 		(s->_color == _black_node) &&
-		// 		(s->_left->_color == _black_node) &&
-		// 		(s->_right->_color == _black_node)) {
-		// 		s->_color = _red_node;
-		// 		n->_parent->_color = _black_node;
-		// 	} else
-		// 		_delete_case5(n);
-		// }
-
-		// void _delete_case5(node* n) {
-		// 	node* s = _brother(n);
-
-		// 	if  (s->_color == _black_node) {
-		// 		if ((n == n->_parent->_left) &&
-		// 			(s->_right->_color == _black_node) &&
-		// 			(s->_left->_color == _red_node)) {
-		// 			s->_color = _red_node;
-		// 			s->_left->_color = _black_node;
-		// 			_rotate_right(s);
-		// 		} else if ((n == n->_parent->_right) &&
-		// 				(s->_left->_color == _black_node) &&
-		// 				(s->_right->_color == _red_node)) {
-		// 			s->_color = _red_node;
-		// 			s->_right->_color = _black_node;
-		// 			_rotate_left(s);
-		// 		}
-		// 	}
-		// 	_delete_case6(n);
-		// }
-
-		// void _delete_case6(node* n) {
-		// 	node* s = _brother(n);
-
-		// 	s->_color = n->_parent->_color;
-		// 	n->_parent->_color = _black_node;
-
-		// 	if (n == n->_parent->_left) {
-		// 		s->_right->_color = _black_node;
-		// 		_rotate_left(n->_parent);
-		// 	} else {
-		// 		s->_left->_color = _black_node;
-		// 		_rotate_right(n->_parent);
-		// 	}
-		// }
 
 	public:
 
@@ -584,8 +499,9 @@ namespace ft {
 				  _end(),
 				  _rend() {
 
-			_end = new node(value_type(), _black_node, NULL, NULL, NULL, true);
-			_rend = new node(value_type(), _black_node, NULL, NULL, NULL, true);
+			_end = new node(value_type(), _BLACK, NULL, NULL, NULL, true);
+			_rend = new node(value_type(), _BLACK, NULL, NULL, NULL, true);
+			_null = new node(value_type(), _BLACK, NULL, NULL, NULL, false, true);
 		}
 
 		  template <typename InputIterator>
@@ -601,12 +517,12 @@ namespace ft {
 				  _end(),
 				  _rend() {
 				
-				_end = new node(value_type(), _black_node, NULL, NULL, NULL, true);
-				_rend = new node(value_type(), _black_node, NULL, NULL, NULL, true);
+				_null = new node(value_type(), _BLACK, NULL, NULL, NULL, false, true);
+				_end  = new node(value_type(), _BLACK, _null, _null, _null, true);
+				_rend = new node(value_type(), _BLACK, _null, _null, _null, true);
 
 				while (first != last) {
 					_add_node(_root, *first);
-					// _balance(current);
 					++first;
 				}
 			}
@@ -629,6 +545,7 @@ namespace ft {
 			// clear();
 			delete _end;
 			delete _rend;
+			delete _null;
 		}
 	
 // Map methods ---------------------------------------------------------------------
@@ -942,13 +859,13 @@ namespace ft {
 	// 		}
 	// 	}
 
-	// 	  template<typename BinaryP_red_nodeicate>
+	// 	  template<typename BinaryP_REDicate>
 	// 	void
-	// 	unique (BinaryP_red_nodeicate binary_p_red_node) {
+	// 	unique (BinaryP_REDicate binary_p_RED) {
 	// 					iterator first = this->begin();
 	// 		++first;
 	// 		while (first != this->end()) {
-	// 			if (binary_p_red_node(first.ptr->_data, first.ptr->_prev->_data)) {
+	// 			if (binary_p_RED(first.ptr->_data, first.ptr->_prev->_data)) {
 	// 				iterator temp = first;
 	// 				++temp;
 	// 				_cut(first);

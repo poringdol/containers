@@ -50,16 +50,17 @@ namespace ft {
 
 		iterator
 		operator++ () NOEXCEPT {
-			
-			if (ptr->_right) {
+
+			if (!ptr->_right->_null) {
 				ptr = ptr->_right;
-				while (ptr->_left)
+				if (ptr->_last_node)
+					return iterator(ptr);
+				while (!ptr->_left->_last_node && !ptr->_left->_null)
 					ptr = ptr->_left;
 			} else {
 				if (_key_comp(ptr, ptr->_parent))
 					ptr = ptr->_parent;
 				else {
-					// ptr = ptr->_parent;
 					while (!_key_comp(ptr, ptr->_parent))
 						ptr = ptr->_parent;
 					ptr = ptr->_parent;
@@ -73,15 +74,16 @@ namespace ft {
 			
 			Node* temp = this->ptr;
 
-			if (ptr->_right) {
+			if (!ptr->_right->_null) {
 				ptr = ptr->_right;
-				while (ptr->_left)
+				if (ptr->_last_node)
+					return iterator(ptr);
+				while (!ptr->_left->_null)
 					ptr = ptr->_left;
 			} else {
 				if (_key_comp(ptr, ptr->_parent))
 					ptr = ptr->_parent;
 				else {
-					// ptr = ptr->_parent;
 					while (!_key_comp(ptr, ptr->_parent))
 						ptr = ptr->_parent;
 					ptr = ptr->_parent;
@@ -95,9 +97,11 @@ namespace ft {
 
 			if (ptr->_last_node) {
 				ptr = ptr->_parent;
-			} else if (ptr->_left) {
+			} else if (!ptr->_left->_null) {
 				ptr = ptr->_left;
-				while (ptr->_right)
+				if (ptr->_last_node)
+					return iterator(ptr);
+				while (!ptr->_right->_null)
 					ptr = ptr->_right;
 			} else {
 				if (!_key_comp(ptr, ptr->_parent))
@@ -118,9 +122,11 @@ namespace ft {
 		
 			if (ptr->_last_node) {
 				ptr = ptr->_parent;
-			} else if (ptr->_left) {
+			} else if (!ptr->_left->_null) {
 				ptr = ptr->_left;
-				while (ptr->_right)
+				if (ptr->_last_node)
+					return iterator(ptr);
+				while (!ptr->_right->_null)
 					ptr = ptr->_right;
 			} else {
 				if (!_key_comp(ptr, ptr->_parent))
@@ -175,9 +181,11 @@ namespace ft {
 		reverse_iterator
 		operator++ () NOEXCEPT {
 
-			if (ptr->_left) {
+			if (!ptr->_left->_null) {
 				ptr = ptr->_left;
-				while (ptr->_right)
+				if (ptr->_last_node)
+					return reverse_iterator(ptr);
+				while (!ptr->_right->_null)
 					ptr = ptr->_right;
 			} else {
 				if (!this->_key_comp(ptr, ptr->_parent))
@@ -196,9 +204,11 @@ namespace ft {
 
 			Node* temp = this->ptr;
 
-			if (ptr->_left) {
+			if (!ptr->_left->_null) {
 				ptr = ptr->_left;
-				while (ptr->_right)
+				if (ptr->_last_node)
+					return reverse_iterator(ptr);
+				while (!ptr->_right->_null)
 					ptr = ptr->_right;
 			} else {
 				if (!this->_key_comp(ptr, ptr->_parent))
@@ -217,9 +227,11 @@ namespace ft {
 
 			if (ptr->_last_node) {
 				ptr = ptr->_parent;
-			} else if (ptr->_right) {
+			} else if (!ptr->_right->_null) {
 				ptr = ptr->_right;
-				while (ptr->_left)
+				if (ptr->_last_node)
+					return reverse_iterator(ptr);
+				while (!ptr->_left->_null)
 					ptr = ptr->_left;
 			} else {
 				if (this->_key_comp(ptr, ptr->_parent))
@@ -240,9 +252,11 @@ namespace ft {
 
 			if (ptr->_last_node) {
 				ptr = ptr->_parent;
-			} else if (ptr->_right) {
+			} else if (!ptr->_right->_null) {
 				ptr = ptr->_right;
-				while (ptr->_left)
+				if (ptr->_last_node)
+					return reverse_iterator(ptr);
+				while (!ptr->_left->_null)
 					ptr = ptr->_left;
 			} else {
 				if (this->_key_comp(ptr, ptr->_parent))
