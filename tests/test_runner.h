@@ -74,7 +74,8 @@ void AssertEqual(const T& t, const U& u, const string& hint = string()) {
 		if (!hint.empty()) {
 			os << "\thint: " << hint;
 		}
-   	 throw runtime_error(os.str());
+		std::cout << os.str() << endl;
+   		// throw runtime_error(os.str());
  	}
 }
 

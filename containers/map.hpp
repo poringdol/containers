@@ -2,9 +2,9 @@
 
 #include <limits>
 #include <memory>
-#include <cstring>
+#include "stack.hpp"
 #include "map_iterator.hpp"
-#include "cpp_type_traits.hpp"
+// #include "cpp_type_traits.hpp"
 
 #ifndef NOEXCEPT
 	#if __cplusplus >= 201103L
@@ -42,7 +42,7 @@ namespace ft {
 		enum _rb_tree_color { _BLACK = false, _RED = true };
 // ----------------------------------------------------------------------------
 
-// Supporting structure tree node
+// Supporting structure tree_node
 		struct _rb_tree_node {
 
 			value_type				_data;
@@ -76,6 +76,10 @@ namespace ft {
 			friend class map<Key, T, Compare, Alloc>;
 
 		public:
+			typedef bool	result_type;
+			typedef			value_type first_argument_type;
+			typedef			value_type second_argument_type;
+
 			bool operator()(const value_type& x, const value_type& y) const {
 				return _comp(x.first, y.first);
 			}
@@ -107,9 +111,7 @@ namespace ft {
 				   !_comp_val(k2, k1);
 		}
 
-		// _add_node(root, node) recursively searches for a place to insert a node
-		void
-		// node*
+		node*
 		_add_node (node* root, const value_type& new_data) {
 		
 			if (!root) {
@@ -118,7 +120,11 @@ namespace ft {
 				_rend->_parent = _root;
 				_root->_left = _rend;
 				_root->_right = _end;
-				return;
+				return _root;
+			}
+			while (root->_parent != _null 
+					&& _comp_val(new_data, root->_parent->_data)) {
+				root = root->_parent;
 			}
 			while ((root->_left != _null
 					&& !root->_left->_last_node
@@ -128,7 +134,7 @@ namespace ft {
 					&& !_comp_val(new_data, root->_data))) {
 				
 				if (_is_key_equal(new_data, root->_data))
-					return;
+					return root;
 
 				if (_comp_val(new_data, root->_data))
 					root = root->_left;
@@ -136,8 +142,8 @@ namespace ft {
 					root = root->_right;
 			}
 			if (_is_key_equal(new_data, root->_data))
-				return;
-			_insert_node(root, new_data);
+				return root;
+			return _insert_node(root, new_data);
 		}
 
 		node*
@@ -178,7 +184,7 @@ namespace ft {
 		_find (const key_type& k) const {
 
 			iterator it = begin();
-			value_type temp(k, 0);
+			value_type temp(k, T());
 			while (it != end()) {
 				if (_is_key_equal(*it, temp))
 					return it.base();
@@ -189,9 +195,7 @@ namespace ft {
 
 		void
 		_erase (iterator position) {
-			(void)position;
 			_delete_node(position.base());
-			_node_count--;
 		}
 
 		void
@@ -203,7 +207,7 @@ namespace ft {
 				if (indent)
 					std::cout << std::setw(indent) << ' ';
 				std::cout << (p->_color ? "\033[1;31m" : "") <<
-					"[" << p->_data.first << " "	 << p->_data.second << "]" <<
+					"[" << p->_data.first << " " << p->_data.second << "]" <<
 					"\033[0;0m" << "\n ";
 				if(p->_left && p->_left != _rend)
 					_print(p->_left, indent + 5);
@@ -233,12 +237,19 @@ namespace ft {
 		}
 
 		void
+		_set_empty_map() {
+			_end->_parent = _rend;
+			_rend->_parent = _end;
+			_root = NULL;
+		}
+
+		void
 		_print_tree () { std::cout << "\n"; _print(_root); std::cout << "\n"; }
 
 	// Balancing ----------------------------------------------------------------
 
 		node*
-		_grand_parent (node* n) {
+		_grandparent (node* n) {
 			if (n != _null && n->_parent != _null)
 				return n->_parent->_parent;
 			return _null;
@@ -246,7 +257,7 @@ namespace ft {
 
 		node*
 		_uncle (node* n) {
-			node* g = _grand_parent(n);
+			node* g = _grandparent(n);
 			if (g == _null)
 				return _null;			// No grandparent means no uncle
 			if (n->_parent == g->_left)
@@ -329,7 +340,7 @@ namespace ft {
 			if (u != _null && !u->_last_node && u->_color == _RED) {		 // && (n->_parent->_color == _RED) проверяется в insert_case2
 				n->_parent->_color = _BLACK;
 				u->_color = _BLACK;
-				g = _grand_parent(n);
+				g = _grandparent(n);
 				g->_color = _RED;
 				_insert_case1(g);
 			} else {
@@ -340,7 +351,7 @@ namespace ft {
 		void
 		_insert_case4 (node* n) {
 
-			node* g = _grand_parent(n);
+			node* g = _grandparent(n);
  
 			if ((n == n->_parent->_right) && (n->_parent == g->_left)) {
 				_rotate_left(n->_parent);
@@ -354,7 +365,7 @@ namespace ft {
 
 		void
 		_insert_case5 (node* n) {
-			node* g = _grand_parent(n);
+			node* g = _grandparent(n);
 
 			n->_parent->_color = _BLACK;
 			g->_color = _RED;
@@ -388,7 +399,8 @@ namespace ft {
 				_root = child;
 		}
 
-		void _delete_balance(node* x) {
+		void
+		_delete_balance(node* x) {
 
 			while (x != _root && x->_color == _BLACK) {
 				if (x == x->_parent->_left) {
@@ -444,11 +456,12 @@ namespace ft {
 			x->_color = _BLACK;
 		}
 
-		void _delete_node(node* n) {
+		void
+		_delete_node(node* n) {
 			node* child;
-			node* child_child;
+			node* grandchild;
 
-			if (!n || n == _null) return;
+			if (!n || n == _null || !_node_count) return;
 
 			if (n->_left == _null || (n->_left->_last_node)
 			 || n->_right == _null || (n->_right->_last_node)) {		// n has a _null node as a child
@@ -459,29 +472,31 @@ namespace ft {
 					child = child->_left;
 			}
 
-			if (child->_left != _null)							/* child_child is child's only child */
-				child_child = child->_left;
+			if (child->_left != _null && !child->_left->_last_node)		// grandchild is child's only child
+				grandchild = child->_left;
 			else
-				child_child = child->_right;
+				grandchild = child->_right;
 
-			child_child->_parent = child->_parent;
+			grandchild->_parent = child->_parent;
 			if (child->_parent != _null)
 				if (child == child->_parent->_left)
-					child->_parent->_left = child_child;
+					child->_parent->_left = grandchild;
 				else
-					child->_parent->_right = child_child;
+					child->_parent->_right = grandchild;
 			else
-				_root = child_child;
+				_root = grandchild;
 
 			if (child != n)
 				_replace_node(n, child);
 
-
 			if (n->_color == _BLACK)
-				_delete_balance (child_child);
+				_delete_balance (grandchild);
 			_set_end(_root);
 			_set_rend(_root);
 			delete n;
+			_node_count--;
+			if (!_node_count)
+				_set_empty_map();
 		}
 
 	public:
@@ -491,17 +506,18 @@ namespace ft {
 		explicit
 		map (const key_compare& comp = key_compare(),
 			 const allocator_type& alloc = allocator_type())
-				: _root(),
-				  _compare(comp),
-				  _alloc(alloc),
-				  _node_count(),
-				  _comp_val(comp),
-				  _end(),
-				  _rend() {
+				  : _root(),
+					_compare(comp),
+					_alloc(alloc),
+					_node_count(),
+					_comp_val(comp),
+					_end(),
+					_rend() {
 
-			_end = new node(value_type(), _BLACK, NULL, NULL, NULL, true);
-			_rend = new node(value_type(), _BLACK, NULL, NULL, NULL, true);
 			_null = new node(value_type(), _BLACK, NULL, NULL, NULL, false, true);
+			_end  = new node(value_type(), _BLACK, _null, _null, _null, true);
+			_rend = new node(value_type(), _BLACK, _null, _null, _null, true);
+			_set_empty_map();
 		}
 
 		  template <typename InputIterator>
@@ -509,84 +525,108 @@ namespace ft {
 			 InputIterator last,
 			 const key_compare& comp = key_compare(),
 			 const allocator_type& alloc = allocator_type())
-				: _root(),
-				  _compare(comp),
-				  _alloc(alloc),
-				  _node_count(),
-				  _comp_val(comp),
-				  _end(),
-				  _rend() {
-				
+				  : _root(),
+					_compare(comp),
+					_alloc(alloc),
+					_node_count(),
+					_comp_val(comp),
+					_end(),
+					_rend() {
+					
 				_null = new node(value_type(), _BLACK, NULL, NULL, NULL, false, true);
 				_end  = new node(value_type(), _BLACK, _null, _null, _null, true);
 				_rend = new node(value_type(), _BLACK, _null, _null, _null, true);
+				_set_empty_map();
 
-				while (first != last) {
-					_add_node(_root, *first);
-					++first;
-				}
+				insert(first, last);
 			}
 
-		// map (const map& x) {
+		map (const map& x)
+			  : _root(),
+				_compare(x._compare),
+				_alloc(x._alloc),
+				_node_count(),
+				_comp_val(x._comp_val),
+				_end(),
+				_rend() {
 
-		// 	typename ft::map<Key, T>::iterator first = x.begin();
-	
-		// 	while (first != x.end()) {
-		// 			_add_node(_root, first->ptr);
-		// 			// _balance(current);
-		// 			++first;
-		// 		}
-		// }
+			_null = new node(value_type(), _BLACK, NULL, NULL, NULL, false, true);
+			_end  = new node(value_type(), _BLACK, _null, _null, _null, true);
+			_rend = new node(value_type(), _BLACK, _null, _null, _null, true);
+			_set_empty_map();
+
+			insert(x.begin(), x.end());
+		}
 
 // Map destructor --------------------------------------------------------------
 
-		// ~map () { _clear(); }
 		~map () {
-			// clear();
+			_clear();
 			delete _end;
 			delete _rend;
 			delete _null;
 		}
-	
+
+// Map operators -------------------------------------------------------------------
+
+		map&
+		operator= (const map& x) {
+			insert(x.begin(), x.end());
+			return *this;
+		}
+
+		mapped_type&
+		operator[] (const key_type& k) {
+			
+			pair<iterator,bool> temp = insert(make_pair(k, T()));
+			
+			return temp.first->second;
+		}
+
 // Map methods ---------------------------------------------------------------------
 
 	//  Iterators -------------------------------
 
 		iterator
-		begin () NOEXCEPT			{ return iterator(_rend->_parent); }
+		begin () NOEXCEPT				{ return iterator(_rend->_parent); }
 
 		const_iterator
-		begin () const NOEXCEPT		{ return iterator(_rend->_parent); }
+		begin () const NOEXCEPT			{ return iterator(_rend->_parent); }
 
 		iterator
-		end () NOEXCEPT				{ return iterator(_end); }
+		end () NOEXCEPT					{ return iterator(_end); }
 
 		const_iterator
-		end () const NOEXCEPT		{ return const_iterator(_end); }
+		end () const NOEXCEPT			{ return const_iterator(_end); }
 
 		reverse_iterator
-		rbegin () NOEXCEPT			{ return reverse_iterator(_end->_parent); }
+		rbegin () NOEXCEPT				{ return reverse_iterator(_end->_parent); }
 
 		const_reverse_iterator
-		rbegin () const NOEXCEPT 	{ return reverse_iterator(_end->_parent); }
+		rbegin () const NOEXCEPT 		{ return reverse_iterator(_end->_parent); }
 
 		reverse_iterator
-		rend () NOEXCEPT			{ return reverse_iterator(_rend); }
+		rend () NOEXCEPT				{ return reverse_iterator(_rend); }
 
 		const_reverse_iterator
-		rend () const NOEXCEPT		{ return const_reverse_iterator(_rend); }
+		rend () const NOEXCEPT			{ return const_reverse_iterator(_rend); }
 
-		iterator
-		find (const key_type& k)		{ return iterator(_find(k)); }
+	//  Capacity --------------------------------
 
-		const_iterator
-		find (const key_type& k) const	{ return const_iterator(_find(k)); }
+		bool
+		empty () const NOEXCEPT			{ return _node_count == 0u; }
 
 		size_type
-		count (const key_type& k) const	{ return (_find(k) == _end ? 0u : 1u); }
+		size () const NOEXCEPT			{ return _node_count; }
+
+		size_type
+		max_size () const NOEXCEPT		{ return std::numeric_limits<long>::max() / sizeof(_rb_tree_node); }
+
+	// Modifiers --------------------------------
 
 		pair<iterator,bool>
 		insert (const value_type& val) {
+
 			size_t old_size = size();
 			_add_node(_root, val);
 			return std::make_pair(find(val.first), old_size != size());
@@ -594,16 +634,16 @@ namespace ft {
 
 		iterator
 		insert (iterator position, const value_type& val) {
-			_add_node(position.ptr, val);
-			return find(val.first);
+
+			return _add_node(position.ptr, val);
 		}
 
-		  template <class InputIterator>
+		  template <typename InputIterator>
 		void
 		insert (InputIterator first, InputIterator last) {
+			
 			while (first != last) {
 				_add_node(_root, *first);
-				// _balance(current);
 				++first;
 			}
 		}
@@ -623,344 +663,152 @@ namespace ft {
 
 		void
 		erase (iterator first, iterator last) {
+			
+			ft::stack<node*> store;
 			while (first != last) {
-				erase(first);
+				store.push(first.base());
 				++first;
+			}
+			while (!store.empty()) {
+				_erase(store.top());
+				store.pop();
 			}
 		}
 
+		void
+		swap (map& x) {
 
+			node*			root = x._root;
+			key_compare		compare = x._compare;
+			allocator_type	alloc = x._alloc;
+			size_t			node_count = x._node_count;
+			value_compare	comp_val = x._comp_val;
+			node*			end = x._end;
+			node*			rend = x._rend;
+			node*			null = x._null;
+			
+			x._root = _root;
+			x._compare = _compare;
+			x._alloc = _alloc;
+			x._node_count = _node_count;
+			x._comp_val = _comp_val;
+			x._end = _end;
+			x._rend = _rend;
+			x._null = _null;
 
-	// // Capacity ----------------------------
+			_root = root;
+			_compare = compare;
+			_alloc = alloc;
+			_node_count = node_count;
+			_comp_val = comp_val;
+			_end = end;
+			_rend = rend;
+			_null = null;
+		}
 
-		bool
-		empty () const NOEXCEPT		{ return _node_count == 0; }
+		void
+		clear () NOEXCEPT { _clear(); }
+
+	// Observers --------------------------------
+
+		key_compare
+		key_comp() const				{ return _compare; }
+	
+		value_compare
+		value_comp() const				{ return _comp_val; }
+
+	// Operations -------------------------------
+
+		iterator
+		find (const key_type& k)		{ return iterator(_find(k)); }
+
+		const_iterator
+		find (const key_type& k) const	{ return const_iterator(_find(k)); }
 
 		size_type
-		size () const NOEXCEPT		{ return _node_count; }
+		count (const key_type& k) const	{ return (_find(k) == _end ? 0u : 1u); }
 
-	// 	size_type
-	// 	max_size () const NOEXCEPT	{ return std::numeric_limits<size_type>::max() / sizeof(Map_node) / 2; }
+		iterator
+		lower_bound (const key_type& k) { 
+			
+			iterator it = begin();
+			value_type temp(k, T());
+			
+			while (it != end()) {
+				if (_is_key_equal(*it, temp) || _comp_val(temp, it.base()->_data))
+					return it;
+				++it;
+			}
+			return it;
+		}
 
-	// // Element access -------------------------
+		const_iterator
+		lower_bound (const key_type& k) const {
 
-	// 	reference
-	// 	front () NOEXCEPT			{ return *(begin()); }
+			const_iterator it = begin();
+			value_type temp(k, T());
+			
+			while (it != end()) {
+				if (_is_key_equal(*it, temp) || _comp_val(temp, it.base()->data))
+					return it;
+				++it;
+			}
+			return it;
+		}
 
-	// 	value_type
-	// 	front () const NOEXCEPT		{ return *(this->begin()); }
+		iterator
+		upper_bound (const key_type& k) {
 
-	// 	reference
-	// 	back () NOEXCEPT				{ return *(-- (this->end())); }
+			iterator it = begin();
+			value_type temp(k, T());
+			
+			while (it != end()) {
+				if (_comp_val(temp, *it))
+					return it;
+				++it;
+			}
+			return it;
+		}
 
-	// 	value_type
-	// 	back () const NOEXCEPT		{ return *(-- (this->end())); }
+		const_iterator
+		upper_bound (const key_type& k) const {
+			
+			const_iterator it = begin();
+			value_type temp(k, T());
+			
+			while (it != end()) {
+				if (_comp_val(temp, *it))
+					return it;
+				++it;
+			}
+			return it;
+		}
 
-	// // Modifiers ------------------------------
+		pair<iterator, iterator>
+		equal_range (const key_type& k) {
 
-	// 	  template<typename InputIterator>
-	// 	void
-	// 	assign (InputIterator first, InputIterator last) {
-	// 		typedef typename ft::is_integer_my<InputIterator>::type_my _Integral;
-	// 		_assign(first, last, _Integral());
-	// 	}
+			iterator res = lower_bound(k);
+			return make_pair(res, res);
+		}
 
-	// 	void
-	// 	assign (size_type n, value_type val) {
-	// 		_assign(n, val, ft::true_type_my());
-	// 	}
+		pair<const_iterator, const_iterator>
+		equal_range (const key_type& k) const {
 
-	// 	void
-	// 	push_front (value_type data) {
-	// 		Map_node *temp = new Map_node(data, this->_head, this->_head->_next);
-	// 		this->_head->_next = this->_head->_next->_prev = temp;
-	// 		_Map_size++;
-	// 	}
-
-	// 	void
-	// 	pop_front () NOEXCEPT { this->erase(this->begin()); }
-
-	// 	void
-	// 	push_back (value_type data) {
-	// 		if (!_Map_size) {
-	// 			Map_node *temp = new Map_node(data);
-	// 			this->_head->_prev = this->_head->_next = temp;
-	// 			temp->_prev = temp->_next = this->_head;
-	// 		} else {
-	// 			Map_node *temp = new Map_node(data, this->_head->_prev, this->_head);
-	// 			this->_head->_prev->_next = temp;
-	// 			this->_head->_prev = temp;
-	// 		}
-	// 		_Map_size++;
-	// 	}
-
-	// 	void
-	// 	pop_back () NOEXCEPT { this->erase(iterator(this->_head->_prev)); }
-
-	// 	iterator
-	// 	insert (iterator position, value_type data) {
-	// 		if (position == this->begin()) {
-	// 			push_front(data);
-	// 			return this->begin();
-	// 		}
-
-	// 		Map_node *temp = new Map_node(data);
-	// 		_node_insert(position.ptr, temp);
-	// 		_Map_size++;
-	// 		return iterator(temp);
-	// 	}
-
-	// 	void
-	// 	insert (iterator position, size_type n, value_type val) {
-	// 		_insert(position, n, val, ft::true_type_my());
-	// 	}
-		
-	// 	  template<typename InputIterator>
-	// 	void
-	// 	insert (iterator position, InputIterator first, InputIterator last) {
-	// 		typedef typename ft::is_integer_my<InputIterator>::type_my _Integral;
-	// 		_insert(position, first, last, _Integral());
-	// 	}
-
-	// 	iterator
-	// 	erase (iterator position) {
-	// 		if (position != this->end()) {
-	// 			_cut(position);
-	// 			iterator temp = position++;
-	// 			if (temp == this->begin())
-	// 				this->_head->_next = temp.ptr;
-	// 			delete temp.ptr;
-	// 			_Map_size -= _Map_size ? 1 : 0;
-	// 		}
-	// 		return position;
-	// 	}
-
-	// 	iterator
-	// 	erase (iterator first, iterator last) {
-	// 		while (first != last) {
-	// 			first = erase(first);
-	// 		}
-	// 		return last;
-	// 	}
-
-	// 	void
-	// 	swap (Map& x) {
-	// 		Map_node* temp = this->_head;
-	// 		this->_head = x._head;
-	// 		x._head = temp;
-
-	// 		size_type size = this->_Map_size;
-	// 		_Map_size = x._Map_size;
-	// 		x._Map_size = size;
-	// 	}
-
-	// 	void
-	// 	resize (size_type new_size, value_type val = value_type()) {
-	// 		if (new_size < this->_Map_size) {
-	// 			iterator it = this->begin();
-	// 			while (new_size--)
-	// 				++it;
-	// 			erase(it, this->end());
-	// 		} else {
-	// 			insert(this->end(), new_size - this->_Map_size, val);
-	// 		}
-	// 	}
-
-	// 	void
-	// 	clear () NOEXCEPT {
-	// 		Map_node *temp;
-	// 		while (this->_Map_size) {
-	// 			temp = this->_head->_next;
-	// 			delete this->_head;
-	// 			this->_head = temp;
-	// 			this->_Map_size--;
-	// 		}
-	// 		this->_head->_prev = this->_head->_next = this->_head;
-	// 	}
-
-	// // Operations -----------------------------
-
-	// 	void
-	// 	splice (iterator position, Map& x) {
-	// 		while (x._Map_size--) {
-	// 			iterator first = x.begin();
-	// 			iterator temp = ++(x.begin());
-	// 			_cut(first);
-	// 			_node_insert(position.ptr, first.ptr);
-	// 			first = temp;
-	// 			_Map_size++;
-	// 		}
-	// 		x._head->_next = x._head->_prev = x._head;
-	// 		x._Map_size = 0;
-	// 	}
-
-	// 	void
-	// 	splice (iterator position, Map& x, iterator i) {
-	// 		_cut(i);
-	// 		_Map_size++;
-	// 		x._Map_size--;
-	// 		_node_insert(position.ptr, i.ptr);
-	// 	}
-
-	// 	void
-	// 	splice (iterator position, Map& x, iterator first, iterator last) {
-	// 		while (first != last) {
-	// 			iterator temp = first;
-	// 			++temp;
-	// 			_cut(first);
-	// 			_node_insert(position.ptr, first.ptr);
-	// 			first = temp;
-	// 			_Map_size++;
-	// 			x._Map_size--;
-	// 		}
-	// 	}
-
-	// 	void
-	// 	remove (value_type val) {
-	// 		iterator it = this->begin();
-	// 		while (it != this->end()) {
-	// 			iterator temp = it;
-	// 			++it;
-	// 			if (*temp == val) {
-	// 				this->erase(temp);
-	// 			}
-	// 		}
-	// 	}
-
-	// 	  template<typename Compare>
-	// 	void
-	// 	remove_if (Compare comp) {
-	// 		iterator it = this->begin();
-	// 		while (it != this->end()) {
-	// 			iterator temp = it;
-	// 			++it;
-	// 			if (comp(*temp)) {
-	// 				this->erase(temp);
-	// 			}
-	// 		}
-	// 	}
-
-
-	// 	void
-	// 	unique() {
-	// 		iterator first = this->begin();
-	// 		++first;
-	// 		while (first != this->end()) {
-	// 			if (first.ptr->_data == first.ptr->_prev->_data) {
-	// 				iterator temp = first;
-	// 				++temp;
-	// 				_cut(first);
-	// 				delete first.ptr;
-	// 				_Map_size--;
-	// 				first = temp;
-	// 			} else {
-	// 				++first;
-	// 			}
-	// 		}
-	// 	}
-
-	// 	  template<typename BinaryP_REDicate>
-	// 	void
-	// 	unique (BinaryP_REDicate binary_p_RED) {
-	// 					iterator first = this->begin();
-	// 		++first;
-	// 		while (first != this->end()) {
-	// 			if (binary_p_RED(first.ptr->_data, first.ptr->_prev->_data)) {
-	// 				iterator temp = first;
-	// 				++temp;
-	// 				_cut(first);
-	// 				delete first.ptr;
-	// 				_Map_size--;
-	// 				first = temp;
-	// 			} else {
-	// 				++first;
-	// 			}
-	// 		}
-	// 	}
-
-	// 	void
-	// 	merge (Map& x) { this->merge(x, _compare); }
-
-	// 	  template<typename Compare>
-	// 	void
-	// 	merge (Map& x, Compare comp) {
-	// 		if (&x == this)
-	// 			return;
-	// 		iterator first1 = this->begin(), first2 = x.begin(),
-	// 				  last1 = this->end(),	  last2 = x.end();
-	// 		while (first1 != last1 && first2 != last2) {
-	// 			if (comp(*first2, *first1)) {
-	// 				iterator temp = first2;
-	// 				temp++;
-	// 				_node_insert(first1.ptr, first2.ptr);
-	// 				first2 = temp;
-	// 				this->_Map_size++;
-	// 			}
-	// 			else
-	// 				++first1;
-	// 		}
-	// 		while (first2 != last2) {
-	// 			iterator temp = first2;
-	// 			temp++;
-	// 			_node_insert(first1.ptr, first2.ptr);
-	// 			first2 = temp;
-	// 			this->_Map_size++;;
-	// 		}
-	// 		x._head->_next = x._head->_prev = x._head;
-	// 		x._Map_size = 0;
-	// 	}
-
-	// 	void
-	// 	sort() { this->sort(_compare); }
-
-	// 	  template<typename Compare>
-	// 	void
-	// 	sort (Compare comp) {
-	// 		for (iterator it = begin(); it != end(); ) {
-	// 			iterator it_min;
-	// 			it_min = it;
-	// 			for (iterator itt = it; itt != end(); ++itt) {
-	// 				if (comp(*itt, *it_min)) {
-	// 					it_min = itt;
-	// 				}
-	// 			}
-	// 			if (it_min != it) {
-	// 				_cut(it_min);
-	// 				_node_insert(it.ptr, it_min.ptr);
-	// 			} else {
-	// 				++it;
-	// 			}
-	// 		}
-	// 	}
-
-	// 	void
-	// 	reverse () {
-	// 		iterator first = this->_head;
-	// 		size_type size = this->_Map_size;
-	// 		while (size--) {
-	// 			iterator last = -- (this->end());
-	// 			_cut(last);
-				
-	// 			first.ptr->_next->_prev = last.ptr;
-	// 			last.ptr->_next = first.ptr->_next;
-	// 			first.ptr->_next = last.ptr;
-	// 			last.ptr->_prev = first.ptr;
-	// 			++first;
-	// 		}
-	// 	}
+			const_iterator res = lower_bound(k);
+			return make_pair(res, res);
+		}
 
 // Friend functions -----------------------------------------------------------
-		//   template<typename _T, typename _Alloc>
-		// friend bool
-		// operator== (const Map<_T, _Alloc>&, const Map<_T, _Alloc>&);
+		  template <typename _Key, typename _T, typename _Compare, typename _Alloc>
+		friend bool
+		operator== (const map<_Key,_T,_Compare,_Alloc>&, const map<_Key,_T,_Compare,_Alloc>&);
 
-		//   template<typename _T, typename _Alloc>
-		// friend  bool
-		// operator<  (const Map<_T, _Alloc>&, const Map<_T, _Alloc>&);
+		  template <typename _Key, typename _T, typename _Compare, typename _Alloc>
+		friend  bool
+		operator<  (const map<_Key,_T,_Compare,_Alloc>&, const map<_Key,_T,_Compare,_Alloc>&);
 
-		//   template<typename _T, typename _Alloc>
-		// friend void
-		// swap (Map<_T, _Alloc>&, Map<_T, _Alloc>&);
+		  template <typename _Key, typename _T, typename _Compare, typename _Alloc>
+  		void swap (map<_Key,_T,_Compare,_Alloc>& x, map<_Key,_T,_Compare,_Alloc>& y);
 
 		  template<typename U>
 		friend void
@@ -971,72 +819,71 @@ namespace ft {
 
 // Friend functions definitions -----------------------------------------------
 
-	//   template<typename T, typename Alloc>
-	// inline bool
-	// operator== (const Map<T,Alloc>& lhs, const Map<T,Alloc>& rhs) {
+	 template <typename Key, typename T, typename Compare, typename Alloc>
+	bool
+	operator== (map<Key,T,Compare,Alloc>& x, map<Key,T,Compare,Alloc>& y) {
 		
-	// 	if (lhs.size() != rhs.size()) return false;
+		if (x.size() != y.size()) return false;
 		
-	// 	typename ft::Map<T>::iterator first1 = lhs.begin();
-	// 	typename ft::Map<T>::iterator first2 = rhs.begin();
+		typename ft::map<Key, T>::iterator first1 = x.begin();
+		typename ft::map<Key, T>::iterator first2 = y.begin();
 		
-	// 	while (first1 != lhs.end()) {
-	// 		if (*first1 != *first2)
-	// 			return false;
-	// 		++first1;
-	// 		++first2;
-	// 	}
-	// 	return true;
-	// }
+		while (first1 != x.end()) {
+			if (*first1 != *first2)
+				return false;
+			++first1;
+			++first2;
+		}
+		return true;
+	}
 
-	//   template<typename T, typename Alloc>
-	// inline bool
-	// operator!= (const Map<T,Alloc>& lhs, const Map<T,Alloc>& rhs) {
-	// 	return !(lhs == rhs);
-	// }
+	 template <typename Key, typename T, typename Compare, typename Alloc>
+	bool
+	operator!= (map<Key,T,Compare,Alloc>& x, map<Key,T,Compare,Alloc>& y) {
+		return !(x == y);
+	}
 
-	//   template<typename T, typename Alloc>
-	// inline bool
-	// operator<  (const Map<T,Alloc>& lhs, const Map<T,Alloc>& rhs) {
+	 template <typename Key, typename T, typename Compare, typename Alloc>
+	bool
+	operator<  (map<Key,T,Compare,Alloc>& x, map<Key,T,Compare,Alloc>& y) {
 
-	// 	typename ft::Map<T>::iterator first1 = lhs.begin();
-	// 	typename ft::Map<T>::iterator first2 = rhs.begin();
+		typename ft::map<Key, T>::iterator first1 = x.begin();
+		typename ft::map<Key, T>::iterator first2 = y.begin();
 		
-	// 	while (first1 != lhs.end() && first2 != rhs.end()) {
-	// 		if (*first1 < *first2)
-	// 			return true;
-	// 		if (*first1 > *first2)
-	// 			return false;
-	// 		++first1;
-	// 		++first2;
-	// 	}
-	// 	if (lhs.size() > rhs.size() ||
-	// 		(lhs.size() == rhs.size() && *(--first1) >= *(--first2)))
-	// 		return false;
-	// 	return true;
-	// }
+		while (first1 != x.end() && first2 != y.end()) {
+			if (*first1 < *first2)
+				return true;
+			if (*first1 > *first2)
+				return false;
+			++first1;
+			++first2;
+		}
+		if (x.size() > y.size() ||
+			(x.size() == y.size() && *(--first1) >= *(--first2)))
+			return false;
+		return true;
+	}
 
-	//   template<typename T, typename Alloc>
-	// inline bool
-	// operator<= (const Map<T,Alloc>& lhs, const Map<T,Alloc>& rhs) {
-	// 	return !(rhs < lhs);
-	// }
+	 template <typename Key, typename T, typename Compare, typename Alloc>
+	bool
+	operator<= (map<Key,T,Compare,Alloc>& x, map<Key,T,Compare,Alloc>& y) {
+		return !(y < x);
+	}
 
-	//   template<typename T, typename Alloc>
-	// inline bool
-	// operator>  (const Map<T,Alloc>& lhs, const Map<T,Alloc>& rhs) {
-	// 	return rhs < lhs;
-	// }
+	 template <typename Key, typename T, typename Compare, typename Alloc>
+	bool
+	operator>  (map<Key,T,Compare,Alloc>& x, map<Key,T,Compare,Alloc>& y) {
+		return y < x;
+	}
 
-	//   template<typename T, typename Alloc>
-	// inline bool
-	// operator>= (const Map<T,Alloc>& lhs, const Map<T,Alloc>& rhs) {
-	// 	return !(lhs < rhs);
-	// }
+	 template <typename Key, typename T, typename Compare, typename Alloc>
+	bool
+	operator>= (map<Key,T,Compare,Alloc>& x, map<Key,T,Compare,Alloc>& y) {
+		return !(x < y);
+	}
 
-	//   template<typename T, typename Alloc>
-	// void
-	// swap (Map<T,Alloc>& x, Map<T,Alloc>& y) {
-	// 	x.swap(y);
-	// }
+	  template <typename _Key, typename _T, typename _Compare, typename _Alloc>
+	void swap (map<_Key,_T,_Compare,_Alloc>& x, map<_Key,_T,_Compare,_Alloc>& y) {
+		x.swap(y);
+	}
 }

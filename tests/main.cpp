@@ -80,6 +80,7 @@ int main() {
 			ft_vector::vector_test();
 			ft_stack::stack_test();
 			ft_queue::queue_test();
+			ft_map::map_test();
 
 		} else if (index == ft::Exit)
 			exit(0);

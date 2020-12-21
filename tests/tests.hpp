@@ -33,20 +33,20 @@ static char arr_str[][11] = {"one", "two", "three", "four", "five",
 									"six", "seven", "eight", "nine", "zero", ""};
 
 static std::pair<int, int> vect_map1[15] =  {std::make_pair(50, 1),
-							std::make_pair(25, 1), 
-								std::make_pair(8, 1), std::make_pair(35, 1),
-									std::make_pair(1, 1), std::make_pair(12, 1),
-									std::make_pair(30, 1), std::make_pair(40, 1),
-							std::make_pair(75, 1),
-								std::make_pair(60, 1), std::make_pair(90, 1),
-									std::make_pair(55, 1), std::make_pair(70, 1),
-									std::make_pair(80, 1), std::make_pair(100, 1)};
+							std::make_pair(25, 2), 
+								std::make_pair(8, 3), std::make_pair(35, 4),
+									std::make_pair(1, 5), std::make_pair(12, 6),
+									std::make_pair(30, 7), std::make_pair(40, 8),
+							std::make_pair(75, 9),
+								std::make_pair(60, 10), std::make_pair(90, 11),
+									std::make_pair(55, 12), std::make_pair(70, 13),
+									std::make_pair(80, 14), std::make_pair(100, 15)};
 
-static std::pair<int, int> vect_map2[15] =  { std::make_pair(1, 1), std::make_pair(8, 1), std::make_pair(12, 1),
-								std::make_pair(25, 1), std::make_pair(30, 1), std::make_pair(35, 1),
-								std::make_pair(40, 1), std::make_pair(50, 1), std::make_pair(55, 1),
-								std::make_pair(60, 1), std::make_pair(70, 1), std::make_pair(75, 1),
-								std::make_pair(80, 1), std::make_pair(90, 1), std::make_pair(100, 1) };
+static std::pair<int, int> vect_map2[15] =  { std::make_pair(1, 1), std::make_pair(8, 2), std::make_pair(12, 3),
+								std::make_pair(25, 4), std::make_pair(30, 5), std::make_pair(35, 6),
+								std::make_pair(40, 7), std::make_pair(50, 8), std::make_pair(55, 9),
+								std::make_pair(60, 10), std::make_pair(70, 11), std::make_pair(75, 12),
+								std::make_pair(80, 13), std::make_pair(90, 14), std::make_pair(100, 15) };
 
 static std::pair<std::string, int> vect_map3[15] =  { std::make_pair("one", 1), std::make_pair("two", 2), std::make_pair("three", 3),
 								std::make_pair("four", 4), std::make_pair("five", 5), std::make_pair("six", 6),
@@ -116,6 +116,7 @@ std::string mapToString(const T& cont) {
 	std::ostringstream os;
 	for(typename T::const_iterator it = cont.begin(); it != cont.end(); ++it) {
 		os << it->first << " " << it->second << ", ";
+		// std::cout << it->first << " " << it->second << std::endl;
 	}
 	if (ENABLE_LOGS) {
 		int i = 0;
@@ -223,23 +224,24 @@ namespace ft_map
 
 	void constructorDefault_test();
 	void constructorRange_test();
+	void constructorCopy_test();
 	void begin_end_test();
 	void size_test();
+	void max_size_test();
 	void empty_test();
 	void find_test();
 	void count_test();
-	// void max_size_test();
 	void insert_range_test();
 	void insert_single_test();
 	void insert_hint_test();
 	void erase_single_test();
 	void erase_key_test();
 	void erase_range_test();
-	// void clear_test();
-	// void erase_test();
-	// void remove_test();
-	// void remove_if_test();
-	// void swap_test();
-	// void unique_test();
-	// void operators_test();
+	void operator_square_braces();
+	void clear_test();
+	void swap_test();
+	void lower_bound_test();
+	void upper_bound_test();
+	void equal_range_test();
+	void operators_test();
 }
