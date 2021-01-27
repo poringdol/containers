@@ -2,14 +2,6 @@
 
 #include "list.hpp"
 
-#ifndef NOEXCEPT
-	#if __cplusplus >= 201103L
-		#define NOEXCEPT noexcept
-	#else
-		#define NOEXCEPT throw()
-	#endif
-#endif
-
 namespace ft {
 /********************************** Stack class ***************************************/
 
@@ -66,7 +58,6 @@ namespace ft {
 /************************************ end of stack class ***********************************/
 
 // Friend functions definitions -------------------------------------------------
-
 
 	  template <typename T, typename Container>
 	inline bool 

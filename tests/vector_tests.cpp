@@ -18,7 +18,6 @@ namespace ft_vector
 		ASSERT_EQUAL(0u, myvc1.size());
 		ASSERT_EQUAL(0u, myvc1.capacity());
 
-
 		ft::vector<int> myvc2(myvc1);
 		ASSERT_EQUAL(0u, myvc2.size());
 		ASSERT_EQUAL(0u, myvc2.capacity());
@@ -73,7 +72,6 @@ namespace ft_vector
 		ASSERT_EQUAL(vc.capacity(), myvc1.capacity());
 		ASSERT_EQUAL(contToString(vc), contToString(myvc1));
 
-
 		ft::vector<int> myvc2(ls.begin(), ls.end());		// vector from std::list
 		ASSERT_EQUAL(ls.size(), myvc2.size());
 		ASSERT_EQUAL(contToString(ls), contToString(myvc2));
@@ -94,7 +92,7 @@ namespace ft_vector
 		ASSERT_EQUAL(0u, myvc1.size());
 
 		ft::vector<int> myvc2(vc.begin(), vc.end());
-		ASSERT_EQUAL(10u, myvc2.size());
+		ASSERT_EQUAL(vc.size(), myvc2.size());
 	}
 
 	void empty_test() {
@@ -384,7 +382,6 @@ namespace ft_vector
 		ASSERT_EQUAL(vc1.size(), myvc1.size());
 		ASSERT_EQUAL(vc1.capacity(), myvc1.capacity());
 
-
 		std::vector<std::string> str1;
 		ft::vector<std::string> mystr;
 		str1.insert(str1.begin(), str.begin(), str.end());
@@ -606,7 +603,6 @@ namespace ft_vector
 		ASSERT_EQUAL(contToString(vc1), contToString(myvc1));
 		ASSERT_EQUAL(vc1.size(), myvc1.size());
 		ASSERT_EQUAL(vc1.capacity(), myvc1.capacity());
-
 
 		vc1.resize(12, 1);
 		myvc1.resize(12, 1);

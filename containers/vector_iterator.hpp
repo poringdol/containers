@@ -3,14 +3,6 @@
 #include <iterator>
 #include "list.hpp"
 
-#ifndef NOEXCEPT
-	#if __cplusplus >= 201103L
-		#define NOEXCEPT noexcept
-	#else
-		#define NOEXCEPT throw()
-	#endif
-#endif
-
 namespace ft {
 	
 // Iterator class -------------------------------------------------------------
@@ -30,58 +22,57 @@ namespace ft {
 		typedef T*					pointer;
 		typedef T&					reference;
 
-
-		vector_iterator() NOEXCEPT : ptr(NULL) {}
-		vector_iterator(pointer new_ptr) NOEXCEPT : ptr(new_ptr) {}
+		vector_iterator() throw() : ptr(NULL) {}
+		vector_iterator(pointer new_ptr) throw() : ptr(new_ptr) {}
 
 		  template<typename Iterator>
 		iterator
 		operator= (const Iterator& x)			{ return iterator(x.ptr); }
 
 		reference
-		operator*() const NOEXCEPT				{ return *ptr; }
+		operator*() const throw()				{ return *ptr; }
 
 		pointer
-		operator->() const NOEXCEPT				{ return ptr; }
+		operator->() const throw()				{ return ptr; }
 
 		iterator
-		operator++ () NOEXCEPT 					{ ++ptr; return *this; }
+		operator++ () throw() 					{ ++ptr; return *this; }
 
 		iterator
-		operator++ (int) NOEXCEPT				{ return iterator(ptr++); }
+		operator++ (int) throw()				{ return iterator(ptr++); }
 
 		iterator
-		operator-- () NOEXCEPT					{ --ptr; return *this; }
+		operator-- () throw()					{ --ptr; return *this; }
 
 		iterator
-		operator-- (int) NOEXCEPT 				{ return iterator(ptr--); }
+		operator-- (int) throw() 				{ return iterator(ptr--); }
 
 		reference
-		operator[] (int n) const NOEXCEPT		{ return ptr[n]; }
+		operator[] (int n) const throw()		{ return ptr[n]; }
 		
 		iterator
-		operator+= (int n) NOEXCEPT				{ ptr += n; return *this; }
+		operator+= (int n) throw()				{ ptr += n; return *this; }
 		
 		iterator
-		operator+ (int n) NOEXCEPT				{ return iterator(ptr + n); }
+		operator+ (int n) throw()				{ return iterator(ptr + n); }
 		
 		iterator
-		operator-= (int n) NOEXCEPT				{ ptr -= n; return *this; }
+		operator-= (int n) throw()				{ ptr -= n; return *this; }
 
 		iterator
-		operator- (int n) NOEXCEPT				{ return iterator(ptr - n); }
+		operator- (int n) throw()				{ return iterator(ptr - n); }
 		
 		T*
-		base()		 NOEXCEPT					{ return ptr; }
+		base()		 throw()					{ return ptr; }
 
 		const T*
-		base() const NOEXCEPT					{ return ptr; }
+		base() const throw()					{ return ptr; }
 	
 		bool
-		operator== (const iterator& x) NOEXCEPT { return ptr == x.ptr; }
+		operator== (const iterator& x) throw() { return ptr == x.ptr; }
 
 		bool
-		operator!= (const iterator& x) NOEXCEPT { return ptr != x.ptr; }
+		operator!= (const iterator& x) throw() { return ptr != x.ptr; }
 	};
 // ============================================================================
 
@@ -99,36 +90,36 @@ namespace ft {
 		typedef const T&					const_reference;
 		typedef vector_iterator<T>const		base_iterator;
 
-		vector_reverse_iterator() NOEXCEPT : base_iterator() {}
-		vector_reverse_iterator(pointer new_ptr) NOEXCEPT : base_iterator(new_ptr) {}
+		vector_reverse_iterator() throw() : base_iterator() {}
+		vector_reverse_iterator(pointer new_ptr) throw() : base_iterator(new_ptr) {}
 
 		  template<typename Iterator>
 		reverse_iterator
 		operator= (Iterator& x)					{ return reverse_iterator(x.ptr); }
 
 		reverse_iterator
-		operator++ () NOEXCEPT 					{ --(this->ptr); return *this; }
+		operator++ () throw() 					{ --(this->ptr); return *this; }
 
 		reverse_iterator
-		operator++ (int) NOEXCEPT				{ return reverse_iterator(this->ptr--); }
+		operator++ (int) throw()				{ return reverse_iterator(this->ptr--); }
 
 		reverse_iterator
-		operator-- () NOEXCEPT					{ ++(this->ptr); return *this; }
+		operator-- () throw()					{ ++(this->ptr); return *this; }
 
 		reverse_iterator
-		operator-- (int) NOEXCEPT 				{ return reverse_iterator(this->ptr++); }
+		operator-- (int) throw() 				{ return reverse_iterator(this->ptr++); }
 
 		reverse_iterator
-		operator+= (int n) NOEXCEPT				{ this->ptr -= n; return *this; }
+		operator+= (int n) throw()				{ this->ptr -= n; return *this; }
 		
 		reverse_iterator
-		operator+ (int n) NOEXCEPT				{ return reverse_iterator(this->ptr - n); }
+		operator+ (int n) throw()				{ return reverse_iterator(this->ptr - n); }
 		
 		reverse_iterator
-		operator-= (int n) NOEXCEPT				{ this->ptr += n; return *this; }
+		operator-= (int n) throw()				{ this->ptr += n; return *this; }
 
 		reverse_iterator
-		operator- (int n) NOEXCEPT				{ return reverse_iterator(this->ptr + n); }
+		operator- (int n) throw()				{ return reverse_iterator(this->ptr + n); }
 		
 	};
 // ============================================================================
@@ -137,48 +128,48 @@ namespace ft {
 	  template<typename IteratorL, typename IteratorR>
 	inline bool
 	operator==(const vector_iterator<IteratorL>& lhs,
-				const vector_iterator<IteratorR>& rhs) NOEXCEPT
+				const vector_iterator<IteratorR>& rhs) throw()
 	{ return lhs.base() == rhs.base(); }
 	
 	  template<typename IteratorL, typename IteratorR>
 	inline bool
 	operator!=(const vector_iterator<IteratorL>& lhs,
-				const vector_iterator<IteratorR>& rhs) NOEXCEPT
+				const vector_iterator<IteratorR>& rhs) throw()
 	{ return lhs.base() != rhs.base(); }
 
 	  template<typename IteratorL, typename IteratorR>
 	inline bool
 	operator<(const vector_iterator<IteratorL>& lhs,
-				const vector_iterator<IteratorR>& rhs) NOEXCEPT
+				const vector_iterator<IteratorR>& rhs) throw()
 	{ return lhs.base() < rhs.base(); }
 
 	  template<typename IteratorL, typename IteratorR>
 	inline bool
 	operator>(const vector_iterator<IteratorL>& lhs,
-				const vector_iterator<IteratorR>& rhs) NOEXCEPT
+				const vector_iterator<IteratorR>& rhs) throw()
 	{ return lhs.base() > rhs.base(); }
 
 	  template<typename IteratorL, typename IteratorR>
 	inline bool
 	operator<=(const vector_iterator<IteratorL>& lhs,
-				const vector_iterator<IteratorR>& rhs) NOEXCEPT
+				const vector_iterator<IteratorR>& rhs) throw()
 	{ return lhs.base() <= rhs.base(); }
 
 	  template<typename IteratorL, typename IteratorR>
 	inline bool
 	operator>=(const vector_iterator<IteratorL>& lhs,
-				const vector_iterator<IteratorR>& rhs) NOEXCEPT
+				const vector_iterator<IteratorR>& rhs) throw()
 	{ return lhs.base() >= rhs.base(); }
 
 	  template<typename Iterator>
 	Iterator
 	operator-(const vector_iterator<Iterator>& lhs,
-			const vector_iterator<Iterator>& rhs) NOEXCEPT
+			const vector_iterator<Iterator>& rhs) throw()
 	{ return lhs.base() - rhs.base(); }
 
 	  template<typename Iterator>
 	Iterator
-	operator+(Iterator n, const vector_iterator<Iterator>& i) NOEXCEPT
+	operator+(Iterator n, const vector_iterator<Iterator>& i) throw()
 	{ return vector_iterator<Iterator>(i.base() + n); }
 
 // Non-member relations for reverse vector iterator
@@ -186,35 +177,35 @@ namespace ft {
 	  template<typename IteratorL, typename IteratorR>
 	inline bool
 	operator<(const vector_reverse_iterator<IteratorL>& lhs,
-				const vector_reverse_iterator<IteratorR>& rhs) NOEXCEPT
+				const vector_reverse_iterator<IteratorR>& rhs) throw()
 	{ return lhs.base() > rhs.base(); }
 
 	  template<typename IteratorL, typename IteratorR>
 	inline bool
 	operator>(const vector_reverse_iterator<IteratorL>& lhs,
-				const vector_reverse_iterator<IteratorR>& rhs) NOEXCEPT
+				const vector_reverse_iterator<IteratorR>& rhs) throw()
 	{ return lhs.base() < rhs.base(); }
 
 	  template<typename IteratorL, typename IteratorR>
 	inline bool
 	operator<=(const vector_reverse_iterator<IteratorL>& lhs,
-				const vector_reverse_iterator<IteratorR>& rhs) NOEXCEPT
+				const vector_reverse_iterator<IteratorR>& rhs) throw()
 	{ return lhs.base() >= rhs.base(); }
 
 	  template<typename IteratorL, typename IteratorR>
 	inline bool
 	operator>=(const vector_reverse_iterator<IteratorL>& lhs,
-				const vector_reverse_iterator<IteratorR>& rhs) NOEXCEPT
+				const vector_reverse_iterator<IteratorR>& rhs) throw()
 	{ return lhs.base() <= rhs.base(); }
 
 	  template<typename Iterator>
 	Iterator
 	operator-(const vector_reverse_iterator<Iterator>& lhs,
-			const vector_reverse_iterator<Iterator>& rhs) NOEXCEPT
+			const vector_reverse_iterator<Iterator>& rhs) throw()
 	{ return rhs.base() - lhs.base(); }
 
 	  template<typename Iterator>
 	Iterator
-	operator+(Iterator n, const vector_reverse_iterator<Iterator>& i) NOEXCEPT
+	operator+(Iterator n, const vector_reverse_iterator<Iterator>& i) throw()
 	{ return vector_reverse_iterator<Iterator>(i.base() - n); }
 }

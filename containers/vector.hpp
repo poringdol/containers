@@ -4,14 +4,6 @@
 #include "vector_iterator.hpp"
 #include "cpp_type_traits.hpp"
 
-#ifndef NOEXCEPT
-	#if __cplusplus >= 201103L
-		#define NOEXCEPT noexcept
-	#else
-		#define NOEXCEPT throw()
-	#endif
-#endif
-
 namespace ft {
 /********************************** Vector class ***************************************/
 
@@ -22,7 +14,6 @@ namespace ft {
 
 		typedef ft::vector_iterator<T>			vector_iterator;
 		typedef ft::vector_reverse_iterator<T>	vector_reverse_iterator;
-
 
 	public:
 
@@ -320,37 +311,36 @@ namespace ft {
 	// Iterators --------------------------------
 
 		iterator
-		begin () NOEXCEPT			{ return iterator(_start != _finish ? _start + 1 : _start); }
+		begin () throw()			{ return iterator(_start != _finish ? _start + 1 : _start); }
 
 		const_iterator
-		begin () const NOEXCEPT		{ return const_iterator(_start != _finish ? _start + 1 : _start); }
+		begin () const throw()		{ return const_iterator(_start != _finish ? _start + 1 : _start); }
 
 		iterator
-		end () NOEXCEPT				{ return iterator(_finish); }
+		end () throw()				{ return iterator(_finish); }
 
 		const_iterator
-		end () const NOEXCEPT		{ return const_iterator(_finish); }
+		end () const throw()		{ return const_iterator(_finish); }
 
 		reverse_iterator
-		rbegin () NOEXCEPT			{ return reverse_iterator(_start != _finish ? _finish - 1 : _finish); }
+		rbegin () throw()			{ return reverse_iterator(_start != _finish ? _finish - 1 : _finish); }
 
 		const_reverse_iterator
-		rbegin () const NOEXCEPT	{ return const_reverse_iterator(_start != _finish ? _finish - 1 : _finish); }
+		rbegin () const throw()	{ return const_reverse_iterator(_start != _finish ? _finish - 1 : _finish); }
 
 		reverse_iterator
-		rend () NOEXCEPT			{ return reverse_iterator(_start); }
+		rend () throw()			{ return reverse_iterator(_start); }
 
 		const_reverse_iterator
-		rend () const NOEXCEPT		{ return const_reverse_iterator(_start); }
-
+		rend () const throw()		{ return const_reverse_iterator(_start); }
 
 	//  Capacity --------------------------------
 
 		size_type
-		size () const NOEXCEPT		{ return empty() ? 0 : _finish - (_start + 1); }
+		size () const throw()		{ return empty() ? 0 : _finish - (_start + 1); }
 		
 		size_type
-		max_size () const NOEXCEPT	{ return std::numeric_limits<long>::max() / sizeof(T); }
+		max_size () const throw()	{ return std::numeric_limits<long>::max() / sizeof(T); }
 
 		void
 		resize (size_type n, value_type val = value_type()) {
@@ -385,10 +375,10 @@ namespace ft {
 		}
 
 		size_type
-		capacity () const NOEXCEPT	{ return _end_of_storage == _start ? 0 : _end_of_storage - (_start + 2); }
+		capacity () const throw()	{ return _end_of_storage == _start ? 0 : _end_of_storage - (_start + 2); }
 
 		bool
-		empty () const NOEXCEPT		{ return begin() == end(); }
+		empty () const throw()		{ return begin() == end(); }
 
 		void
 		reserve (size_type new_size) {
@@ -426,16 +416,16 @@ namespace ft {
 		at (size_type n) const			{ return (*this)[_check_max_len(n)]; }
 
 		reference
-		front () NOEXCEPT				{ return *(begin()); }
+		front () throw()				{ return *(begin()); }
 
 		const_reference
-		front () const NOEXCEPT			{ return *(begin()); }
+		front () const throw()			{ return *(begin()); }
 
 		reference
-		back () NOEXCEPT				{ return *(rbegin()); }
+		back () throw()				{ return *(rbegin()); }
 
 		const_reference
-		back () const NOEXCEPT			{ return *(rbegin()); }
+		back () const throw()			{ return *(rbegin()); }
 
 	//  Modifiers ------------------------------------
 
@@ -450,10 +440,10 @@ namespace ft {
 		assign (size_type n, const value_type& val) { _assign(n, val, ft::true_type_my()); }
 
 		void
-		push_back (const value_type& val) NOEXCEPT	{ insert(end(), 1, val); }
+		push_back (const value_type& val) throw()	{ insert(end(), 1, val); }
 
 		void
-		pop_back () NOEXCEPT						{ _alloc.destroy(--_finish); }
+		pop_back () throw()						{ _alloc.destroy(--_finish); }
 
 		iterator
 		insert (iterator position, const value_type& val) {
@@ -473,7 +463,7 @@ namespace ft {
 		}
 
 		iterator
-		erase (iterator position) NOEXCEPT {
+		erase (iterator position) throw() {
 			iterator res = position;
 			for ( ;position != end(); ++position) {
 				_alloc.destroy(position.base());
@@ -485,7 +475,7 @@ namespace ft {
 		}
 		
 		iterator
-		erase (iterator first, iterator last) NOEXCEPT {
+		erase (iterator first, iterator last) throw() {
 
 			iterator res = first;
 			size_type size = _range_size(first, last);
@@ -502,13 +492,13 @@ namespace ft {
 		}
 
 		void
-		swap (vector& x) NOEXCEPT {
+		swap (vector& x) throw() {
 			_swap(_start, x._start);
 			_swap(_finish, x._finish);
 			_swap(_end_of_storage, x._end_of_storage);
 		}
 		void
-		clear () NOEXCEPT			{ _destroy(begin(), end()); }
+		clear () throw()			{ _destroy(begin(), end()); }
 
 	// Non-member overloads ------------------------------------------------------------
 
@@ -529,7 +519,6 @@ namespace ft {
 /************************************ end of list class **************************************/
 
 // Friend functions definitions -------------------------------------------------
-
 
 	  template<typename T, typename Alloc>
 	inline bool operator== (const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) {

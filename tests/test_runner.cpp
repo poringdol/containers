@@ -185,3 +185,83 @@ namespace ft_map
 		ENABLE_LOGS = 0;
 	}
 }
+
+namespace ft_multimap
+{
+	void multimap_test() {
+		
+		TestRunner tr;
+
+		std::cout << YELLOW 
+				<< "\n####################################################\n";
+		std::cout << "#                                                  #\n";
+		std::cout << "#                  Multimap tests                  #\n";
+		std::cout << "#                                                  #\n";
+		std::cout << "####################################################\n\n"
+				<< BW;
+
+		RUN_TEST(tr, constructorDefault_test);
+		RUN_TEST(tr, constructorRange_test);
+		RUN_TEST(tr, constructorCopy_test);
+		RUN_TEST(tr, begin_end_test);
+		RUN_TEST(tr, size_test);
+		RUN_TEST(tr, max_size_test);
+		RUN_TEST(tr, empty_test);
+		RUN_TEST(tr, find_test);
+		RUN_TEST(tr, count_test);
+		RUN_TEST(tr, insert_range_test);
+		RUN_TEST(tr, insert_single_test);
+		RUN_TEST(tr, insert_hint_test);
+		RUN_TEST(tr, erase_single_test);
+		RUN_TEST(tr, erase_key_test);
+		RUN_TEST(tr, erase_range_test);
+		RUN_TEST(tr, clear_test);
+		RUN_TEST(tr, swap_test);
+		RUN_TEST(tr, lower_bound_test);
+		RUN_TEST(tr, upper_bound_test);
+		RUN_TEST(tr, equal_range_test);
+		RUN_TEST(tr, operators_test);
+
+		ENABLE_LOGS = 0;
+	}
+}
+
+namespace ft_set
+{
+	void set_test() {
+		
+		TestRunner tr;
+
+		std::cout << YELLOW 
+				<< "\n####################################################\n";
+		std::cout << "#                                                  #\n";
+		std::cout << "#                  Multimap tests                  #\n";
+		std::cout << "#                                                  #\n";
+		std::cout << "####################################################\n\n"
+				<< BW;
+
+		RUN_TEST(tr, constructorDefault_test);
+		RUN_TEST(tr, constructorRange_test);
+		RUN_TEST(tr, constructorCopy_test);
+		RUN_TEST(tr, begin_end_test);
+		RUN_TEST(tr, size_test);
+		RUN_TEST(tr, max_size_test);
+		RUN_TEST(tr, empty_test);
+		RUN_TEST(tr, find_test);
+		RUN_TEST(tr, count_test);
+		RUN_TEST(tr, insert_range_test);
+		RUN_TEST(tr, insert_single_test);
+		RUN_TEST(tr, insert_hint_test);
+		RUN_TEST(tr, erase_single_test);
+		RUN_TEST(tr, erase_key_test);
+		RUN_TEST(tr, erase_range_test);
+		RUN_TEST(tr, clear_test);
+		RUN_TEST(tr, swap_test);
+		RUN_TEST(tr, lower_bound_test);
+		RUN_TEST(tr, upper_bound_test);
+		RUN_TEST(tr, equal_range_test);
+		RUN_TEST(tr, operators_test);
+
+		ENABLE_LOGS = 0;
+	}
+}

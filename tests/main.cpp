@@ -21,16 +21,19 @@ int main() {
 	
 		cout << YELLOW << "\nSelect tests to run" << BW << endl << endl;
 
-		cout << YELLOW << "1. " << BLUE << "List" <<  BW <<endl;
-		cout << YELLOW << "2. " << BLUE << "Vector" << BW << endl;
-		cout << YELLOW << "3. " << BLUE << "Map" << BW << endl;
-		cout << YELLOW << "4. " << BLUE << "Stack" << BW << endl;
-		cout << YELLOW << "5. " << BLUE << "Queue" << BW << endl;
-		cout << YELLOW << "6. " << BLUE << "All" << BW << endl;
-		cout << YELLOW << "0. " << BLUE << "Exit" << BW << endl << endl;
+		cout << YELLOW << "1.  " << BLUE << "List" <<  BW <<endl;
+		cout << YELLOW << "2.  " << BLUE << "Vector" << BW << endl;
+		cout << YELLOW << "3.  " << BLUE << "Map" << BW << endl;
+		cout << YELLOW << "4.  " << BLUE << "Stack" << BW << endl;
+		cout << YELLOW << "5.  " << BLUE << "Queue" << BW << endl;
+		cout << YELLOW << "6.  " << BLUE << "Deque" << BW << endl;
+		cout << YELLOW << "7.  " << BLUE << "Set" << BW << endl;
+		cout << YELLOW << "8.  " << BLUE << "Multiset" << BW << endl;
+		cout << YELLOW << "9.  " << BLUE << "Multimap" << BW << endl;
+		cout << YELLOW << "10. " << BLUE << "All" << BW << endl;
+		cout << YELLOW << "0.  " << BLUE << "Exit" << BW << endl << endl;
 
-
-		int index = 10;
+		int index = 11;
 		while (1) {
 			cout << YELLOW << "Enter index: " << BW;
 			cin >> index;
@@ -38,7 +41,7 @@ int main() {
 				cout << std::endl;
 				exit(0);
 			}
-			if (!cin || index < 0 || index > 6) {
+			if (!cin || index < 0 || index > 10) {
 				cout << RED << "\nIncorrect input\n" << BW << endl;
 				cin.clear();
 				while (cin.get() != '\n');
@@ -74,6 +77,26 @@ int main() {
 			last_test = ft_queue::queue_test;
 			ft_queue::queue_test();
 
+		} else if (index == ft::Deque) {
+
+			// last_test = ft_queue::deque_test;
+			// ft_deque::deque_test();
+
+		} else if (index == ft::Set) {
+
+			last_test = ft_set::set_test;
+			ft_set::set_test();
+
+		} else if (index == ft::Multiset) {
+
+			// last_test = ft_multiset::multiset_test;
+			// ft_multiset::multiset_test();
+
+		} else if (index == ft::Multimap) {
+
+			last_test = ft_multimap::multimap_test;
+			ft_multimap::multimap_test();
+
 		} else if (index == ft::All) {
 
 			ft_list::list_test();
@@ -81,6 +104,10 @@ int main() {
 			ft_stack::stack_test();
 			ft_queue::queue_test();
 			ft_map::map_test();
+			// ft_deque::deque_test();
+			ft_set::set_test();
+			// ft_multiset::multiset_test();
+			ft_multimap::multimap_test();
 
 		} else if (index == ft::Exit)
 			exit(0);

@@ -2,24 +2,25 @@
 
 #include <memory>
 #include <utility>
+#include "map.hpp"
 
 namespace ft {
 
 // Iterator class -------------------------------------------------------------
 
-	  template<typename Key, typename T, typename Node>
-	struct map_iterator {
+	  template<typename T, typename Node>
+	struct set_iterator {
 
 	protected:
-	
+
 		bool
-		_key_comp(Node* ptr1, Node* ptr2) { return ptr1->_data.first < ptr2->_data.first; }
+		_key_comp(Node* ptr1, Node* ptr2) { return ptr1->_data < ptr2->_data; }
 
 	public:
 
-		typedef map_iterator			iterator;
+		typedef set_iterator			iterator;
 		typedef size_t					size_type;
-		typedef std::pair<const Key, T>	value_type;
+		typedef T						value_type;
 		typedef value_type*				pointer;
 		typedef const value_type*		const_pointer;
 		typedef value_type&				reference;
@@ -27,8 +28,9 @@ namespace ft {
 	
 		Node* ptr;
 	
-		map_iterator() throw() : ptr() {}
-		map_iterator(Node* newptr) throw() : ptr(newptr) {}
+		set_iterator() throw() : ptr() {}
+		set_iterator(Node* newptr) throw() : ptr(newptr) {}
+
 
 		  template<typename Iterator>
 		iterator
@@ -144,12 +146,19 @@ namespace ft {
 
 // Reverse iterator class -------------------------------------------------------------
 
-	  template<typename Key, typename T, typename Node>
-	struct map_reverse_iterator : map_iterator<Key, T, Node> {
+	  template<typename T, typename Node>
+	struct set_reverse_iterator {
 
-		typedef map_reverse_iterator	reverse_iterator;
+	protected:
+	
+		bool
+		_key_comp(Node* ptr1, Node* ptr2) { return ptr1->_data < ptr2->_data; }
+
+	public:
+	
+		typedef set_reverse_iterator	reverse_iterator;
 		typedef size_t					size_type;
-		typedef std::pair<const Key, T>	value_type;
+		typedef T						value_type;
 		typedef value_type*				pointer;
 		typedef const value_type*		const_pointer;
 		typedef value_type&				reference;
@@ -157,8 +166,8 @@ namespace ft {
 
 		Node* ptr;
 	
-		map_reverse_iterator() throw() : ptr(NULL) {}
-		map_reverse_iterator(Node* newptr) throw() : ptr(newptr) {}
+		set_reverse_iterator() throw() : ptr(NULL) {}
+		set_reverse_iterator(Node* newptr) throw() : ptr(newptr) {}
 
 		  template<typename Iterator>
 		reverse_iterator

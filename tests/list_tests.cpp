@@ -27,17 +27,17 @@ namespace ft_list
 
 	void constructorFill_test() {
 		
-		ft::list<int> ls1(10, 15);
+		std::list<int> ls1(10, 15);
 		ft::list<int> myls1(10, 15);
 		ASSERT_EQUAL(ls1.size(), myls1.size());
 		ASSERT_EQUAL(contToString(ls1), contToString(myls1));
 
-		ft::list<char> ls2(10, 'X');
+		std::list<char> ls2(10, 'X');
 		ft::list<char> myls2(10, 'X');
 		ASSERT_EQUAL(ls2.size(), myls2.size());
 		ASSERT_EQUAL(contToString(ls2), contToString(myls2));
 
-		ft::list<std::string> ls3(10, "Kto tut?");
+		std::list<std::string> ls3(10, "Kto tut?");
 		ft::list<std::string> myls3(10, "Kto tut?");
 		ASSERT_EQUAL(ls3.size(), myls3.size());
 		ASSERT_EQUAL(contToString(ls3), contToString(myls3));
@@ -48,7 +48,6 @@ namespace ft_list
 		ft::list<int> myls1(ls.begin(), ls.end());		// list from std::list
 		ASSERT_EQUAL(ls.size(), myls1.size());
 		ASSERT_EQUAL(contToString(ls), contToString(myls1));
-
 
 		ft::list<int> myls2(vc.begin(), vc.end());		// list from std::vector
 		ASSERT_EQUAL(vc.size(), myls2.size());
@@ -65,7 +64,7 @@ namespace ft_list
 		ASSERT_EQUAL(0u, myls1.size());
 
 		ft::list<int> myls2(ls.begin(), ls.end());
-		ASSERT_EQUAL(10u, myls2.size());
+		ASSERT_EQUAL(ls.size(), myls2.size());
 	}
 
 	void empty_test() {

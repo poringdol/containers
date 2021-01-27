@@ -21,7 +21,9 @@ SRC = main.cpp \
 	  list_tests.cpp \
 	  stack_tests.cpp \
 	  queue_tests.cpp  \
-	  map_tests.cpp
+	  map_tests.cpp \
+	  multimap_tests.cpp
+
 SRCDIR = ./tests/
 INCLUDES = ./containers/
 MAIN = $(SRCDIR)main.cpp
@@ -58,7 +60,7 @@ clean:
 
 fclean:
 	@$(RM) $(OBJDIR) $(NAME) test_c98 a.out
-	@echo "$(RED) All test deleted $(B&W)"
+	@echo "$(RED) All tests deleted $(B&W)"
 
 re: fclean all
 

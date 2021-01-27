@@ -4,15 +4,6 @@
 #include <memory>
 #include "stack.hpp"
 #include "map_iterator.hpp"
-// #include "cpp_type_traits.hpp"
-
-#ifndef NOEXCEPT
-	#if __cplusplus >= 201103L
-		#define NOEXCEPT noexcept
-	#else
-		#define NOEXCEPT throw()
-	#endif
-#endif
 
 
 namespace ft {
@@ -331,7 +322,6 @@ namespace ft {
 			_insert_case3(n);
 		}
 
-
 		void
 		_insert_case3 (node* n) {
 			node* u = _uncle(n);
@@ -588,39 +578,39 @@ namespace ft {
 	//  Iterators -------------------------------
 
 		iterator
-		begin () NOEXCEPT				{ return iterator(_rend->_parent); }
+		begin () throw()				{ return iterator(_rend->_parent); }
 
 		const_iterator
-		begin () const NOEXCEPT			{ return iterator(_rend->_parent); }
+		begin () const throw()			{ return iterator(_rend->_parent); }
 
 		iterator
-		end () NOEXCEPT					{ return iterator(_end); }
+		end () throw()					{ return iterator(_end); }
 
 		const_iterator
-		end () const NOEXCEPT			{ return const_iterator(_end); }
+		end () const throw()			{ return const_iterator(_end); }
 
 		reverse_iterator
-		rbegin () NOEXCEPT				{ return reverse_iterator(_end->_parent); }
+		rbegin () throw()				{ return reverse_iterator(_end->_parent); }
 
 		const_reverse_iterator
-		rbegin () const NOEXCEPT 		{ return reverse_iterator(_end->_parent); }
+		rbegin () const throw() 		{ return reverse_iterator(_end->_parent); }
 
 		reverse_iterator
-		rend () NOEXCEPT				{ return reverse_iterator(_rend); }
+		rend () throw()				{ return reverse_iterator(_rend); }
 
 		const_reverse_iterator
-		rend () const NOEXCEPT			{ return const_reverse_iterator(_rend); }
+		rend () const throw()			{ return const_reverse_iterator(_rend); }
 
 	//  Capacity --------------------------------
 
 		bool
-		empty () const NOEXCEPT			{ return _node_count == 0u; }
+		empty () const throw()			{ return _node_count == 0u; }
 
 		size_type
-		size () const NOEXCEPT			{ return _node_count; }
+		size () const throw()			{ return _node_count; }
 
 		size_type
-		max_size () const NOEXCEPT		{ return std::numeric_limits<long>::max() / sizeof(_rb_tree_node); }
+		max_size () const throw()		{ return std::numeric_limits<long>::max() / sizeof(_rb_tree_node); }
 
 	// Modifiers --------------------------------
 
@@ -707,7 +697,7 @@ namespace ft {
 		}
 
 		void
-		clear () NOEXCEPT { _clear(); }
+		clear () throw() { _clear(); }
 
 	// Observers --------------------------------
 

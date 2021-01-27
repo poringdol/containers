@@ -7,52 +7,75 @@
 #include <map>
 #include "tests.hpp"
 #include "test_runner.h"
-#include "map.hpp"
+#include "multimap.hpp"
 
 /*********************************************************************/
 /*								TESTS								 */
 /*********************************************************************/
-namespace ft_map
+namespace ft_multimap
 {
 	void constructorDefault_test() {
 
-		ft::map<int, int> my_mp1;
+		ft::multimap<int, int> my_mp1;
 		ASSERT_EQUAL(0u, my_mp1.size());
 
-		ft::map<std::string, ft::stack<double> > my_mp2;
+		ft::multimap<std::string, ft::stack<double> > my_mp2;
 		ASSERT_EQUAL(0u, my_mp2.size());
 
-		// ft::map<int, int> my_mp3 = my_mp1;
+		// ft::multimap<int, int> my_mp3 = my_mp1;
 		// ASSERT_EQUAL(0u, my_mp3.size());
+	}
+
+	void constructorRange_test() {
+		{
+			std::multimap<int, int> mp(map1.begin(), map1.end());	// map from std::multimap<int, int> - unsorted
+			ft::multimap<int, int> my_mp(map1.begin(), map1.end());
+			ASSERT_EQUAL(mp.size(), my_mp.size());
+			ASSERT_EQUAL(mapToString(mp), mapToString(my_mp));
+			print_tree(my_mp);
+		}
+		{
+			std::multimap<int, int> mp(map2.begin(), map2.end());	// map from std::multimap<int, int> - sorted
+			ft::multimap<int, int> my_mp(map2.begin(), map2.end());
+			ASSERT_EQUAL(mp.size(), my_mp.size());
+			ASSERT_EQUAL(mapToString(mp), mapToString(my_mp));
+			print_tree(my_mp);
+		}
+		{
+			std::multimap<std::string, int> mp(map3.begin(), map3.end());	// map from std::multimap<std::string, int> - unsorted
+			ft::multimap<std::string, int> my_mp(map3.begin(), map3.end());
+			ASSERT_EQUAL(mp.size(), my_mp.size());
+			mapToString(mp);
+			mapToString(my_mp);
+			ASSERT_EQUAL(mapToString(mp), mapToString(my_mp));
+			print_tree(my_mp);
+		}
+		{
+			std::vector<std::pair<int, int> > v;
+			for (int i = 0; i < 20; i++) v.push_back(make_pair(i, rand() % 50));
+
+			std::multimap<int, int> mp(v.begin(), v.end());	// map from std::multimap<int, int> - unsorted
+			ft::multimap<int, int> my_mp(v.begin(), v.end());
+			ASSERT_EQUAL(mp.size(), my_mp.size());
+			ASSERT_EQUAL(mapToString(mp), mapToString(my_mp));
+			print_tree(my_mp);
+		}
 	}
 
 	void constructorCopy_test() {
 		{
-			ft::map<int, int> my_mp1;
+			ft::multimap<int, int> my_mp1;
 			ASSERT_EQUAL(0u, my_mp1.size());
 
-			ft::map<int, int> my_mp2(my_mp1);
+			ft::multimap<int, int> my_mp2(my_mp1);
 			ASSERT_EQUAL(0u, my_mp2.size());
 		}
 		{
-			std::map<int, int> mp(map1.begin(), map1.end());
-			ft::map<int, int> my_mp(map1.begin(), map1.end());
+			std::multimap<int, int> mp(map1.begin(), map1.end());
+			ft::multimap<int, int> my_mp(map1.begin(), map1.end());
 
-			std::map<int, int> mp2(mp);
-			ft::map<int, int> my_mp2(my_mp);
-
-			ASSERT_EQUAL(mp2.size(), my_mp2.size());
-			ASSERT_EQUAL(mapToString(mp2), mapToString(my_mp2));
-
-			ASSERT_EQUAL(my_mp.size(), my_mp2.size());
-			ASSERT_EQUAL(mapToString(my_mp), mapToString(my_mp2));
-		}
-		{
-			std::map<int, int> mp(map1.begin(), map1.end());
-			ft::map<int, int> my_mp(map1.begin(), map1.end());
-
-			std::map<int, int> mp2 = mp;
-			ft::map<int, int> my_mp2 = my_mp;
+			std::multimap<int, int> mp2(mp);
+			ft::multimap<int, int> my_mp2(my_mp);
 
 			ASSERT_EQUAL(mp2.size(), my_mp2.size());
 			ASSERT_EQUAL(mapToString(mp2), mapToString(my_mp2));
@@ -61,12 +84,25 @@ namespace ft_map
 			ASSERT_EQUAL(mapToString(my_mp), mapToString(my_mp2));
 		}
 		{
-			std::map<int, int> mp(map1.begin(), map1.end());
-			ft::map<int, int> my_mp(map1.begin(), map1.end());
+			std::multimap<int, int> mp(map1.begin(), map1.end());
+			ft::multimap<int, int> my_mp(map1.begin(), map1.end());
 
-			std::map<int, int> mp2; 
+			std::multimap<int, int> mp2 = mp;
+			ft::multimap<int, int> my_mp2 = my_mp;
+
+			ASSERT_EQUAL(mp2.size(), my_mp2.size());
+			ASSERT_EQUAL(mapToString(mp2), mapToString(my_mp2));
+
+			ASSERT_EQUAL(my_mp.size(), my_mp2.size());
+			ASSERT_EQUAL(mapToString(my_mp), mapToString(my_mp2));
+		}
+		{
+			std::multimap<int, int> mp(map1.begin(), map1.end());
+			ft::multimap<int, int> my_mp(map1.begin(), map1.end());
+
+			std::multimap<int, int> mp2; 
 			mp2 = mp;
-			ft::map<int, int> my_mp2;
+			ft::multimap<int, int> my_mp2;
 			my_mp2 = my_mp;
 
 			ASSERT_EQUAL(mp2.size(), my_mp2.size());
@@ -77,106 +113,15 @@ namespace ft_map
 		}
 	}
 
-	void operator_square_braces() {
-		{
-			std::map<int, int> mp;
-			ft::map<int, int> my_mp;
-
-			int i1 = mp[15];
-			int i2 = my_mp[15];
-			ASSERT_EQUAL(i1, i2);
-
-			mp[15] = 123;
-			my_mp[15] = 123;
-			ASSERT_EQUAL(i1, i2);
-		}
-		{
-			std::map<std::string, int> mp;
-			ft::map<std::string, int> my_mp;
-
-			int i1 = mp["not exist"];
-			int i2 = my_mp["not exist"];
-			
-			ASSERT_EQUAL(i1, i2);
-			ASSERT_EQUAL(mp.size(), my_mp.size());
-
-			mp["not exist"] = 17;
-			my_mp["not exist"] = 17;
-			ASSERT_EQUAL(i1, i2);
-		}
-		{
-			std::map<int, int> mp(map1.begin(), map1.end());
-			ft::map<int, int> my_mp(map1.begin(), map1.end());
-
-			int i1 = mp[55];
-			int i2 = my_mp[55];
-			ASSERT_EQUAL(i1, i2);
-			ASSERT_EQUAL(mp.size(), my_mp.size());
-
-			mp[55] = 1234;
-			my_mp[55] = 1234;
-			ASSERT_EQUAL(i1, i2);
-
-			i1 = mp[56];
-			i2 = my_mp[56];
-			ASSERT_EQUAL(i1, i2);
-			ASSERT_EQUAL(mp.size(), my_mp.size());
-
-			mp[56] = 12345;
-			my_mp[56] = 12345;
-			ASSERT_EQUAL(i1, i2);
-		}
-		{
-			std::map<std::string, int> mp(map3.begin(), map3.end());
-			ft::map<std::string, int> my_mp(map3.begin(), map3.end());
-
-			int i1 = mp["eleven"];
-			int i2 = my_mp["eleven"];
-			ASSERT_EQUAL(i1, i2);
-			ASSERT_EQUAL(mp.size(), my_mp.size());
-
-			mp["eleven"] = 99;
-			my_mp["eleven"] = 99;
-			ASSERT_EQUAL(i1, i2);
-
-			i1 = mp["tri"];
-			i2 = my_mp["tri"];
-			ASSERT_EQUAL(i1, i2);
-			ASSERT_EQUAL(mp.size(), my_mp.size());
-
-			mp["tri"] = 199;
-			my_mp["tri"] = 199;
-			ASSERT_EQUAL(i1, i2);
-		}
-		{
-			std::map<std::string, std::string> mp;
-			ft::map<std::string, std::string> my_mp;
-
-			std::string i1 = mp["eleven"];
-			std::string i2 = my_mp["eleven"];
-			ASSERT_EQUAL(i1, i2);
-			ASSERT_EQUAL(mp.size(), my_mp.size());
-
-			i1 = mp["tri"];
-			i2 = my_mp["tri"];
-			ASSERT_EQUAL(i1, i2);
-			ASSERT_EQUAL(mp.size(), my_mp.size());
-
-			mp["eleven"] = "raz raz";
-			my_mp["eleven"] = "raz raz";
-			ASSERT_EQUAL(i1, i2);
-		}
-	}
-
 	void begin_end_test() {
 
-		std::map<int, int> mp(map1.begin(), map1.end());
-		std::map<int, int>::iterator it;
-		std::map<int, int>::reverse_iterator r_it;
+		std::multimap<int, int> mp(map1.begin(), map1.end());
+		std::multimap<int, int>::iterator it;
+		std::multimap<int, int>::reverse_iterator r_it;
 
-		ft::map<int, int> my_mp(map1.begin(), map1.end());
-		ft::map<int, int>::iterator my_it;
-		ft::map<int, int>::reverse_iterator my_r_it;
+		ft::multimap<int, int> my_mp(map1.begin(), map1.end());
+		ft::multimap<int, int>::iterator my_it;
+		ft::multimap<int, int>::reverse_iterator my_r_it;
 
 		it = mp.begin();
 		my_it = my_mp.begin();
@@ -220,72 +165,39 @@ namespace ft_map
 		ASSERT_EQUAL(r_it->second, my_r_it->second);
 	}
 
-	void constructorRange_test() {
-		{
-			std::map<int, int> mp(map1.begin(), map1.end());	// map from std::map<int, int> - unsorted
-			ft::map<int, int> my_mp(map1.begin(), map1.end());
-			ASSERT_EQUAL(mp.size(), my_mp.size());
-			ASSERT_EQUAL(mapToString(mp), mapToString(my_mp));
-			print_tree(my_mp);
-		}
-		{
-			std::map<int, int> mp(map2.begin(), map2.end());	// map from std::map<int, int> - sorted
-			ft::map<int, int> my_mp(map2.begin(), map2.end());
-			ASSERT_EQUAL(mp.size(), my_mp.size());
-			ASSERT_EQUAL(mapToString(mp), mapToString(my_mp));
-			print_tree(my_mp);
-		}
-		{
-			std::map<std::string, int> mp(map3.begin(), map3.end());	// map from std::map<std::string, int> - unsorted
-			ft::map<std::string, int> my_mp(map3.begin(), map3.end());
-			ASSERT_EQUAL(mp.size(), my_mp.size());
-			ASSERT_EQUAL(mapToString(mp), mapToString(my_mp));
-			print_tree(my_mp);
-		}
-		{
-			std::vector<std::pair<int, int> > v;
-			for (int i = 0; i < 20; i++) v.push_back(make_pair(i, rand() % 50));
-
-			std::map<int, int> mp(v.begin(), v.end());	// map from std::map<int, int> - unsorted
-			ft::map<int, int> my_mp(v.begin(), v.end());
-			ASSERT_EQUAL(mp.size(), my_mp.size());
-			ASSERT_EQUAL(mapToString(mp), mapToString(my_mp));
-			print_tree(my_mp);
-		}
-	}
 
 	void size_test() {
 
-		ft::map<int, int> my_mp1;
+		ft::multimap<int, int> my_mp1;
 		ASSERT_EQUAL(0u, my_mp1.size());
 
-		std::map<int, int> mp2(map1.begin(), map1.end());
-		ft::map<int, int> my_mp2(map1.begin(), map1.end());
+		std::multimap<int, int> mp2(map1.begin(), map1.end());
+		ft::multimap<int, int> my_mp2(map1.begin(), map1.end());
 		ASSERT_EQUAL(mp2.size(), my_mp2.size());
 	}
 
 	void max_size_test() {
 		
-		std::map<int, int> mp;
-		ft::map<int, int> my_mp;
+		std::multimap<int, int> mp;
+		ft::multimap<int, int> my_mp;
 		ASSERT_EQUAL(mp.max_size(), my_mp.max_size());
 	}
 
 	void empty_test() {
 
-		ft::map<int, int> my_mp1;
+		ft::multimap<int, int> my_mp1;
 		ASSERT_EQUAL(true, my_mp1.empty());
 
-		ft::map<int, int> my_mp2(map1.begin(), map1.end());
+		ft::multimap<int, int> my_mp2(map1.begin(), map1.end());
 		ASSERT_EQUAL(false, my_mp2.empty());
 	}
 
 	void find_test() {
-		std::map<int, int> mp(map1.begin(), map1.end());
-		ft::map<int, int> my_mp(map1.begin(), map1.end());
+		std::multimap<int, int> mp(map1.begin(), map1.end());
+		ft::multimap<int, int> my_mp(map1.begin(), map1.end());
 
-		std::map<int, int>::iterator it;
-		ft::map<int, int>::iterator my_it;
+		std::multimap<int, int>::iterator it;
+		ft::multimap<int, int>::iterator my_it;
 
 		it = mp.find(19);
 		my_it = my_mp.find(19);
@@ -299,8 +211,8 @@ namespace ft_map
 
 	void count_test() {
 	
-		std::map<int, int> mp(map1.begin(), map1.end());
-		ft::map<int, int> my_mp(map1.begin(), map1.end());
+		std::multimap<int, int> mp(map2.begin(), map2.end());
+		ft::multimap<int, int> my_mp(map2.begin(), map2.end());
 
 		ASSERT_EQUAL(mp.count(16),   my_mp.count(16));			// value not found
 		ASSERT_EQUAL(mp.count(-1),   my_mp.count(-1));
@@ -316,8 +228,8 @@ namespace ft_map
 
 	void insert_range_test() {
 
-		std::map<int, int> mp1;
-		ft::map<int, int> my_mp1;
+		std::multimap<int, int> mp1;
+		ft::multimap<int, int> my_mp1;
 
 		mp1.insert(map1.begin(), map1.end());
 		my_mp1.insert(map1.begin(), map1.end());
@@ -328,8 +240,8 @@ namespace ft_map
 		ASSERT_EQUAL(mapToString(mp1), mapToString(my_mp1));
 		print_tree(my_mp1);
 
-		std::map<std::string, int> mp2;
-		ft::map<std::string, int> my_mp2;
+		std::multimap<std::string, int> mp2;
+		ft::multimap<std::string, int> my_mp2;
 		mp2.insert(map3.begin(), map3.end());
 		my_mp2.insert(map3.begin(), map3.end());
 		ASSERT_EQUAL(mapToString(mp1), mapToString(my_mp1));
@@ -341,75 +253,72 @@ namespace ft_map
 
 	void insert_single_test() {
 		{
-			std::map<int, int> mp;
-			ft::map<int, int> my_mp;
+			std::multimap<int, int> mp;
+			ft::multimap<int, int> my_mp;
 			
-			std::map<int, int>::iterator it;
-			ft::map<int, int>::iterator my_it;
+			std::multimap<int, int>::iterator it;
+			ft::multimap<int, int>::iterator my_it;
 
-			std::pair<std::map<int, int>::iterator, bool> pr;
-			std::pair<ft::map<int, int>::iterator, bool> my_pr;
+			std::multimap<int, int>::iterator pr;
+			ft::multimap<int, int>::iterator my_pr;
 
 			pr = mp.insert(std::make_pair(10, 5));
 			my_pr = my_mp.insert(std::make_pair(10, 5));
 			
-			ASSERT_EQUAL(pr.first->first, my_pr.first->first);
-			ASSERT_EQUAL(pr.first->second, my_pr.first->second);
-			ASSERT_EQUAL(pr.second, my_pr.second);
+			ASSERT_EQUAL(pr->first, my_pr->first);
+			ASSERT_EQUAL(pr->second, my_pr->second);
+			ASSERT_EQUAL(pr->second, my_pr->second);
 			ASSERT_EQUAL(mp.size(), my_mp.size());
 
 			pr = mp.insert(std::make_pair(10, 5));
 			my_pr = my_mp.insert(std::make_pair(10, 5));
-			ASSERT_EQUAL(pr.first->first, my_pr.first->first);
-			ASSERT_EQUAL(pr.first->second, my_pr.first->second);
+			ASSERT_EQUAL(pr->first, my_pr->first);
+			ASSERT_EQUAL(pr->second, my_pr->second);
 			ASSERT_EQUAL(mp.size(), my_mp.size());
 
 			pr = mp.insert(std::make_pair(10, 15));
 			my_pr = my_mp.insert(std::make_pair(10, 15));
-			ASSERT_EQUAL(pr.first->first, my_pr.first->first);
-			ASSERT_EQUAL(pr.first->second, my_pr.first->second);
+			ASSERT_EQUAL(pr->first, my_pr->first);
+			ASSERT_EQUAL(pr->second, my_pr->second);
 			ASSERT_EQUAL(mp.size(), my_mp.size());
 
 			pr = mp.insert(std::make_pair(15, 15));
 			my_pr = my_mp.insert(std::make_pair(15, 15));
-			ASSERT_EQUAL(pr.first->first, my_pr.first->first);
-			ASSERT_EQUAL(pr.first->second, my_pr.first->second);
+			ASSERT_EQUAL(pr->first, my_pr->first);
+			ASSERT_EQUAL(pr->second, my_pr->second);
 			ASSERT_EQUAL(mp.size(), my_mp.size());
 		}
 		{
-			std::map<int, int> mp(map1.begin(), map1.end());
-			ft::map<int, int> my_mp(map1.begin(), map1.end());
+			std::multimap<int, int> mp(map1.begin(), map1.end());
+			ft::multimap<int, int> my_mp(map1.begin(), map1.end());
 
-			std::map<int, int>::iterator it;
-			ft::map<int, int>::iterator my_it;
-
-			std::pair<std::map<int, int>::iterator, bool> pr;
-			std::pair<ft::map<int, int>::iterator, bool> my_pr;
+			std::multimap<int, int>::iterator pr;
+			ft::multimap<int, int>::iterator my_pr;
 
 			pr = mp.insert(std::make_pair(10, 5));
 			my_pr = my_mp.insert(std::make_pair(10, 5));
 			
-			ASSERT_EQUAL(pr.first->first, my_pr.first->first);
-			ASSERT_EQUAL(pr.first->second, my_pr.first->second);
-			ASSERT_EQUAL(pr.second, my_pr.second);
+			ASSERT_EQUAL(pr->first, my_pr->first);
+			ASSERT_EQUAL(pr->second, my_pr->second);
+			ASSERT_EQUAL(pr->second, my_pr->second);
 			ASSERT_EQUAL(mp.size(), my_mp.size());
 
 			pr = mp.insert(std::make_pair(10, 5));
 			my_pr = my_mp.insert(std::make_pair(10, 5));
-			ASSERT_EQUAL(pr.first->first, my_pr.first->first);
-			ASSERT_EQUAL(pr.first->second, my_pr.first->second);
+			ASSERT_EQUAL(pr->first, my_pr->first);
+			ASSERT_EQUAL(pr->second, my_pr->second);
 			ASSERT_EQUAL(mp.size(), my_mp.size());
 
 			pr = mp.insert(std::make_pair(10, 15));
 			my_pr = my_mp.insert(std::make_pair(10, 15));
-			ASSERT_EQUAL(pr.first->first, my_pr.first->first);
-			ASSERT_EQUAL(pr.first->second, my_pr.first->second);
+			ASSERT_EQUAL(pr->first, my_pr->first);
+			ASSERT_EQUAL(pr->second, my_pr->second);
 			ASSERT_EQUAL(mp.size(), my_mp.size());
 
 			pr = mp.insert(std::make_pair(15, 15));
 			my_pr = my_mp.insert(std::make_pair(15, 15));
-			ASSERT_EQUAL(pr.first->first, my_pr.first->first);
-			ASSERT_EQUAL(pr.first->second, my_pr.first->second);
+			ASSERT_EQUAL(pr->first, my_pr->first);
+			ASSERT_EQUAL(pr->second, my_pr->second);
 			ASSERT_EQUAL(mp.size(), my_mp.size());
 		}
 	}
@@ -419,11 +328,11 @@ namespace ft_map
 			std::pair<int, int> pr1(12, 1);
 			std::pair<int, int> pr2(11, 1);
 
-			std::map<int, int> mp(map1.begin(), map1.end());
-			ft::map<int, int> my_mp(map1.begin(), map1.end());
+			std::multimap<int, int> mp(map1.begin(), map1.end());
+			ft::multimap<int, int> my_mp(map1.begin(), map1.end());
 
-			std::map<int, int>::iterator it;
-			ft::map<int, int>::iterator my_it;
+			std::multimap<int, int>::iterator it;
+			ft::multimap<int, int>::iterator my_it;
 
 			it = mp.find(55);
 			my_it = my_mp.find(55);
@@ -445,8 +354,8 @@ namespace ft_map
 
 	void erase_single_test() {
 		{
-			std::map<int, int> mp(map1.begin(), map1.end());
-			ft::map<int, int> my_mp(map1.begin(), map1.end());
+			std::multimap<int, int> mp(map1.begin(), map1.end());
+			ft::multimap<int, int> my_mp(map1.begin(), map1.end());
 			
 			mp.erase(mp.begin());
 			my_mp.erase(my_mp.begin());
@@ -468,12 +377,12 @@ namespace ft_map
 			ASSERT_EQUAL(mp.size(), my_mp.size());
 			ASSERT_EQUAL(mapToString(mp), mapToString(my_mp));
 
-			std::pair<std::map<int, int>::iterator, bool> pr = mp.insert(make_pair(64, 1));
-			std::pair<ft::map<int, int>::iterator, bool> my_pr = my_mp.insert(make_pair(64, 1));
+			std::multimap<int, int>::iterator pr = mp.insert(make_pair(64, 1));
+			ft::multimap<int, int>::iterator my_pr = my_mp.insert(make_pair(64, 1));
 			print_tree(my_mp);
 
-			std::map<int, int>::iterator it = pr.first;
-			ft::map<int, int>::iterator my_it = my_pr.first;
+			std::multimap<int, int>::iterator it = pr;
+			ft::multimap<int, int>::iterator my_it = my_pr;
 			mp.erase(it);
 			my_mp.erase(my_it);
 			ASSERT_EQUAL(mp.size(), my_mp.size());
@@ -525,8 +434,8 @@ namespace ft_map
 			print_tree(my_mp);
 		}
 		{
-			std::map<std::string, int> mp(map3.begin(), map3.end());
-			ft::map<std::string, int> my_mp(map3.begin(), map3.end());
+			std::multimap<std::string, int> mp(map3.begin(), map3.end());
+			ft::multimap<std::string, int> my_mp(map3.begin(), map3.end());
 
 			ASSERT_EQUAL(mapToString(mp), mapToString(my_mp));
 			mp.erase(mp.begin());
@@ -556,11 +465,11 @@ namespace ft_map
 			my_mp.erase(--my_mp.end());
 			ASSERT_EQUAL(mapToString(mp), mapToString(my_mp));
 
-			std::pair<std::map<std::string, int>::iterator, bool> pr = mp.insert(make_pair("odin", 1));
-			std::pair<ft::map<std::string, int>::iterator, bool> my_pr = my_mp.insert(make_pair("odin", 1));
+			std::multimap<std::string, int>::iterator pr = mp.insert(make_pair("odin", 1));
+			ft::multimap<std::string, int>::iterator my_pr = my_mp.insert(make_pair("odin", 1));
 
-			std::map<std::string, int>::iterator it = pr.first;
-			ft::map<std::string, int>::iterator my_it = my_pr.first;
+			std::multimap<std::string, int>::iterator it = pr;
+			ft::multimap<std::string, int>::iterator my_it = my_pr;
 
 			mp.erase(it);
 			my_mp.erase(my_it);
@@ -604,8 +513,8 @@ namespace ft_map
 
 	void erase_key_test() {
 		{
-			std::map<int, int> mp(map1.begin(), map1.end());
-			ft::map<int, int> my_mp(map1.begin(), map1.end());
+			std::multimap<int, int> mp(map1.begin(), map1.end());
+			ft::multimap<int, int> my_mp(map1.begin(), map1.end());
 
 			size_t t1, t2;
 			
@@ -652,11 +561,11 @@ namespace ft_map
 
 	void erase_range_test() {
 		{
-			std::map<int, int> mp(map1.begin(), map1.end());
-			ft::map<int, int> my_mp(map1.begin(), map1.end());
+			std::multimap<int, int> mp(map1.begin(), map1.end());
+			ft::multimap<int, int> my_mp(map1.begin(), map1.end());
 
-			std::map<int, int>::iterator it = mp.insert(make_pair(64, 10)).first;
-			ft::map<int, int>::iterator my_it = my_mp.insert(make_pair(64, 10)).first;
+			std::multimap<int, int>::iterator it = mp.insert(make_pair(64, 10));
+			ft::multimap<int, int>::iterator my_it = my_mp.insert(make_pair(64, 10));
 
 			mp.erase(++mp.begin(), it);
 			my_mp.erase(++my_mp.begin(), my_it);
@@ -674,8 +583,8 @@ namespace ft_map
 	}
 
 	void clear_test() {
-		std::map<int, int> mp1(map1.begin(), map1.end());
-		ft::map<int, int> my_mp1(map1.begin(), map1.end());
+		std::multimap<int, int> mp1(map1.begin(), map1.end());
+		ft::multimap<int, int> my_mp1(map1.begin(), map1.end());
 
 		mp1.clear();
 		my_mp1.clear();
@@ -689,12 +598,12 @@ namespace ft_map
 	}
 
 	void swap_test() {
-		std::map<int, int> mp1(map1.begin(), map1.end());
-		ft::map<int, int> my_mp1(map1.begin(), map1.end());
+		std::multimap<int, int> mp1(map1.begin(), map1.end());
+		ft::multimap<int, int> my_mp1(map1.begin(), map1.end());
 		ASSERT_EQUAL(mapToString(mp1), mapToString(my_mp1));
 
-		std::map<int, int> mp2(map1.begin(), map1.end());
-		ft::map<int, int> my_mp2(map1.begin(), map1.end());
+		std::multimap<int, int> mp2(map1.begin(), map1.end());
+		ft::multimap<int, int> my_mp2(map1.begin(), map1.end());
 
 		mp1.erase(mp1.begin());
 		my_mp1.erase(my_mp1.begin());
@@ -720,11 +629,11 @@ namespace ft_map
 	}
 
 	void lower_bound_test() {
-		std::map<int, int> mp(map1.begin(), map1.end());
-		ft::map<int, int> my_mp(map1.begin(), map1.end());
+		std::multimap<int, int> mp(map1.begin(), map1.end());
+		ft::multimap<int, int> my_mp(map1.begin(), map1.end());
 
-		std::map<int, int>::iterator it = mp.lower_bound(12);
-		ft::map<int, int>::iterator my_it = my_mp.lower_bound(12);
+		std::multimap<int, int>::iterator it = mp.lower_bound(12);
+		ft::multimap<int, int>::iterator my_it = my_mp.lower_bound(12);
 
 		ASSERT_EQUAL(it->first, my_it->first);
 		ASSERT_EQUAL(it->second, my_it->second);
@@ -735,8 +644,8 @@ namespace ft_map
 		ASSERT_EQUAL(it->first, my_it->first);
 		ASSERT_EQUAL(it->second, my_it->second);
 
-		std::map<int, int>::iterator it2 = mp.find(12);
-		ft::map<int, int>::iterator my_it2 = my_mp.find(12);
+		std::multimap<int, int>::iterator it2 = mp.find(12);
+		ft::multimap<int, int>::iterator my_it2 = my_mp.find(12);
 
 		it2++;
 		my_it2++;
@@ -759,11 +668,11 @@ namespace ft_map
 	}
 
 	void upper_bound_test() {
-		std::map<int, int> mp(map1.begin(), map1.end());
-		ft::map<int, int> my_mp(map1.begin(), map1.end());
+		std::multimap<int, int> mp(map1.begin(), map1.end());
+		ft::multimap<int, int> my_mp(map1.begin(), map1.end());
 
-		std::map<int, int>::iterator it = mp.upper_bound(12);
-		ft::map<int, int>::iterator my_it = my_mp.upper_bound(12);
+		std::multimap<int, int>::iterator it = mp.upper_bound(12);
+		ft::multimap<int, int>::iterator my_it = my_mp.upper_bound(12);
 
 		ASSERT_EQUAL(it->first, my_it->first);
 		ASSERT_EQUAL(it->second, my_it->second);
@@ -774,8 +683,8 @@ namespace ft_map
 		ASSERT_EQUAL(it->first, my_it->first);
 		ASSERT_EQUAL(it->second, my_it->second);
 
-		std::map<int, int>::iterator it2 = mp.find(25);
-		ft::map<int, int>::iterator my_it2 = my_mp.find(25);
+		std::multimap<int, int>::iterator it2 = mp.find(25);
+		ft::multimap<int, int>::iterator my_it2 = my_mp.find(25);
 
 		it = mp.upper_bound(14);
 		my_it = my_mp.upper_bound(14);
@@ -800,14 +709,14 @@ namespace ft_map
 
 	void equal_range_test() {
 
-		std::map<int, int> mp(map1.begin(), map1.end());
-		ft::map<int, int> my_mp(map1.begin(), map1.end());
+		std::multimap<int, int> mp(map1.begin(), map1.end());
+		ft::multimap<int, int> my_mp(map1.begin(), map1.end());
 
-		std::map<int, int>::iterator it;
-		ft::map<int, int>::iterator my_it;
+		std::multimap<int, int>::iterator it;
+		ft::multimap<int, int>::iterator my_it;
 
-		std::pair<std::map<int, int>::iterator, std::map<int, int>::iterator> pr;
-		std::pair<ft::map<int, int>::iterator, ft::map<int, int>::iterator> my_pr;
+		std::pair<std::multimap<int, int>::iterator, std::multimap<int, int>::iterator> pr;
+		std::pair<ft::multimap<int, int>::iterator, ft::multimap<int, int>::iterator> my_pr;
 
 		{
 			it = mp.lower_bound(0);
@@ -897,8 +806,8 @@ namespace ft_map
 	}
 
 	void operators_test() {
-		std::map<int, int> mp1, mp2;
-		ft::map<int, int> my_mp1, my_mp2;
+		std::multimap<int, int> mp1, mp2;
+		ft::multimap<int, int> my_mp1, my_mp2;
 
 		std::vector<pair<int, int> >src(map1);
 		std::vector<pair<int, int> > v[6];

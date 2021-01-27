@@ -1,15 +1,6 @@
 #pragma once
 
 #include <memory>
-#include "list.hpp"
-
-#ifndef NOEXCEPT
-	#if __cplusplus >= 201103L
-		#define NOEXCEPT noexcept
-	#else
-		#define NOEXCEPT throw()
-	#endif
-#endif
 
 namespace ft {
 
@@ -28,50 +19,50 @@ namespace ft {
 
 		Node* ptr;
 
-		list_iterator() NOEXCEPT : ptr(NULL) {}
-		list_iterator(Node* new_ptr) NOEXCEPT : ptr(new_ptr) {}
+		list_iterator() throw() : ptr(NULL) {}
+		list_iterator(Node* new_ptr) throw() : ptr(new_ptr) {}
 
 		  template<typename Iterator>
 		iterator
 		operator= (const Iterator& x)	{ return iterator(x.ptr); }
 
 		reference
-		operator*() const NOEXCEPT		{ return this->ptr->_data; }
+		operator*() const throw()		{ return this->ptr->_data; }
 
 		pointer
-		operator->() const NOEXCEPT 		{ return &this->ptr->_data; }
+		operator->() const throw() 		{ return &this->ptr->_data; }
 
 		iterator
-		operator++ () NOEXCEPT {
+		operator++ () throw() {
 			this->ptr = this->ptr->_next;
 			return *this;
 		}
 
 		iterator
-		operator++ (int) NOEXCEPT {
+		operator++ (int) throw() {
 			iterator tmp = *this;
 			this->ptr = this->ptr->_next;
 			return tmp;
 		}
 
 		iterator
-		operator-- () NOEXCEPT {
+		operator-- () throw() {
 			this->ptr = this->ptr->_prev;
 			return *this;
 		}
 
 		iterator
-		operator-- (int) NOEXCEPT {
+		operator-- (int) throw() {
 			iterator tmp = *this;
 			this->ptr = this->ptr->_prev;
 			return tmp;
 		}
 
 		bool
-		operator== (const iterator& x) NOEXCEPT { return this->ptr == x.ptr; }
+		operator== (const iterator& x) throw() { return this->ptr == x.ptr; }
 
 		bool
-		operator!= (const iterator& x) NOEXCEPT { return this->ptr != x.ptr; }
+		operator!= (const iterator& x) throw() { return this->ptr != x.ptr; }
 	};
 // ============================================================================
 
@@ -89,34 +80,34 @@ namespace ft {
 		typedef const T&					const_reference;
 		typedef list_iterator<T, Node>	base_iterator;
 
-		list_reverse_iterator() NOEXCEPT : base_iterator() {}
-		list_reverse_iterator(Node* new_ptr) NOEXCEPT : base_iterator(new_ptr) {}
+		list_reverse_iterator() throw() : base_iterator() {}
+		list_reverse_iterator(Node* new_ptr) throw() : base_iterator(new_ptr) {}
 
 		  template<typename Iterator>
 		reverse_iterator
 		operator= (Iterator& x) { return reverse_iterator(x.ptr); }
 
 		reverse_iterator
-		operator++ () NOEXCEPT {
+		operator++ () throw() {
 			this->ptr = this->ptr->_prev;
 			return *this;
 		}
 
 		reverse_iterator
-		operator++ (int) NOEXCEPT {
+		operator++ (int) throw() {
 			reverse_iterator tmp = *this;
 			this->ptr = this->ptr->_prev;
 			return tmp;
 		}
 
 		reverse_iterator
-		operator-- () NOEXCEPT {
+		operator-- () throw() {
 			this->ptr = this->ptr->_next;
 			return *this;
 		}
 
 		reverse_iterator
-		operator-- (int) NOEXCEPT {
+		operator-- (int) throw() {
 			reverse_iterator tmp = *this;
 			this->ptr = this->ptr->_next;
 			return tmp;

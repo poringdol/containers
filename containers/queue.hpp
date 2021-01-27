@@ -3,14 +3,6 @@
 #include "list.hpp"
 #include <queue>
 
-#ifndef NOEXCEPT
-	#if __cplusplus >= 201103L
-		#define NOEXCEPT noexcept
-	#else
-		#define NOEXCEPT throw()
-	#endif
-#endif
-
 namespace ft {
 /********************************** Queue class ***************************************/
 
@@ -73,7 +65,6 @@ namespace ft {
 /************************************ end of queue class ***********************************/
 
 // Friend functions definitions -------------------------------------------------
-
 
 	  template <typename T, typename Container>
 	inline bool 

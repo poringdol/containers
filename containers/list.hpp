@@ -4,14 +4,6 @@
 #include "cpp_type_traits.hpp"
 #include "list_iterator.hpp"
 
-#ifndef NOEXCEPT
-	#if __cplusplus >= 201103L
-		#define NOEXCEPT noexcept
-	#else
-		#define NOEXCEPT throw()
-	#endif
-#endif
-
 
 namespace ft {
 /********************************** List class ***************************************/
@@ -30,7 +22,7 @@ namespace ft {
 
 			_list_node (T new_data = T(),
 					  _list_node *new_prev = NULL,
-					  _list_node *new_next = NULL) NOEXCEPT
+					  _list_node *new_next = NULL) throw()
 					: _data(new_data), _prev(new_prev), _next(new_next) {}
 		};
 // ============================================================================
@@ -58,11 +50,10 @@ namespace ft {
 		_list_node* _head;
 		Alloc _alloc;
 
-
 // Supporting functions -------------------------------------------------------
 
 		void
-		_list_init () NOEXCEPT {
+		_list_init () throw() {
 			this->_head = new _list_node;
 			this->_head->_prev = this->_head->_next = this->_head;
 		}
@@ -170,53 +161,53 @@ namespace ft {
 	//  Iterators -------------------------------
 
 		iterator
-		begin () NOEXCEPT			{ return iterator(this->_head->_next); }
+		begin () throw()			{ return iterator(this->_head->_next); }
 
 		const_iterator
-		begin () const NOEXCEPT		{ return const_iterator(this->_head->_next); }
+		begin () const throw()		{ return const_iterator(this->_head->_next); }
 
 		iterator
-		end () NOEXCEPT				{ return iterator(this->_head); }
+		end () throw()				{ return iterator(this->_head); }
 
 		const_iterator
-		end () const NOEXCEPT		{ return const_iterator(this->_head); }
+		end () const throw()		{ return const_iterator(this->_head); }
 
 		reverse_iterator
-		rbegin () NOEXCEPT			{ return reverse_iterator(this->_head->_prev); }
+		rbegin () throw()			{ return reverse_iterator(this->_head->_prev); }
 
 		const_reverse_iterator
-		rbegin () const NOEXCEPT 	{ return const_reverse_iterator(this->_head->_prev); }
+		rbegin () const throw() 	{ return const_reverse_iterator(this->_head->_prev); }
 
 		reverse_iterator
-		rend () NOEXCEPT				{ return reverse_iterator(this->_head); }
+		rend () throw()				{ return reverse_iterator(this->_head); }
 
 		const_reverse_iterator
-		rend () const NOEXCEPT		{ return const_reverse_iterator(this->_head); }
+		rend () const throw()		{ return const_reverse_iterator(this->_head); }
 
 	// Capacity ----------------------------
 
 		bool
-		empty () const NOEXCEPT		{ return _list_size == 0; }
+		empty () const throw()		{ return _list_size == 0; }
 
 		size_type
-		size () const NOEXCEPT		{ return _list_size; }
+		size () const throw()		{ return _list_size; }
 
 		size_type
-		max_size () const NOEXCEPT	{ return std::numeric_limits<size_type>::max() / sizeof(_list_node) / 2; }
+		max_size () const throw()	{ return std::numeric_limits<size_type>::max() / sizeof(_list_node) / 2; }
 
 	// Element access -------------------------
 
 		reference
-		front () NOEXCEPT			{ return *(begin()); }
+		front () throw()			{ return *(begin()); }
 
 		value_type
-		front () const NOEXCEPT		{ return *(this->begin()); }
+		front () const throw()		{ return *(this->begin()); }
 
 		reference
-		back () NOEXCEPT				{ return *(-- (this->end())); }
+		back () throw()				{ return *(-- (this->end())); }
 
 		value_type
-		back () const NOEXCEPT		{ return *(-- (this->end())); }
+		back () const throw()		{ return *(-- (this->end())); }
 
 	// Modifiers ------------------------------
 
@@ -240,7 +231,7 @@ namespace ft {
 		}
 
 		void
-		pop_front () NOEXCEPT { this->erase(this->begin()); }
+		pop_front () throw() { this->erase(this->begin()); }
 
 		void
 		push_back (value_type data) {
@@ -257,7 +248,7 @@ namespace ft {
 		}
 
 		void
-		pop_back () NOEXCEPT { this->erase(iterator(this->_head->_prev)); }
+		pop_back () throw() { this->erase(iterator(this->_head->_prev)); }
 
 		iterator
 		insert (iterator position, value_type data) {
@@ -329,7 +320,7 @@ namespace ft {
 		}
 
 		void
-		clear () NOEXCEPT {
+		clear () throw() {
 			_list_node *temp;
 			while (this->_list_size) {
 				temp = this->_head->_next;
@@ -401,7 +392,6 @@ namespace ft {
 				}
 			}
 		}
-
 
 		void
 		unique() {
