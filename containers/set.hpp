@@ -99,7 +99,11 @@ namespace ft {
 
 		node*
 		_add_node (node* root, const value_type& new_data) {
-		
+			
+			iterator it = find(new_data);
+			if (it != end())
+				return it.base();
+
 			if (!root) {
 				_insert_node(root, new_data);
 				_end->_parent = _root;
@@ -118,17 +122,12 @@ namespace ft {
 				|| (root->_right != _null
 					&& !root->_right->_last_node
 					&& !_comp_val(new_data, root->_data))) {
-				
-				if (_is_key_equal(new_data, root->_data))
-					return root;
 
 				if (_comp_val(new_data, root->_data))
 					root = root->_left;
 				else
 					root = root->_right;
 			}
-			if (_is_key_equal(new_data, root->_data))
-				return root;
 			return _insert_node(root, new_data);
 		}
 
@@ -420,7 +419,6 @@ namespace ft {
 
 		iterator
 		insert (iterator position, const value_type& val) {
-
 			return _add_node(position.ptr, val);
 		}
 
@@ -518,7 +516,7 @@ namespace ft {
 		lower_bound (const key_type& k) { 
 			
 			iterator it = begin();
-			
+
 			while (it != end()) {
 				if (_is_key_equal(*it, k) || _comp_val(k, it.base()->_data))
 					return it;
@@ -581,30 +579,30 @@ namespace ft {
 		}
 
 // Friend functions -----------------------------------------------------------
-		  template <typename _Key, typename _T, typename _Compare, typename _Alloc>
+		  template <typename _T, typename _Compare, typename _Alloc>
 		friend bool
-		operator== (const set<_Key,_T,_Compare,_Alloc>&, const set<_Key,_T,_Compare,_Alloc>&);
+		operator== (const set<_T,_Compare,_Alloc>&, const set<_T,_Compare,_Alloc>&);
 
-		  template <typename _Key, typename _T, typename _Compare, typename _Alloc>
+		  template <typename _T, typename _Compare, typename _Alloc>
 		friend  bool
-		operator<  (const set<_Key,_T,_Compare,_Alloc>&, const set<_Key,_T,_Compare,_Alloc>&);
+		operator<  (const set<_T,_Compare,_Alloc>&, const set<_T,_Compare,_Alloc>&);
 
-		  template <typename _Key, typename _T, typename _Compare, typename _Alloc>
-  		void swap (set<_Key,_T,_Compare,_Alloc>& x, set<_Key,_T,_Compare,_Alloc>& y);
+		  template <typename _T, typename _Compare, typename _Alloc>
+  		void swap (set<_T,_Compare,_Alloc>& x, set<_T,_Compare,_Alloc>& y);
 	};
 
 /************************************ end of Set class ***********************************/
 
 // Friend functions definitions -----------------------------------------------
 
-	 template <typename Key, typename T, typename Compare, typename Alloc>
+	 template <typename T, typename Compare, typename Alloc>
 	bool
-	operator== (set<Key,T,Compare,Alloc>& x, set<Key,T,Compare,Alloc>& y) {
+	operator== (set<T,Compare,Alloc>& x, set<T,Compare,Alloc>& y) {
 		
 		if (x.size() != y.size()) return false;
 		
-		typename ft::set<Key, T>::iterator first1 = x.begin();
-		typename ft::set<Key, T>::iterator first2 = y.begin();
+		typename ft::set<T>::iterator first1 = x.begin();
+		typename ft::set<T>::iterator first2 = y.begin();
 		
 		while (first1 != x.end()) {
 			if (*first1 != *first2)
@@ -615,18 +613,18 @@ namespace ft {
 		return true;
 	}
 
-	 template <typename Key, typename T, typename Compare, typename Alloc>
+	 template <typename T, typename Compare, typename Alloc>
 	bool
-	operator!= (set<Key,T,Compare,Alloc>& x, set<Key,T,Compare,Alloc>& y) {
+	operator!= (set<T,Compare,Alloc>& x, set<T,Compare,Alloc>& y) {
 		return !(x == y);
 	}
 
-	 template <typename Key, typename T, typename Compare, typename Alloc>
+	 template <typename T, typename Compare, typename Alloc>
 	bool
-	operator<  (set<Key,T,Compare,Alloc>& x, set<Key,T,Compare,Alloc>& y) {
+	operator<  (set<T,Compare,Alloc>& x, set<T,Compare,Alloc>& y) {
 
-		typename ft::set<Key, T>::iterator first1 = x.begin();
-		typename ft::set<Key, T>::iterator first2 = y.begin();
+		typename ft::set<T>::iterator first1 = x.begin();
+		typename ft::set<T>::iterator first2 = y.begin();
 		
 		while (first1 != x.end() && first2 != y.end()) {
 			if (*first1 < *first2)
@@ -642,26 +640,26 @@ namespace ft {
 		return true;
 	}
 
-	 template <typename Key, typename T, typename Compare, typename Alloc>
+	 template <typename T, typename Compare, typename Alloc>
 	bool
-	operator<= (set<Key,T,Compare,Alloc>& x, set<Key,T,Compare,Alloc>& y) {
+	operator<= (set<T,Compare,Alloc>& x, set<T,Compare,Alloc>& y) {
 		return !(y < x);
 	}
 
-	 template <typename Key, typename T, typename Compare, typename Alloc>
+	 template <typename T, typename Compare, typename Alloc>
 	bool
-	operator>  (set<Key,T,Compare,Alloc>& x, set<Key,T,Compare,Alloc>& y) {
+	operator>  (set<T,Compare,Alloc>& x, set<T,Compare,Alloc>& y) {
 		return y < x;
 	}
 
-	 template <typename Key, typename T, typename Compare, typename Alloc>
+	 template <typename T, typename Compare, typename Alloc>
 	bool
-	operator>= (set<Key,T,Compare,Alloc>& x, set<Key,T,Compare,Alloc>& y) {
+	operator>= (set<T,Compare,Alloc>& x, set<T,Compare,Alloc>& y) {
 		return !(x < y);
 	}
 
-	  template <typename _Key, typename _T, typename _Compare, typename _Alloc>
-	void swap (set<_Key,_T,_Compare,_Alloc>& x, set<_Key,_T,_Compare,_Alloc>& y) {
+	  template <typename _T, typename _Compare, typename _Alloc>
+	void swap (set<_T,_Compare,_Alloc>& x, set<_T,_Compare,_Alloc>& y) {
 		x.swap(y);
 	}
 }

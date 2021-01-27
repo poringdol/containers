@@ -34,6 +34,7 @@ namespace ft {
 }
 
 static int arr_int[16] = {1,2,3,4,5,6,7,8,9,0,1,2,3,1,3,-1};
+static int arr_int2[16] = {1,2,3,1,2,2,1,4,0,0,1,2,3,1,3,-1};
 static char arr_str[][16] = {"one_1", "two_1", "three_1", "four_1", "five_1",
 									"six_1", "seven_1", "eight_1", "nine_1", "zero_1",
 									"one_2", "two_2", "one_3", "two_3", "three_2", ""};
@@ -69,6 +70,7 @@ static std::pair<std::string, int> vect_map3[20] =  { std::make_pair("one", 1), 
 
 static std::list<int> ls(arr_int, arr_int + 15);
 static std::vector<int> vc(arr_int, arr_int + 15);
+static std::vector<int> vc2(arr_int2, arr_int2 + 15);
 static std::deque<int> dq(arr_int, arr_int + 15);
 static std::vector<std::string> str(arr_str, arr_str + 15);
 static std::vector<std::pair<int, int> > map1(vect_map1, vect_map1 + 20);
@@ -276,29 +278,27 @@ namespace ft_deque
 namespace ft_set
 {
 	void set_test();
-
-	// void constructorDefault_test();
-	// void constructorRange_test();
-	// void constructorCopy_test();
-	// void begin_end_test();
-	// void size_test();
-	// void max_size_test();
-	// void empty_test();
-	// void find_test();
-	// void count_test();
-	// void insert_range_test();
-	// void insert_single_test();
-	// void insert_hint_test();
-	// void erase_single_test();
-	// void erase_key_test();
-	// void erase_range_test();
-	// void operator_square_braces();
-	// void clear_test();
-	// void swap_test();
-	// void lower_bound_test();
-	// void upper_bound_test();
-	// void equal_range_test();
-	// void operators_test();
+	void constructorDefault_test();
+	void constructorRange_test();
+	void constructorCopy_test();
+	void begin_end_test();
+	void size_test();
+	void max_size_test();
+	void empty_test();
+	void find_test();
+	void count_test();
+	void insert_range_test();
+	void insert_single_test();
+	void insert_hint_test();
+	void erase_single_test();
+	void erase_key_test();
+	void erase_range_test();
+	void clear_test();
+	void swap_test();
+	void lower_bound_test();
+	void upper_bound_test();
+	void equal_range_test();
+	void operators_test();
 }
 
 namespace ft_multiset
@@ -333,32 +333,6 @@ namespace ft_multimap
 {
 	void multimap_test();
 
-	void constructorDefault_test();
-	void constructorRange_test();
-	void constructorCopy_test();
-	void begin_end_test();
-	void size_test();
-	void max_size_test();
-	void empty_test();
-	void find_test();
-	void count_test();
-	void insert_range_test();
-	void insert_single_test();
-	void insert_hint_test();
-	void erase_single_test();
-	void erase_key_test();
-	void erase_range_test();
-	void clear_test();
-	void swap_test();
-	void lower_bound_test();
-	void upper_bound_test();
-	void equal_range_test();
-	void operators_test();
-}
-
-namespace ft_set
-{
-	void set_test();
 	void constructorDefault_test();
 	void constructorRange_test();
 	void constructorCopy_test();
