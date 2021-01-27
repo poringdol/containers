@@ -89,8 +89,8 @@ int main() {
 
 		} else if (index == ft::Multiset) {
 
-			// last_test = ft_multiset::multiset_test;
-			// ft_multiset::multiset_test();
+			last_test = ft_multiset::multiset_test;
+			ft_multiset::multiset_test();
 
 		} else if (index == ft::Multimap) {
 
@@ -106,7 +106,7 @@ int main() {
 			ft_map::map_test();
 			// ft_deque::deque_test();
 			ft_set::set_test();
-			// ft_multiset::multiset_test();
+			ft_multiset::multiset_test();
 			ft_multimap::multimap_test();
 
 		} else if (index == ft::Exit)

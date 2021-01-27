@@ -267,7 +267,6 @@ namespace ft_multimap
 			
 			ASSERT_EQUAL(pr->first, my_pr->first);
 			ASSERT_EQUAL(pr->second, my_pr->second);
-			ASSERT_EQUAL(pr->second, my_pr->second);
 			ASSERT_EQUAL(mp.size(), my_mp.size());
 
 			pr = mp.insert(std::make_pair(10, 5));

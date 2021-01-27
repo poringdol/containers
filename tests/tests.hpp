@@ -278,6 +278,7 @@ namespace ft_deque
 namespace ft_set
 {
 	void set_test();
+	
 	void constructorDefault_test();
 	void constructorRange_test();
 	void constructorCopy_test();
@@ -305,28 +306,28 @@ namespace ft_multiset
 {
 	void multiset_test();
 
-	// void constructorDefault_test();
-	// void constructorRange_test();
-	// void constructorCopy_test();
-	// void begin_end_test();
-	// void size_test();
-	// void max_size_test();
-	// void empty_test();
-	// void find_test();
-	// void count_test();
-	// void insert_range_test();
-	// void insert_single_test();
-	// void insert_hint_test();
-	// void erase_single_test();
-	// void erase_key_test();
-	// void erase_range_test();
-	// void operator_square_braces();
-	// void clear_test();
-	// void swap_test();
-	// void lower_bound_test();
-	// void upper_bound_test();
-	// void equal_range_test();
-	// void operators_test();
+	void constructorDefault_test();
+	void constructorRange_test();
+	void constructorCopy_test();
+	void begin_end_test();
+	void size_test();
+	void max_size_test();
+	void empty_test();
+	void find_test();
+	void count_test();
+	void insert_range_test();
+	void insert_single_test();
+	void insert_hint_test();
+	void erase_single_test();
+	void erase_key_test();
+	void erase_range_test();
+	void operator_square_braces();
+	void clear_test();
+	void swap_test();
+	void lower_bound_test();
+	void upper_bound_test();
+	void equal_range_test();
+	void operators_test();
 }
 
 namespace ft_multimap

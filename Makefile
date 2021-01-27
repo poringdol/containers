@@ -23,7 +23,8 @@ SRC = main.cpp \
 	  queue_tests.cpp  \
 	  map_tests.cpp \
 	  multimap_tests.cpp \
-	  set_tests.cpp
+	  set_tests.cpp \
+	  multiset_tests.cpp
 
 SRCDIR = ./tests/
 INCLUDES = ./containers/

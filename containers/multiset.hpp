@@ -2,32 +2,30 @@
 
 #include <limits>
 #include <memory>
-#include <iomanip>
-// #include "stack.hpp"
-#include "multimap_iterator.hpp"
+#include "stack.hpp"
+#include "multiset_iterator.hpp"
 
 
 namespace ft {
 
-/********************************** Multimap class ***************************************/
+/********************************** Multiset class ***************************************/
 
-	  template <typename Key,
-			  typename T,
-			  typename Compare = std::less<Key>,
-			  typename Alloc = std::allocator<std::pair<const Key, T> > >
-	class multimap {
+	  template <typename T,
+				typename Compare = std::less<T>,
+				typename Alloc = std::allocator<T> >
+	class multiset {
 
 	public:
 
-		typedef Key											key_type;
-		typedef T											mapped_type;
-		typedef std::pair<const Key, T>						value_type;
+		typedef T											key_type;
+		typedef T											value_type;
 		typedef Compare										key_compare;
 		typedef Alloc										allocator_type;
 		typedef T&											reference;
 		typedef const T&									const_reference;
 		typedef T*											pointer;
 		typedef const T*									const_pointer;
+		typedef ptrdiff_t									difference_type;
 		typedef size_t										size_type;
 
 // ----------------------------------------------------------------------------
@@ -49,20 +47,19 @@ namespace ft {
 						bool last_node 		= false,
 						bool null	 		= false)
 							: _data(data), _parent(parent),
-							  _left(left), _right(right),
-							  _last_node(last_node), _null(null) {}
+							  _left(left), _right(right), _last_node(last_node), _null(null) {}
 		};
 // ----------------------------------------------------------------------------
 
 // Supporting nested class to compare elements
 		class value_compare {
 
-			friend class multimap;
+			friend class multiset;
 		
 		protected:
 			Compare _comp;
 			value_compare(Compare c) : _comp(c) {}
-			friend class multimap<Key, T, Compare, Alloc>;
+			friend class multiset<T, Compare, Alloc>;
 
 		public:
 			typedef bool	result_type;
@@ -70,16 +67,16 @@ namespace ft {
 			typedef			value_type second_argument_type;
 
 			bool operator()(const value_type& x, const value_type& y) const {
-				return _comp(x.first, y.first);
+				return _comp(x, y);
 			}
 		};
 // ----------------------------------------------------------------------------
 	
-		typedef _tree_node										node;
-		typedef multimap_iterator<Key, T, _tree_node>			iterator;
-		typedef multimap_iterator<Key, T, _tree_node>			const_iterator;
-		typedef multimap_reverse_iterator<Key, T, _tree_node>	reverse_iterator;
-		typedef multimap_reverse_iterator<Key, T, _tree_node>	const_reverse_iterator;
+		typedef _tree_node									node;
+		typedef multiset_iterator<T, _tree_node>			iterator;
+		typedef multiset_iterator<T, _tree_node>			const_iterator;
+		typedef multiset_reverse_iterator<T, _tree_node>	reverse_iterator;
+		typedef multiset_reverse_iterator<T, _tree_node>	const_reverse_iterator;
 
 	private:
 	
@@ -92,7 +89,7 @@ namespace ft {
 		node*			_rend;
 		node*			_null;
 
-// // Supporting functions -------------------------------------------------------
+// Supporting functions -------------------------------------------------------
 		
 		bool
 		_is_key_equal (const value_type& k1, const value_type& k2) const {
@@ -102,7 +99,7 @@ namespace ft {
 
 		node*
 		_add_node (node* root, const value_type& new_data) {
-		
+
 			if (!root) {
 				_insert_node(root, new_data);
 				_end->_parent = _root;
@@ -111,8 +108,10 @@ namespace ft {
 				_root->_right = _end;
 				return _root;
 			}
-			root = _root;
-			
+			while (root->_parent != _null 
+					&& _comp_val(new_data, root->_parent->_data)) {
+				root = root->_parent;
+			}
 			while ((root->_left != _null
 					&& !root->_left->_last_node
 					&& _comp_val(new_data, root->_data))
@@ -126,7 +125,6 @@ namespace ft {
 				else
 					root = root->_right;
 			}
-
 			return _insert_node(root, new_data);
 		}
 
@@ -147,7 +145,7 @@ namespace ft {
 					root->_left = new _tree_node(new_data, root, _null, _null);
 					res = root->_left;
 				}
-			} else {												// new_data >= current root data
+			} else {												// new_data > current root data
 				if (root->_right != _null) {									// root->_right == end
 					root->_right = new _tree_node(new_data, root, _null, _end);
 					_end->_parent = root->_right;
@@ -165,9 +163,8 @@ namespace ft {
 		_find (const key_type& k) const {
 
 			iterator it = begin();
-			value_type temp(k, T());
 			while (it != end()) {
-				if (_is_key_equal(*it, temp))
+				if (_is_key_equal(*it, k))
 					return it.base();
 				++it;
 			}
@@ -180,7 +177,7 @@ namespace ft {
 			node* ptr = position.base();
 
 			if (ptr->_left->_last_node && ptr->_right->_last_node)
-				_set_empty_map();
+				_set_empty_tree();
 
 			else if (ptr->_left->_last_node || ptr->_right->_last_node)
 			{
@@ -284,35 +281,18 @@ namespace ft {
 		_clear () { erase(begin(), end()); }
 
 		void
-		_print (node* p, int indent = 0) {
-			if(p != _null) {
-				if (indent)
-					std::cout << std::setw(indent) << ' ';
-				std::cout << "[" << p->_data.first << " " << p->_data.second << "]" << "\n ";
-				if(p->_left && p->_left != _rend)
-					_print(p->_left, indent + 5);
-				if(p->_right && p->_right != _end)
-					_print(p->_right, indent + 5);
-			}
-		}
-
-		void
-		_set_empty_map() {
+		_set_empty_tree() {
 			_end->_parent = _rend;
 			_rend->_parent = _end;
 			_root = NULL;
 		}
 
-
 	public:
 
-		void
-		_print_tree () { std::cout << "\n"; _print(_root); std::cout << "\n"; }
-
-// Multimap constructors -----------------------------------------------------------
+// Multiset constructors -----------------------------------------------------------
 
 		explicit
-		multimap (const key_compare& comp = key_compare(),
+		multiset (const key_compare& comp = key_compare(),
 			 const allocator_type& alloc = allocator_type())
 				  : _root(),
 					_compare(comp),
@@ -325,11 +305,11 @@ namespace ft {
 			_null = new node(value_type(), NULL, NULL, NULL, false, true);
 			_end  = new node(value_type(), _null, _null, _null, true);
 			_rend = new node(value_type(), _null, _null, _null, true);
-			_set_empty_map();
+			_set_empty_tree();
 		}
 
 		  template <typename InputIterator>
-		multimap (InputIterator first,
+		multiset (InputIterator first,
 			 InputIterator last,
 			 const key_compare& comp = key_compare(),
 			 const allocator_type& alloc = allocator_type())
@@ -344,12 +324,12 @@ namespace ft {
 				_null = new node(value_type(), NULL, NULL, NULL, false, true);
 				_end  = new node(value_type(), _null, _null, _null, true);
 				_rend = new node(value_type(), _null, _null, _null, true);
-				_set_empty_map();
+				_set_empty_tree();
 
 				insert(first, last);
 			}
 
-		multimap (const multimap& x)
+		multiset (const multiset& x)
 			  : _root(),
 				_compare(x._compare),
 				_alloc(x._alloc),
@@ -361,31 +341,31 @@ namespace ft {
 			_null = new node(value_type(), NULL, NULL, NULL, false, true);
 			_end  = new node(value_type(), _null, _null, _null, true);
 			_rend = new node(value_type(), _null, _null, _null, true);
-			_set_empty_map();
+			_set_empty_tree();
 
 			insert(x.begin(), x.end());
 		}
 
-// Multimap destructor --------------------------------------------------------------
+// Multiset destructor --------------------------------------------------------------
 
-		~multimap () {
+		~multiset () {
 			_clear();
 			delete _end;
 			delete _rend;
 			delete _null;
 		}
 
-// // Multimap operators -------------------------------------------------------------------
+// Multiset operators -------------------------------------------------------------------
 
-		multimap&
-		operator= (const multimap& x) {
+		multiset&
+		operator= (const multiset& x) {
 			insert(x.begin(), x.end());
 			return *this;
 		}
 
-// // Multimap methods ---------------------------------------------------------------------
+// Multiset methods ---------------------------------------------------------------------
 
-// 	//  Iterators -------------------------------
+	//  Iterators -------------------------------
 
 		iterator
 		begin () throw()				{ return iterator(_rend->_parent); }
@@ -397,22 +377,21 @@ namespace ft {
 		end () throw()					{ return iterator(_end); }
 
 		const_iterator
-		end () const throw()			{ return const_iterator(_end); }
+		end () const throw()			{ return const_iterator(_end); }	
 
 		reverse_iterator
-		rbegin () throw()				{ 
-			return reverse_iterator(_end->_parent); }
+		rbegin () throw()				{ return reverse_iterator(_end->_parent); }
 
 		const_reverse_iterator
 		rbegin () const throw() 		{ return reverse_iterator(_end->_parent); }
 
 		reverse_iterator
-		rend () throw()					{ return reverse_iterator(_rend); }
+		rend () throw()				{ return reverse_iterator(_rend); }
 
 		const_reverse_iterator
 		rend () const throw()			{ return const_reverse_iterator(_rend); }
 
-// 	//  Capacity --------------------------------
+	//  Capacity --------------------------------
 
 		bool
 		empty () const throw()			{ return _node_count == 0u; }
@@ -423,7 +402,7 @@ namespace ft {
 		size_type
 		max_size () const throw()		{ return std::numeric_limits<long>::max() / sizeof(_tree_node); }
 
-// 	// Modifiers --------------------------------
+	// Modifiers --------------------------------
 
 		iterator
 		insert (const value_type& val) {
@@ -451,13 +430,12 @@ namespace ft {
 		erase (iterator position) { _erase(position); }
 
 		size_type
-		erase (const key_type& k) {
+		erase (const key_type& k) { 
 
-			value_type temp(k, T());
 			ft::stack<node*> store;
 
 			for (iterator first = begin(); first != end(); first++) {
-				if (_is_key_equal(*first, temp)) {
+				if (_is_key_equal(*first, k)) {
 					store.push(first.base());
 				}
 			}
@@ -485,7 +463,7 @@ namespace ft {
 		}
 
 		void
-		swap (multimap& x) {
+		swap (multiset& x) {
 
 			node*			root = x._root;
 			key_compare		compare = x._compare;
@@ -518,7 +496,7 @@ namespace ft {
 		void
 		clear () throw() { _clear(); }
 
-// 	// Observers --------------------------------
+	// Observers --------------------------------
 
 		key_compare
 		key_comp() const				{ return _compare; }
@@ -526,7 +504,7 @@ namespace ft {
 		value_compare
 		value_comp() const				{ return _comp_val; }
 
-// 	// Operations -------------------------------
+	// Operations -------------------------------
 
 		iterator
 		find (const key_type& k)		{ return iterator(_find(k)); }
@@ -537,10 +515,9 @@ namespace ft {
 		size_type
 		count (const key_type& k) const	{ 
 			size_type n = 0u;
-			value_type temp(k, T());
 
 			for (iterator it = begin(); it != end(); it++) {
-				if (_is_key_equal(*it, temp))
+				if (_is_key_equal(*it, k))
 					n++;
 			}
 			return n;
@@ -550,10 +527,9 @@ namespace ft {
 		lower_bound (const key_type& k) { 
 			
 			iterator it = begin();
-			value_type temp(k, T());
-			
+
 			while (it != end()) {
-				if (_is_key_equal(*it, temp) || _comp_val(temp, it.base()->_data))
+				if (_is_key_equal(*it, k) || _comp_val(k, it.base()->_data))
 					return it;
 				++it;
 			}
@@ -564,10 +540,9 @@ namespace ft {
 		lower_bound (const key_type& k) const {
 
 			const_iterator it = begin();
-			value_type temp(k, T());
 			
 			while (it != end()) {
-				if (_is_key_equal(*it, temp) || _comp_val(temp, it.base()->data))
+				if (_is_key_equal(*it, k) || _comp_val(k, it.base()->data))
 					return it;
 				++it;
 			}
@@ -578,10 +553,9 @@ namespace ft {
 		upper_bound (const key_type& k) {
 
 			iterator it = begin();
-			value_type temp(k, T());
 			
 			while (it != end()) {
-				if (_comp_val(temp, *it))
+				if (_comp_val(k, *it))
 					return it;
 				++it;
 			}
@@ -592,10 +566,9 @@ namespace ft {
 		upper_bound (const key_type& k) const {
 			
 			const_iterator it = begin();
-			value_type temp(k, T());
 			
 			while (it != end()) {
-				if (_comp_val(temp, *it))
+				if (_comp_val(k, *it))
 					return it;
 				++it;
 			}
@@ -615,34 +588,30 @@ namespace ft {
 		}
 
 // Friend functions -----------------------------------------------------------
-		  template <typename _Key, typename _T, typename _Compare, typename _Alloc>
+		  template <typename _T, typename _Compare, typename _Alloc>
 		friend bool
-		operator== (const multimap<_Key,_T,_Compare,_Alloc>&, const multimap<_Key,_T,_Compare,_Alloc>&);
+		operator== (const multiset<_T,_Compare,_Alloc>&, const multiset<_T,_Compare,_Alloc>&);
 
-		  template <typename _Key, typename _T, typename _Compare, typename _Alloc>
+		  template <typename _T, typename _Compare, typename _Alloc>
 		friend  bool
-		operator<  (const multimap<_Key,_T,_Compare,_Alloc>&, const multimap<_Key,_T,_Compare,_Alloc>&);
+		operator<  (const multiset<_T,_Compare,_Alloc>&, const multiset<_T,_Compare,_Alloc>&);
 
-		  template <typename _Key, typename _T, typename _Compare, typename _Alloc>
-  		void swap (multimap<_Key,_T,_Compare,_Alloc>& x, multimap<_Key,_T,_Compare,_Alloc>& y);
-
-		  template<typename U>
-		friend void
-		print_tree(U& tree);
+		  template <typename _T, typename _Compare, typename _Alloc>
+  		void swap (multiset<_T,_Compare,_Alloc>& x, multiset<_T,_Compare,_Alloc>& y);
 	};
 
-/************************************ end of Multimap class ***********************************/
+/************************************ end of Multiset class ***********************************/
 
 // Friend functions definitions -----------------------------------------------
 
-	 template <typename Key, typename T, typename Compare, typename Alloc>
+	 template <typename T, typename Compare, typename Alloc>
 	bool
-	operator== (multimap<Key,T,Compare,Alloc>& x, multimap<Key,T,Compare,Alloc>& y) {
+	operator== (multiset<T,Compare,Alloc>& x, multiset<T,Compare,Alloc>& y) {
 		
 		if (x.size() != y.size()) return false;
 		
-		typename ft::multimap<Key, T>::iterator first1 = x.begin();
-		typename ft::multimap<Key, T>::iterator first2 = y.begin();
+		typename ft::multiset<T>::iterator first1 = x.begin();
+		typename ft::multiset<T>::iterator first2 = y.begin();
 		
 		while (first1 != x.end()) {
 			if (*first1 != *first2)
@@ -653,18 +622,18 @@ namespace ft {
 		return true;
 	}
 
-	 template <typename Key, typename T, typename Compare, typename Alloc>
+	 template <typename T, typename Compare, typename Alloc>
 	bool
-	operator!= (multimap<Key,T,Compare,Alloc>& x, multimap<Key,T,Compare,Alloc>& y) {
+	operator!= (multiset<T,Compare,Alloc>& x, multiset<T,Compare,Alloc>& y) {
 		return !(x == y);
 	}
 
-	 template <typename Key, typename T, typename Compare, typename Alloc>
+	 template <typename T, typename Compare, typename Alloc>
 	bool
-	operator<  (multimap<Key,T,Compare,Alloc>& x, multimap<Key,T,Compare,Alloc>& y) {
+	operator<  (multiset<T,Compare,Alloc>& x, multiset<T,Compare,Alloc>& y) {
 
-		typename ft::multimap<Key, T>::iterator first1 = x.begin();
-		typename ft::multimap<Key, T>::iterator first2 = y.begin();
+		typename ft::multiset<T>::iterator first1 = x.begin();
+		typename ft::multiset<T>::iterator first2 = y.begin();
 		
 		while (first1 != x.end() && first2 != y.end()) {
 			if (*first1 < *first2)
@@ -680,26 +649,26 @@ namespace ft {
 		return true;
 	}
 
-	 template <typename Key, typename T, typename Compare, typename Alloc>
+	 template <typename T, typename Compare, typename Alloc>
 	bool
-	operator<= (multimap<Key,T,Compare,Alloc>& x, multimap<Key,T,Compare,Alloc>& y) {
+	operator<= (multiset<T,Compare,Alloc>& x, multiset<T,Compare,Alloc>& y) {
 		return !(y < x);
 	}
 
-	 template <typename Key, typename T, typename Compare, typename Alloc>
+	 template <typename T, typename Compare, typename Alloc>
 	bool
-	operator>  (multimap<Key,T,Compare,Alloc>& x, multimap<Key,T,Compare,Alloc>& y) {
+	operator>  (multiset<T,Compare,Alloc>& x, multiset<T,Compare,Alloc>& y) {
 		return y < x;
 	}
 
-	 template <typename Key, typename T, typename Compare, typename Alloc>
+	 template <typename T, typename Compare, typename Alloc>
 	bool
-	operator>= (multimap<Key,T,Compare,Alloc>& x, multimap<Key,T,Compare,Alloc>& y) {
+	operator>= (multiset<T,Compare,Alloc>& x, multiset<T,Compare,Alloc>& y) {
 		return !(x < y);
 	}
 
-	  template <typename _Key, typename _T, typename _Compare, typename _Alloc>
-	void swap (multimap<_Key,_T,_Compare,_Alloc>& x, multimap<_Key,_T,_Compare,_Alloc>& y) {
+	  template <typename _T, typename _Compare, typename _Alloc>
+	void swap (multiset<_T,_Compare,_Alloc>& x, multiset<_T,_Compare,_Alloc>& y) {
 		x.swap(y);
 	}
 }
