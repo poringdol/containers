@@ -79,8 +79,8 @@ int main() {
 
 		} else if (index == ft::Deque) {
 
-			// last_test = ft_queue::deque_test;
-			// ft_deque::deque_test();
+			last_test = ft_deque::deque_test;
+			ft_deque::deque_test();
 
 		} else if (index == ft::Set) {
 
@@ -104,7 +104,7 @@ int main() {
 			ft_stack::stack_test();
 			ft_queue::queue_test();
 			ft_map::map_test();
-			// ft_deque::deque_test();
+			ft_deque::deque_test();
 			ft_set::set_test();
 			ft_multiset::multiset_test();
 			ft_multimap::multimap_test();

@@ -24,7 +24,8 @@ SRC = main.cpp \
 	  map_tests.cpp \
 	  multimap_tests.cpp \
 	  set_tests.cpp \
-	  multiset_tests.cpp
+	  multiset_tests.cpp \
+	  deque_tests.cpp
 
 SRCDIR = ./tests/
 INCLUDES = ./containers/

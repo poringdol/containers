@@ -25,22 +25,22 @@ namespace ft_set
 
 	void constructorRange_test() {
 		{
-			std::set<int> st(ls.begin(), ls.end());		// set from std::list
-			ft::set<int> my_st(ls.begin(), ls.end());
+			std::set<int> st(g_ls.begin(), g_ls.end());		// set from std::list
+			ft::set<int> my_st(g_ls.begin(), g_ls.end());
 			ASSERT_EQUAL(st.size(), my_st.size());
 			ASSERT_EQUAL(contToString(st), contToString(my_st));
 			
 		}
 		{
-			std::set<int> st(vc.begin(), vc.end());	// set from std::vector
-			ft::set<int> my_st(vc.begin(), vc.end());
+			std::set<int> st(g_vc.begin(), g_vc.end());	// set from std::vector
+			ft::set<int> my_st(g_vc.begin(), g_vc.end());
 			ASSERT_EQUAL(st.size(), my_st.size());
 			ASSERT_EQUAL(contToString(st), contToString(my_st));
 			
 		}
 		{
-			std::set<std::string> st(str.begin(), str.end());	// set from std::vector
-			ft::set<std::string> my_st(str.begin(), str.end());
+			std::set<std::string> st(g_str.begin(), g_str.end());	// set from std::vector
+			ft::set<std::string> my_st(g_str.begin(), g_str.end());
 			ASSERT_EQUAL(st.size(), my_st.size());
 			contToString(st);
 			contToString(my_st);
@@ -68,8 +68,8 @@ namespace ft_set
 			ASSERT_EQUAL(0u, my_st2.size());
 		}
 		{
-			std::set<int> st(vc.begin(), vc.end());
-			ft::set<int> my_st(vc.begin(), vc.end());
+			std::set<int> st(g_vc.begin(), g_vc.end());
+			ft::set<int> my_st(g_vc.begin(), g_vc.end());
 
 			std::set<int> st2(st);
 			ft::set<int> my_st2(my_st);
@@ -81,8 +81,8 @@ namespace ft_set
 			ASSERT_EQUAL(contToString(my_st), contToString(my_st2));
 		}
 		{
-			std::set<int> st(vc.begin(), vc.end());
-			ft::set<int> my_st(vc.begin(), vc.end());
+			std::set<int> st(g_vc.begin(), g_vc.end());
+			ft::set<int> my_st(g_vc.begin(), g_vc.end());
 
 			std::set<int> st2 = st;
 			ft::set<int> my_st2 = my_st;
@@ -94,8 +94,8 @@ namespace ft_set
 			ASSERT_EQUAL(contToString(my_st), contToString(my_st2));
 		}
 		{
-			std::set<int> st(vc.begin(), vc.end());
-			ft::set<int> my_st(vc.begin(), vc.end());
+			std::set<int> st(g_vc.begin(), g_vc.end());
+			ft::set<int> my_st(g_vc.begin(), g_vc.end());
 
 			std::set<int> st2; 
 			st2 = st;
@@ -112,11 +112,11 @@ namespace ft_set
 
 	void begin_end_test() {
 
-		std::set<int> st(vc.begin(), vc.end());
+		std::set<int> st(g_vc.begin(), g_vc.end());
 		std::set<int>::iterator it;
 		std::set<int>::reverse_iterator r_it;
 
-		ft::set<int> my_st(vc.begin(), vc.end());
+		ft::set<int> my_st(g_vc.begin(), g_vc.end());
 		ft::set<int>::iterator my_it;
 		ft::set<int>::reverse_iterator my_r_it;
 
@@ -160,8 +160,8 @@ namespace ft_set
 		ft::set<int> my_st1;
 		ASSERT_EQUAL(0u, my_st1.size());
 
-		std::set<int> st2(vc.begin(), vc.end());
-		ft::set<int> my_st2(vc.begin(), vc.end());
+		std::set<int> st2(g_vc.begin(), g_vc.end());
+		ft::set<int> my_st2(g_vc.begin(), g_vc.end());
 		ASSERT_EQUAL(st2.size(), my_st2.size());
 	}
 
@@ -177,13 +177,13 @@ namespace ft_set
 		ft::set<int> my_st1;
 		ASSERT_EQUAL(true, my_st1.empty());
 
-		ft::set<int> my_st2(vc.begin(), vc.end());
+		ft::set<int> my_st2(g_vc.begin(), g_vc.end());
 		ASSERT_EQUAL(false, my_st2.empty());
 	}
 
 	void find_test() {
-		std::set<int> st(vc.begin(), vc.end());
-		ft::set<int> my_st(vc.begin(), vc.end());
+		std::set<int> st(g_vc.begin(), g_vc.end());
+		ft::set<int> my_st(g_vc.begin(), g_vc.end());
 
 		std::set<int>::iterator it;
 		ft::set<int>::iterator my_it;
@@ -200,8 +200,8 @@ namespace ft_set
 
 	void count_test() {
 	
-		std::set<int> st(vc.begin(), vc.end());
-		ft::set<int> my_st(vc.begin(), vc.end());
+		std::set<int> st(g_vc.begin(), g_vc.end());
+		ft::set<int> my_st(g_vc.begin(), g_vc.end());
 
 		ASSERT_EQUAL(st.count(16),   my_st.count(16));			// value not found
 		ASSERT_EQUAL(st.count(-1),   my_st.count(-1));
@@ -220,22 +220,22 @@ namespace ft_set
 		std::set<int> st1;
 		ft::set<int> my_st1;
 
-		st1.insert(vc.begin(), vc.end());
-		my_st1.insert(vc.begin(), vc.end());
+		st1.insert(g_vc.begin(), g_vc.end());
+		my_st1.insert(g_vc.begin(), g_vc.end());
 		ASSERT_EQUAL(contToString(st1), contToString(my_st1));
 
-		st1.insert(vc2.begin(), vc2.end());
-		my_st1.insert(vc2.begin(), vc2.end());
+		st1.insert(g_vc2.begin(), g_vc2.end());
+		my_st1.insert(g_vc2.begin(), g_vc2.end());
 		ASSERT_EQUAL(contToString(st1), contToString(my_st1));
 
 		std::set<std::string> st2;
 		ft::set<std::string> my_st2;
-		st2.insert(str.begin(), str.end());
-		my_st2.insert(str.begin(), str.end());
+		st2.insert(g_str.begin(), g_str.end());
+		my_st2.insert(g_str.begin(), g_str.end());
 		ASSERT_EQUAL(contToString(st1), contToString(my_st1));
 
-		st2.insert(str.rbegin(), str.rend());
-		my_st2.insert(str.rbegin(), str.rend());
+		st2.insert(g_str.rbegin(), g_str.rend());
+		my_st2.insert(g_str.rbegin(), g_str.rend());
 		ASSERT_EQUAL(contToString(st2), contToString(my_st2));
 	}
 
@@ -273,8 +273,8 @@ namespace ft_set
 			ASSERT_EQUAL(st.size(), my_st.size())
 		}
 		{
-			std::set<int> st(vc.begin(), vc.end());
-			ft::set<int> my_st(vc.begin(), vc.end());
+			std::set<int> st(g_vc.begin(), g_vc.end());
+			ft::set<int> my_st(g_vc.begin(), g_vc.end());
 
 			std::pair<std::set<int>::iterator, bool> pr;
 			std::pair<ft::set<int>::iterator, bool> my_pr;
@@ -308,8 +308,8 @@ namespace ft_set
 
 	void insert_hint_test() {
 		{
-			std::set<int> st(vc.begin(), vc.end());
-			ft::set<int> my_st(vc.begin(), vc.end());
+			std::set<int> st(g_vc.begin(), g_vc.end());
+			ft::set<int> my_st(g_vc.begin(), g_vc.end());
 
 			std::set<int>::iterator it;
 			ft::set<int>::iterator my_it;
@@ -367,8 +367,8 @@ namespace ft_set
 
 	void erase_single_test() {
 		{
-			std::set<int> st(vc.begin(), vc.end());
-			ft::set<int> my_st(vc.begin(), vc.end());
+			std::set<int> st(g_vc.begin(), g_vc.end());
+			ft::set<int> my_st(g_vc.begin(), g_vc.end());
 			
 			st.erase(st.begin());
 			my_st.erase(my_st.begin());
@@ -427,8 +427,8 @@ namespace ft_set
 			ASSERT_EQUAL(contToString(st), contToString(my_st));			
 		}
 		{
-			std::set<std::string> st(str.begin(), str.end());
-			ft::set<std::string> my_st(str.begin(), str.end());
+			std::set<std::string> st(g_str.begin(), g_str.end());
+			ft::set<std::string> my_st(g_str.begin(), g_str.end());
 
 			ASSERT_EQUAL(contToString(st), contToString(my_st));
 			st.erase(st.begin());
@@ -489,8 +489,8 @@ namespace ft_set
 
 	void erase_key_test() {
 		{
-			std::set<int> st(vc.begin(), vc.end());
-			ft::set<int> my_st(vc.begin(), vc.end());
+			std::set<int> st(g_vc.begin(), g_vc.end());
+			ft::set<int> my_st(g_vc.begin(), g_vc.end());
 
 			size_t t1, t2;
 			
@@ -535,8 +535,8 @@ namespace ft_set
 
 	void erase_range_test() {
 		{
-			std::set<int> st(vc.begin(), vc.end());
-			ft::set<int> my_st(vc.begin(), vc.end());
+			std::set<int> st(g_vc.begin(), g_vc.end());
+			ft::set<int> my_st(g_vc.begin(), g_vc.end());
 
 			std::pair<std::set<int>::iterator, bool> it = st.insert(5);
 			std::pair<ft::set<int>::iterator, bool> my_it = my_st.insert(5);
@@ -557,8 +557,8 @@ namespace ft_set
 	}
 
 	void clear_test() {
-		std::set<int> st1(vc.begin(), vc.end());
-		ft::set<int> my_st1(vc.begin(), vc.end());
+		std::set<int> st1(g_vc.begin(), g_vc.end());
+		ft::set<int> my_st1(g_vc.begin(), g_vc.end());
 
 		st1.clear();
 		my_st1.clear();
@@ -573,12 +573,12 @@ namespace ft_set
 
 	void swap_test() {
 
-		std::set<int> st1(vc.begin(), vc.end());
-		ft::set<int> my_st1(vc.begin(), vc.end());
+		std::set<int> st1(g_vc.begin(), g_vc.end());
+		ft::set<int> my_st1(g_vc.begin(), g_vc.end());
 		ASSERT_EQUAL(contToString(st1), contToString(my_st1));
 
-		std::set<int> st2(vc.begin(), vc.end());
-		ft::set<int> my_st2(vc.begin(), vc.end());
+		std::set<int> st2(g_vc.begin(), g_vc.end());
+		ft::set<int> my_st2(g_vc.begin(), g_vc.end());
 
 		st1.erase(st1.begin());
 		my_st1.erase(my_st1.begin());
@@ -604,8 +604,8 @@ namespace ft_set
 	}
 
 	void lower_bound_test() {
-		std::set<int> st(vc.begin(), vc.end());
-		ft::set<int> my_st(vc.begin(), vc.end());
+		std::set<int> st(g_vc.begin(), g_vc.end());
+		ft::set<int> my_st(g_vc.begin(), g_vc.end());
 
 		std::set<int>::iterator it = st.lower_bound(2);
 		ft::set<int>::iterator my_it = my_st.lower_bound(2);
@@ -637,8 +637,8 @@ namespace ft_set
 	}
 
 	void upper_bound_test() {
-		std::set<int> st(vc.begin(), vc.end());
-		ft::set<int> my_st(vc.begin(), vc.end());
+		std::set<int> st(g_vc.begin(), g_vc.end());
+		ft::set<int> my_st(g_vc.begin(), g_vc.end());
 
 		std::set<int>::iterator it = st.upper_bound(5);
 		ft::set<int>::iterator my_it = my_st.upper_bound(5);
@@ -669,8 +669,8 @@ namespace ft_set
 
 	void equal_range_test() {
 
-		std::set<int> st(vc.begin(), vc.end());
-		ft::set<int> my_st(vc.begin(), vc.end());
+		std::set<int> st(g_vc.begin(), g_vc.end());
+		ft::set<int> my_st(g_vc.begin(), g_vc.end());
 
 		std::set<int>::iterator it;
 		ft::set<int>::iterator my_it;
@@ -752,7 +752,7 @@ namespace ft_set
 		std::set<int> st1, st2;
 		ft::set<int> my_st1, my_st2;
 
-		std::vector<int> src(vc);
+		std::vector<int> src(g_vc);
 		std::vector<int> v[6];
 
 		v[0] = src;			// 1,2,3,4,5,6,7,8,9,0,1,2,3,1,3,-1

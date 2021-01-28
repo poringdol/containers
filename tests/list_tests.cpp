@@ -45,17 +45,17 @@ namespace ft_list
 
 	void constructorRange_test() {
 
-		ft::list<int> myls1(ls.begin(), ls.end());		// list from std::list
-		ASSERT_EQUAL(ls.size(), myls1.size());
-		ASSERT_EQUAL(contToString(ls), contToString(myls1));
+		ft::list<int> myls1(g_ls.begin(), g_ls.end());		// list from std::list
+		ASSERT_EQUAL(g_ls.size(), myls1.size());
+		ASSERT_EQUAL(contToString(g_ls), contToString(myls1));
 
-		ft::list<int> myls2(vc.begin(), vc.end());		// list from std::vector
-		ASSERT_EQUAL(vc.size(), myls2.size());
-		ASSERT_EQUAL(contToString(vc), contToString(myls2));
+		ft::list<int> myls2(g_vc.begin(), g_vc.end());		// list from std::vector
+		ASSERT_EQUAL(g_vc.size(), myls2.size());
+		ASSERT_EQUAL(contToString(g_vc), contToString(myls2));
 
-		ft::list<int> myls3(dq.begin(), dq.end());		// list from std::deque
-		ASSERT_EQUAL(dq.size(), myls3.size());
-		ASSERT_EQUAL(contToString(dq), contToString(myls3));
+		ft::list<int> myls3(g_dq.begin(), g_dq.end());		// list from std::deque
+		ASSERT_EQUAL(g_dq.size(), myls3.size());
+		ASSERT_EQUAL(contToString(g_dq), contToString(myls3));
 	}
 
 	void size_test() {
@@ -63,8 +63,8 @@ namespace ft_list
 		ft::list<int> myls1;
 		ASSERT_EQUAL(0u, myls1.size());
 
-		ft::list<int> myls2(ls.begin(), ls.end());
-		ASSERT_EQUAL(ls.size(), myls2.size());
+		ft::list<int> myls2(g_ls.begin(), g_ls.end());
+		ASSERT_EQUAL(g_ls.size(), myls2.size());
 	}
 
 	void empty_test() {
@@ -72,28 +72,28 @@ namespace ft_list
 		ft::list<int> myls1;
 		ASSERT_EQUAL(true, myls1.empty());
 
-		ft::list<int> myls2(ls.begin(), ls.end());
+		ft::list<int> myls2(g_ls.begin(), g_ls.end());
 		ASSERT_EQUAL(false, myls2.empty());
 	}
 
 	void max_size_test() {
 		
 		ft::list<int> myls;
-		ASSERT_EQUAL(ls.max_size(), myls.max_size());
+		ASSERT_EQUAL(g_ls.max_size(), myls.max_size());
 	}
 
 	void begin_test() {
 		
-		ft::list<int> myls(ls.begin(), ls.end());
+		ft::list<int> myls(g_ls.begin(), g_ls.end());
 		ft::list<int>::iterator myit = myls.begin();
-		std::list<int>::iterator it = ls.begin();
+		std::list<int>::iterator it = g_ls.begin();
 		ASSERT_EQUAL(*myit, *it);
 
 		*it = 100;
 		*myit = 100;
 		ASSERT_EQUAL(*it, *myit);
 
-		const ft::list<int> myls2(ls.begin(), ls.end());
+		const ft::list<int> myls2(g_ls.begin(), g_ls.end());
 		ft::list<int>::const_iterator myit2 = myls.begin();
 		ASSERT_EQUAL(*myit2, 100);
 		*it = 0;
@@ -101,39 +101,39 @@ namespace ft_list
 
 	void rbegin_rend_test() {
 
-		ft::list<int> myls(ls.begin(), ls.end());
-		ASSERT_EQUAL(contToString(ls), contToString(myls));
+		ft::list<int> myls(g_ls.begin(), g_ls.end());
+		ASSERT_EQUAL(contToString(g_ls), contToString(myls));
 
-		ft::list<int> myrls(ls.rbegin(), ls.rend());
-		std::list<int> rls(ls.rbegin(), ls.rend());
+		ft::list<int> myrls(g_ls.rbegin(), g_ls.rend());
+		std::list<int> rls(g_ls.rbegin(), g_ls.rend());
 		ASSERT_EQUAL(contToString(rls), contToString(myrls));
 	}
 
 	void front_back_test() {
 
-		ft::list<int> myls(ls.begin(), ls.end());
-		ASSERT_EQUAL(contToString(ls), contToString(myls));
+		ft::list<int> myls(g_ls.begin(), g_ls.end());
+		ASSERT_EQUAL(contToString(g_ls), contToString(myls));
 
-		ASSERT_EQUAL(ls.front(), myls.front());
-		ASSERT_EQUAL(ls.back(), myls.back());
+		ASSERT_EQUAL(g_ls.front(), myls.front());
+		ASSERT_EQUAL(g_ls.back(), myls.back());
 	}
 
 	void assign_range_test() {
 
 		ft::list<int> myls;
-		myls.assign(ls.begin(), ls.end());
-		ASSERT_EQUAL(contToString(ls), contToString(myls));
+		myls.assign(g_ls.begin(), g_ls.end());
+		ASSERT_EQUAL(contToString(g_ls), contToString(myls));
 
-		myls.assign(ls.rbegin(), ls.rend());
+		myls.assign(g_ls.rbegin(), g_ls.rend());
 		std::list<int> rls;
-		rls.assign(ls.rbegin(), ls.rend());
+		rls.assign(g_ls.rbegin(), g_ls.rend());
 		ASSERT_EQUAL(contToString(rls), contToString(myls));
 
-		myls.assign(vc.begin(), vc.end());
-		ASSERT_EQUAL(contToString(vc), contToString(myls));
+		myls.assign(g_vc.begin(), g_vc.end());
+		ASSERT_EQUAL(contToString(g_vc), contToString(myls));
 
-		myls.assign(dq.begin(), dq.end());
-		ASSERT_EQUAL(contToString(dq), contToString(myls));
+		myls.assign(g_dq.begin(), g_dq.end());
+		ASSERT_EQUAL(contToString(g_dq), contToString(myls));
 	}
 
 	void assign_fill_test() {
@@ -193,6 +193,26 @@ namespace ft_list
 		ASSERT_EQUAL(contToString(sls), contToString(myls));
 	}
 
+	void reverse_test() {
+		{
+			std::list<int> ls;
+			ft::list<int> myls;
+
+			ls.reverse();
+			myls.reverse();
+			ASSERT_EQUAL(contToString(ls), contToString(myls));
+		}
+		{
+			std::list<int> ls(g_ls.begin(), g_ls.end());
+			ft::list<int> myls(g_ls.begin(), g_ls.end());
+			ASSERT_EQUAL(contToString(ls), contToString(myls));
+
+			ls.reverse();
+			myls.reverse();
+			ASSERT_EQUAL(contToString(ls), contToString(myls));
+		}
+	}
+
 	void merge_test() {
 		std::vector<int> vect1;
 		std::vector<int> vect2;
@@ -229,11 +249,11 @@ namespace ft_list
 	void splice_test() {
 
 	// splice (iterator position, list& x)
-		std::list<int> ls1(ls.begin(), ls.end());
-		std::list<int> ls2(ls.begin(), ls.end());
+		std::list<int> ls1(g_ls.begin(), g_ls.end());
+		std::list<int> ls2(g_ls.begin(), g_ls.end());
 
-		ft::list<int> myls1(ls.begin(), ls.end());
-		ft::list<int> myls2(ls.begin(), ls.end());
+		ft::list<int> myls1(g_ls.begin(), g_ls.end());
+		ft::list<int> myls2(g_ls.begin(), g_ls.end());
 
 		ls1.splice(++(ls1.begin()), ls2);
 		myls1.splice(++(myls1.begin()), myls2);
@@ -242,8 +262,8 @@ namespace ft_list
 		ASSERT_EQUAL(contToString(ls2), contToString(myls2));
 
 	// splice (iterator position, list& x, iterator i)
-		ls2.assign(ls.begin(), ls.end());
-		myls2.assign(ls.begin(), ls.end());
+		ls2.assign(g_ls.begin(), g_ls.end());
+		myls2.assign(g_ls.begin(), g_ls.end());
 
 		ls1.splice(ls1.begin(), ls2, ++(ls2.begin()));
 		myls1.splice(myls1.begin(), myls2, ++(myls2.begin()));
@@ -252,8 +272,8 @@ namespace ft_list
 		ASSERT_EQUAL(contToString(ls2), contToString(myls2));
 
 	// splice (iterator position, list& x, iterator first, iterator last)
-		ls2.assign(ls.begin(), ls.end());
-		myls2.assign(ls.begin(), ls.end());
+		ls2.assign(g_ls.begin(), g_ls.end());
+		myls2.assign(g_ls.begin(), g_ls.end());
 
 		ls1.splice(ls1.begin(), ls2, ls2.begin(), ls2.end());
 		myls1.splice(myls1.begin(), myls2, myls2.begin(), myls2.end());
@@ -263,8 +283,8 @@ namespace ft_list
 	}
 
 	void insert_test() {
-		std::list<int> ls1(ls.begin(), ls.end());
-		ft::list<int> myls1(ls.begin(), ls.end());
+		std::list<int> ls1(g_ls.begin(), g_ls.end());
+		ft::list<int> myls1(g_ls.begin(), g_ls.end());
 
 	// insert (iterator position, const T& data)
 		std::list<int>::iterator it = ls1.insert(++(ls1.begin()), 100);
@@ -278,8 +298,8 @@ namespace ft_list
 		ASSERT_EQUAL(contToString(ls1), contToString(myls1));
 
 	// insert (iterator position, InputIterator first, InputIterator last)
-		ls1.insert(ls1.begin(), ls.begin(), ls.end());
-		myls1.insert(myls1.begin(), ls.begin(), ls.end());
+		ls1.insert(ls1.begin(), g_ls.begin(), g_ls.end());
+		myls1.insert(myls1.begin(), g_ls.begin(), g_ls.end());
 	}
 
 	void push_back_front_test() {
@@ -313,8 +333,8 @@ namespace ft_list
 		// ASSERT_EQUAL(ls1.size(), myls1.size());
 
 	// test with not empty list
-		ls1.assign(ls.begin(), ls.end());
-		myls1.assign(ls.begin(), ls.end());
+		ls1.assign(g_ls.begin(), g_ls.end());
+		myls1.assign(g_ls.begin(), g_ls.end());
 
 		ls1.pop_back();
 		myls1.pop_back();
@@ -348,8 +368,8 @@ namespace ft_list
 	}
 
 	void clear_test() {
-		std::list<int> ls1(ls.begin(), ls.end());
-		ft::list<int> myls1(ls.begin(), ls.end());
+		std::list<int> ls1(g_ls.begin(), g_ls.end());
+		ft::list<int> myls1(g_ls.begin(), g_ls.end());
 
 		ls1.clear();
 		myls1.clear();
@@ -363,8 +383,8 @@ namespace ft_list
 	}
 
 	void erase_test() {
-		std::list<int> ls1(ls.begin(), ls.end());
-		ft::list<int> myls1(ls.begin(), ls.end());
+		std::list<int> ls1(g_ls.begin(), g_ls.end());
+		ft::list<int> myls1(g_ls.begin(), g_ls.end());
 
 		ls1.erase(++(ls1.begin()));
 		myls1.erase(++(myls1.begin()));
@@ -381,8 +401,8 @@ namespace ft_list
 	}
 
 	void remove_test() {
-		std::list<int> ls1(ls.begin(), ls.end());
-		ft::list<int> myls1(ls.begin(), ls.end());
+		std::list<int> ls1(g_ls.begin(), g_ls.end());
+		ft::list<int> myls1(g_ls.begin(), g_ls.end());
 
 		ls1.remove(5);
 		myls1.remove(5);
@@ -402,8 +422,8 @@ namespace ft_list
 	};
 
 	void remove_if_test() {
-		std::list<int> ls1(ls.begin(), ls.end());
-		ft::list<int> myls1(ls.begin(), ls.end());
+		std::list<int> ls1(g_ls.begin(), g_ls.end());
+		ft::list<int> myls1(g_ls.begin(), g_ls.end());
 
 		ls1.remove_if(single_digit);
 		myls1.remove_if(single_digit);
@@ -415,10 +435,10 @@ namespace ft_list
 	}
 
 	void swap_test() {
-		std::list<int> ls1(ls.begin(), ls.end());
-		std::list<int> ls2(vc.begin(), vc.end());
-		ft::list<int> myls1(ls.begin(), ls.end());
-		ft::list<int> myls2(vc.begin(), vc.end());
+		std::list<int> ls1(g_ls.begin(), g_ls.end());
+		std::list<int> ls2(g_vc.begin(), g_vc.end());
+		ft::list<int> myls1(g_ls.begin(), g_ls.end());
+		ft::list<int> myls2(g_vc.begin(), g_vc.end());
 
 		ls1.swap(ls2);
 		myls1.swap(myls2);
