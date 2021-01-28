@@ -105,6 +105,12 @@ namespace ft {
 		node*
 		_add_node (node* root, const value_type& new_data) {
 		
+			iterator it = _find(new_data.first);
+			if (it != end())
+				return it.base();
+
+			root = _root;
+
 			if (!root) {
 				_insert_node(root, new_data);
 				_end->_parent = _root;
@@ -123,17 +129,12 @@ namespace ft {
 				|| (root->_right != _null
 					&& !root->_right->_last_node
 					&& !_comp_val(new_data, root->_data))) {
-				
-				if (_is_key_equal(new_data, root->_data))
-					return root;
 
 				if (_comp_val(new_data, root->_data))
 					root = root->_left;
 				else
 					root = root->_right;
 			}
-			if (_is_key_equal(new_data, root->_data))
-				return root;
 			return _insert_node(root, new_data);
 		}
 
@@ -145,8 +146,6 @@ namespace ft {
 			if (!root) {
 				_root = new _rb_tree_node(new_data, _BLACK, _null, _rend, _end);
 				res = _root;
-			} else if (_is_key_equal(new_data, root->_data)) {
-				return (root);
 			} else if (_comp_val(new_data, root->_data)) {			// new_data < current root data
 				if (root->_left != _null) {									// root->_left == rend
 					root->_left = new _rb_tree_node(new_data, _RED, root, _rend, _null);
@@ -228,7 +227,7 @@ namespace ft {
 		}
 
 		void
-		_set_empty_map() {
+		_set_empty_tree() {
 			_end->_parent = _rend;
 			_rend->_parent = _end;
 			_root = NULL;
@@ -486,7 +485,7 @@ namespace ft {
 			delete n;
 			_node_count--;
 			if (!_node_count)
-				_set_empty_map();
+				_set_empty_tree();
 		}
 
 	public:
@@ -507,7 +506,7 @@ namespace ft {
 			_null = new node(value_type(), _BLACK, NULL, NULL, NULL, false, true);
 			_end  = new node(value_type(), _BLACK, _null, _null, _null, true);
 			_rend = new node(value_type(), _BLACK, _null, _null, _null, true);
-			_set_empty_map();
+			_set_empty_tree();
 		}
 
 		  template <typename InputIterator>
@@ -526,7 +525,7 @@ namespace ft {
 				_null = new node(value_type(), _BLACK, NULL, NULL, NULL, false, true);
 				_end  = new node(value_type(), _BLACK, _null, _null, _null, true);
 				_rend = new node(value_type(), _BLACK, _null, _null, _null, true);
-				_set_empty_map();
+				_set_empty_tree();
 
 				insert(first, last);
 			}
@@ -543,7 +542,7 @@ namespace ft {
 			_null = new node(value_type(), _BLACK, NULL, NULL, NULL, false, true);
 			_end  = new node(value_type(), _BLACK, _null, _null, _null, true);
 			_rend = new node(value_type(), _BLACK, _null, _null, _null, true);
-			_set_empty_map();
+			_set_empty_tree();
 
 			insert(x.begin(), x.end());
 		}
@@ -568,7 +567,7 @@ namespace ft {
 		mapped_type&
 		operator[] (const key_type& k) {
 			
-			pair<iterator,bool> temp = insert(make_pair(k, T()));
+			std::pair<iterator,bool> temp = insert(make_pair(k, T()));
 			
 			return temp.first->second;
 		}
@@ -614,7 +613,7 @@ namespace ft {
 
 	// Modifiers --------------------------------
 
-		pair<iterator,bool>
+		std::pair<iterator,bool>
 		insert (const value_type& val) {
 
 			size_t old_size = size();
@@ -774,14 +773,14 @@ namespace ft {
 			return it;
 		}
 
-		pair<iterator, iterator>
+		std::pair<iterator, iterator>
 		equal_range (const key_type& k) {
 
 			iterator res = lower_bound(k);
 			return make_pair(res, res);
 		}
 
-		pair<const_iterator, const_iterator>
+		std::pair<const_iterator, const_iterator>
 		equal_range (const key_type& k) const {
 
 			const_iterator res = lower_bound(k);

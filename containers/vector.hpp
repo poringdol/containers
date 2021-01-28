@@ -1,6 +1,5 @@
 #pragma once
 
-#include <iterator>
 #include "vector_iterator.hpp"
 #include "cpp_type_traits.hpp"
 

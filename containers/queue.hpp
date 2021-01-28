@@ -19,12 +19,12 @@ namespace ft {
 		typedef typename Container::size_type	size_type;
 		typedef			 Container				container_type;
 
-	// queue constructor ----------------------------------------------------------
+	// Queue constructor ----------------------------------------------------------
 
 		explicit
 		queue (const container_type& ctnr = container_type()): cont(ctnr) {}
 
-	// Vector methods -------------------------------------------------------------
+	// Queue methods -------------------------------------------------------------
 
 		bool
 		empty () const						{ return cont.empty(); }

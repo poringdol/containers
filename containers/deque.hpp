@@ -2,65 +2,66 @@
 
 #include <limits>
 #include "cpp_type_traits.hpp"
-#include "list_iterator.hpp"
+#include "deque.hpp"
+#include "deque_iterator.hpp"
 
 
 namespace ft {
-/********************************** List class ***************************************/
+/********************************** Deque class ***************************************/
 
 	  template<typename T, typename Alloc = std::allocator<T> >
-	class list {
+	class deque : public deque<T, Alloc> {
 
-	protected:
+	private:
 
-// Supporting structure list_node ---------------------------------------------
+	// Supporting structure deque_node ---------------------------------------------
 
-		struct _list_node {
+		struct _deque_node {
 			T _data;
-			_list_node* _prev;
-			_list_node* _next;
+			_deque_node* _prev;
+			_deque_node* _next;
 
-			_list_node (T new_data = T(),
-					  _list_node* new_prev = NULL,
-					  _list_node* new_next = NULL) throw()
+			_deque_node (T new_data = T(),
+					  _deque_node* new_prev = NULL,
+					  _deque_node* new_next = NULL) throw()
 					: _data(new_data), _prev(new_prev), _next(new_next) {}
 		};
 // ============================================================================
 
-		typedef ft::list_iterator<T, _list_node>			list_iterator;
-		typedef ft::list_reverse_iterator<T, _list_node>	list_reverse_iterator;
+		typedef ft::deque_iterator<T, _deque_node>			deque_iterator;
+		typedef ft::deque_reverse_iterator<T, _deque_node>	deque_reverse_iterator;
 
 	public:
 
-		typedef Alloc										allocator_type;
-		typedef size_t										size_type;
-		typedef T											value_type;
-		typedef T*											pointer;
-		typedef const T*									const_pointer;
-		typedef T&											reference;
-		typedef const T&									const_reference;
-		typedef list_iterator							iterator;
-		typedef list_iterator							const_iterator;
-		typedef list_reverse_iterator					reverse_iterator;
-		typedef list_reverse_iterator					const_reverse_iterator;
+		typedef Alloc					allocator_type;
+		typedef size_t					size_type;
+		typedef T						value_type;
+		typedef T*						pointer;
+		typedef const T*				const_pointer;
+		typedef T&						reference;
+		typedef const T&				const_reference;
+		typedef deque_iterator			iterator;
+		typedef deque_iterator			const_iterator;
+		typedef deque_reverse_iterator	reverse_iterator;
+		typedef deque_reverse_iterator	const_reverse_iterator;
 
-	protected:
+	private:
 
-		size_type	_list_size;
-		_list_node*	_head;
-		Alloc		_alloc;
+		size_type		_deque_size;
+		_deque_node*	_head;
+		Alloc			_alloc;
 
 // Supporting functions -------------------------------------------------------
 
 		void
-		_list_init () throw() {
-			this->_head = new _list_node;
+		_deque_init () throw() {
+			this->_head = new _deque_node;
 			this->_head->_prev = this->_head->_next = this->_head;
 		}
 
 		/* 'insert' node placed to current position, 'current' moved to _next position */
 		void
-		_node_insert (_list_node* current, _list_node* insert) {
+		_node_insert (_deque_node* current, _deque_node* insert) {
 			insert->_next = current;
 			insert->_prev = current->_prev;
 			current->_prev = current->_prev->_next = insert;
@@ -113,32 +114,32 @@ namespace ft {
 
 	public:
 
-// List constructors ----------------------------------------------------------
+// Deque constructors ----------------------------------------------------------
 
 		explicit
-		list (const allocator_type& x = allocator_type())
-					: _list_size(0), _alloc(x) { _list_init(); }
+		deque (const allocator_type& x = allocator_type())
+					: _deque_size(0), _alloc(x) { _deque_init(); }
 
 		explicit
-		list (size_type n, value_type val = value_type(), const allocator_type& x = allocator_type()): _list_size(0), _alloc(x) {
-			_list_init();
+		deque (size_type n, value_type val = value_type(), const allocator_type& x = allocator_type()): _deque_size(0), _alloc(x) {
+			_deque_init();
 			while (n--) { this->push_back(val); }
 		}
 		
 
 		  template<typename InputIterator>
-		list (InputIterator first, InputIterator last, const allocator_type& x = allocator_type()): _list_size(0), _alloc(x) {
-			_list_init();
+		deque (InputIterator first, InputIterator last, const allocator_type& x = allocator_type()): _deque_size(0), _alloc(x) {
+			_deque_init();
 			this->assign(first, last);
 		}
 
-		list (const list& x): _list_size(0) { 
-			this->_list_init();
+		deque (const deque& x): _deque_size(0) { 
+			this->_deque_init();
 			*this = x;
 		}
 
-		list&
-		operator= (const list& x) {
+		deque&
+		operator= (const deque& x) {
 			this->clear();
 
 			const_iterator temp = x.begin();
@@ -149,14 +150,14 @@ namespace ft {
 			return *this;
 		}
 
-// List destructor --------------------------------------------------------------
+// Deque destructor --------------------------------------------------------------
 
-		~list() {
+		~deque() {
 			clear();
 			delete this->_head;
 		}
 	
-// List methods ---------------------------------------------------------------------
+// Deque methods ---------------------------------------------------------------------
 
 	//  Iterators -------------------------------
 
@@ -187,13 +188,13 @@ namespace ft {
 	// Capacity ----------------------------
 
 		bool
-		empty () const throw()		{ return _list_size == 0; }
+		empty () const throw()		{ return _deque_size == 0; }
 
 		size_type
-		size () const throw()		{ return _list_size; }
+		size () const throw()		{ return _deque_size; }
 
 		size_type
-		max_size () const throw()	{ return std::numeric_limits<size_type>::max() / sizeof(_list_node) / 2; }
+		max_size () const throw()	{ return std::numeric_limits<size_type>::max() / sizeof(_deque_node) / 2; }
 
 	// Element access -------------------------
 
@@ -225,9 +226,9 @@ namespace ft {
 
 		void
 		push_front (value_type data) {
-			_list_node* temp = new _list_node(data, this->_head, this->_head->_next);
+			_deque_node* temp = new _deque_node(data, this->_head, this->_head->_next);
 			this->_head->_next = this->_head->_next->_prev = temp;
-			_list_size++;
+			_deque_size++;
 		}
 
 		void
@@ -235,16 +236,16 @@ namespace ft {
 
 		void
 		push_back (value_type data) {
-			if (!_list_size) {
-				_list_node* temp = new _list_node(data);
+			if (!_deque_size) {
+				_deque_node* temp = new _deque_node(data);
 				this->_head->_prev = this->_head->_next = temp;
 				temp->_prev = temp->_next = this->_head;
 			} else {
-				_list_node* temp = new _list_node(data, this->_head->_prev, this->_head);
+				_deque_node* temp = new _deque_node(data, this->_head->_prev, this->_head);
 				this->_head->_prev->_next = temp;
 				this->_head->_prev = temp;
 			}
-			_list_size++;
+			_deque_size++;
 		}
 
 		void
@@ -257,9 +258,9 @@ namespace ft {
 				return this->begin();
 			}
 
-			_list_node* temp = new _list_node(data);
+			_deque_node* temp = new _deque_node(data);
 			_node_insert(position.ptr, temp);
-			_list_size++;
+			_deque_size++;
 			return iterator(temp);
 		}
 
@@ -283,7 +284,7 @@ namespace ft {
 				if (temp == this->begin())
 					this->_head->_next = temp.ptr;
 				delete temp.ptr;
-				_list_size -= _list_size ? 1 : 0;
+				_deque_size -= _deque_size ? 1 : 0;
 			}
 			return position;
 		}
@@ -297,36 +298,36 @@ namespace ft {
 		}
 
 		void
-		swap (list& x) {
-			_list_node* temp = this->_head;
+		swap (deque& x) {
+			_deque_node* temp = this->_head;
 			this->_head = x._head;
 			x._head = temp;
 
-			size_type size = this->_list_size;
-			_list_size = x._list_size;
-			x._list_size = size;
+			size_type size = this->_deque_size;
+			_deque_size = x._deque_size;
+			x._deque_size = size;
 		}
 
 		void
 		resize (size_type new_size, value_type val = value_type()) {
-			if (new_size < this->_list_size) {
+			if (new_size < this->_deque_size) {
 				iterator it = this->begin();
 				while (new_size--)
 					++it;
 				erase(it, this->end());
 			} else {
-				insert(this->end(), new_size - this->_list_size, val);
+				insert(this->end(), new_size - this->_deque_size, val);
 			}
 		}
 
 		void
 		clear () throw() {
-			_list_node* temp;
-			while (this->_list_size) {
+			_deque_node* temp;
+			while (this->_deque_size) {
 				temp = this->_head->_next;
 				delete this->_head;
 				this->_head = temp;
-				this->_list_size--;
+				this->_deque_size--;
 			}
 			this->_head->_prev = this->_head->_next = this->_head;
 		}
@@ -334,37 +335,37 @@ namespace ft {
 	// Operations -----------------------------
 
 		void
-		splice (iterator position, list& x) {
-			while (x._list_size--) {
+		splice (iterator position, deque& x) {
+			while (x._deque_size--) {
 				iterator first = x.begin();
 				iterator temp = ++(x.begin());
 				_cut(first);
 				_node_insert(position.ptr, first.ptr);
 				first = temp;
-				_list_size++;
+				_deque_size++;
 			}
 			x._head->_next = x._head->_prev = x._head;
-			x._list_size = 0;
+			x._deque_size = 0;
 		}
 
 		void
-		splice (iterator position, list& x, iterator i) {
+		splice (iterator position, deque& x, iterator i) {
 			_cut(i);
-			_list_size++;
-			x._list_size--;
+			_deque_size++;
+			x._deque_size--;
 			_node_insert(position.ptr, i.ptr);
 		}
 
 		void
-		splice (iterator position, list& x, iterator first, iterator last) {
+		splice (iterator position, deque& x, iterator first, iterator last) {
 			while (first != last) {
 				iterator temp = first;
 				++temp;
 				_cut(first);
 				_node_insert(position.ptr, first.ptr);
 				first = temp;
-				_list_size++;
-				x._list_size--;
+				_deque_size++;
+				x._deque_size--;
 			}
 		}
 
@@ -403,7 +404,7 @@ namespace ft {
 					++temp;
 					_cut(first);
 					delete first.ptr;
-					_list_size--;
+					_deque_size--;
 					first = temp;
 				} else {
 					++first;
@@ -422,7 +423,7 @@ namespace ft {
 					++temp;
 					_cut(first);
 					delete first.ptr;
-					_list_size--;
+					_deque_size--;
 					first = temp;
 				} else {
 					++first;
@@ -431,11 +432,11 @@ namespace ft {
 		}
 
 		void
-		merge (list& x) { this->merge(x, _compare); }
+		merge (deque& x) { this->merge(x, _compare); }
 
 		  template<typename Compare>
 		void
-		merge (list& x, Compare comp) {
+		merge (deque& x, Compare comp) {
 			if (&x == this)
 				return;
 			iterator first1 = this->begin(), first2 = x.begin(),
@@ -446,7 +447,7 @@ namespace ft {
 					temp++;
 					_node_insert(first1.ptr, first2.ptr);
 					first2 = temp;
-					this->_list_size++;
+					this->_deque_size++;
 				}
 				else
 					++first1;
@@ -456,10 +457,10 @@ namespace ft {
 				temp++;
 				_node_insert(first1.ptr, first2.ptr);
 				first2 = temp;
-				this->_list_size++;;
+				this->_deque_size++;;
 			}
 			x._head->_next = x._head->_prev = x._head;
-			x._list_size = 0;
+			x._deque_size = 0;
 		}
 
 		void
@@ -488,7 +489,7 @@ namespace ft {
 		void
 		reverse () {
 			iterator first = this->_head;
-			size_type size = this->_list_size;
+			size_type size = this->_deque_size;
 			while (size--) {
 				iterator last = -- (this->end());
 				_cut(last);
@@ -504,30 +505,30 @@ namespace ft {
 // Friend functions -----------------------------------------------------------
 		  template<typename _T, typename _Alloc>
 		friend bool
-		operator== (const list<_T, _Alloc>&, const list<_T, _Alloc>&);
+		operator== (const deque<_T, _Alloc>&, const deque<_T, _Alloc>&);
 
 		  template<typename _T, typename _Alloc>
 		friend  bool
-		operator<  (const list<_T, _Alloc>&, const list<_T, _Alloc>&);
+		operator<  (const deque<_T, _Alloc>&, const deque<_T, _Alloc>&);
 
 		  template<typename _T, typename _Alloc>
 		friend void
-		swap (list<_T, _Alloc>&, list<_T, _Alloc>&);
+		swap (deque<_T, _Alloc>&, deque<_T, _Alloc>&);
 
 	};
 
-/************************************ end of list class ***********************************/
+/************************************ end of deque class ***********************************/
 
 // Friend functions definitions -----------------------------------------------
 
 	  template<typename T, typename Alloc>
 	inline bool
-	operator== (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
+	operator== (const deque<T,Alloc>& lhs, const deque<T,Alloc>& rhs) {
 		
 		if (lhs.size() != rhs.size()) return false;
 		
-		typename ft::list<T>::iterator first1 = lhs.begin();
-		typename ft::list<T>::iterator first2 = rhs.begin();
+		typename ft::deque<T>::iterator first1 = lhs.begin();
+		typename ft::deque<T>::iterator first2 = rhs.begin();
 		
 		while (first1 != lhs.end()) {
 			if (*first1 != *first2)
@@ -540,16 +541,16 @@ namespace ft {
 
 	  template<typename T, typename Alloc>
 	inline bool
-	operator!= (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
+	operator!= (const deque<T,Alloc>& lhs, const deque<T,Alloc>& rhs) {
 		return !(lhs == rhs);
 	}
 
 	  template<typename T, typename Alloc>
 	inline bool
-	operator<  (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
+	operator<  (const deque<T,Alloc>& lhs, const deque<T,Alloc>& rhs) {
 
-		typename ft::list<T>::iterator first1 = lhs.begin();
-		typename ft::list<T>::iterator first2 = rhs.begin();
+		typename ft::deque<T>::iterator first1 = lhs.begin();
+		typename ft::deque<T>::iterator first2 = rhs.begin();
 		
 		while (first1 != lhs.end() && first2 != rhs.end()) {
 			if (*first1 < *first2)
@@ -567,25 +568,25 @@ namespace ft {
 
 	  template<typename T, typename Alloc>
 	inline bool
-	operator<= (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
+	operator<= (const deque<T,Alloc>& lhs, const deque<T,Alloc>& rhs) {
 		return !(rhs < lhs);
 	}
 
 	  template<typename T, typename Alloc>
 	inline bool
-	operator>  (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
+	operator>  (const deque<T,Alloc>& lhs, const deque<T,Alloc>& rhs) {
 		return rhs < lhs;
 	}
 
 	  template<typename T, typename Alloc>
 	inline bool
-	operator>= (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
+	operator>= (const deque<T,Alloc>& lhs, const deque<T,Alloc>& rhs) {
 		return !(lhs < rhs);
 	}
 
 	  template<typename T, typename Alloc>
 	void
-	swap (list<T,Alloc>& x, list<T,Alloc>& y) {
+	swap (deque<T,Alloc>& x, deque<T,Alloc>& y) {
 		x.swap(y);
 	}
 }
