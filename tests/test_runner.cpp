@@ -33,6 +33,7 @@ namespace ft_list
 		RUN_TEST(tr, assign_fill_test);
 		RUN_TEST(tr, sort_test);
 		RUN_TEST(tr, sort_compare_test);
+		RUN_TEST(tr, reverse_test);
 		RUN_TEST(tr, merge_test);
 		RUN_TEST(tr, splice_test);
 		RUN_TEST(tr, insert_test);
@@ -302,6 +303,45 @@ namespace ft_multiset
 		RUN_TEST(tr, equal_range_test);
 		RUN_TEST(tr, operators_test);
 
+		ENABLE_LOGS = 0;
+	}
+}
+
+namespace ft_deque
+{
+	void deque_test() {
+		
+		TestRunner tr;
+
+		std::cout << YELLOW 
+				<< "\n####################################################\n";
+		std::cout << "#                                                  #\n";
+		std::cout << "#                   Deque tests                    #\n";
+		std::cout << "#                                                  #\n";
+		std::cout << "####################################################\n\n"
+				<< BW;
+
+		RUN_TEST(tr, constructorDefault_test);
+		RUN_TEST(tr, constructorFill_test);
+		RUN_TEST(tr, constructorRange_test);
+		RUN_TEST(tr, begin_test);
+		RUN_TEST(tr, rbegin_rend_test);
+		RUN_TEST(tr, size_test);
+		RUN_TEST(tr, empty_test);
+		// RUN_TEST(tr, max_size_test);
+		RUN_TEST(tr, resize_test);
+		RUN_TEST(tr, front_back_test);
+		RUN_TEST(tr, assign_range_test);
+		RUN_TEST(tr, assign_fill_test);
+		RUN_TEST(tr, insert_test);
+		RUN_TEST(tr, push_back_front_test);
+		RUN_TEST(tr, pop_back_front_test);
+		RUN_TEST(tr, clear_test);
+		RUN_TEST(tr, erase_test);
+		RUN_TEST(tr, swap_test);
+		RUN_TEST(tr, oper_sq_braces_test);
+		RUN_TEST(tr, at_test);
+		RUN_TEST(tr, operators_test);
 		ENABLE_LOGS = 0;
 	}
 }

@@ -35,8 +35,8 @@ namespace ft_map
 			ASSERT_EQUAL(0u, my_mp2.size());
 		}
 		{
-			std::map<int, int> mp(map1.begin(), map1.end());
-			ft::map<int, int> my_mp(map1.begin(), map1.end());
+			std::map<int, int> mp(g_map1.begin(), g_map1.end());
+			ft::map<int, int> my_mp(g_map1.begin(), g_map1.end());
 
 			std::map<int, int> mp2(mp);
 			ft::map<int, int> my_mp2(my_mp);
@@ -48,8 +48,8 @@ namespace ft_map
 			ASSERT_EQUAL(mapToString(my_mp), mapToString(my_mp2));
 		}
 		{
-			std::map<int, int> mp(map1.begin(), map1.end());
-			ft::map<int, int> my_mp(map1.begin(), map1.end());
+			std::map<int, int> mp(g_map1.begin(), g_map1.end());
+			ft::map<int, int> my_mp(g_map1.begin(), g_map1.end());
 
 			std::map<int, int> mp2 = mp;
 			ft::map<int, int> my_mp2 = my_mp;
@@ -61,8 +61,8 @@ namespace ft_map
 			ASSERT_EQUAL(mapToString(my_mp), mapToString(my_mp2));
 		}
 		{
-			std::map<int, int> mp(map1.begin(), map1.end());
-			ft::map<int, int> my_mp(map1.begin(), map1.end());
+			std::map<int, int> mp(g_map1.begin(), g_map1.end());
+			ft::map<int, int> my_mp(g_map1.begin(), g_map1.end());
 
 			std::map<int, int> mp2; 
 			mp2 = mp;
@@ -105,8 +105,8 @@ namespace ft_map
 			ASSERT_EQUAL(i1, i2);
 		}
 		{
-			std::map<int, int> mp(map1.begin(), map1.end());
-			ft::map<int, int> my_mp(map1.begin(), map1.end());
+			std::map<int, int> mp(g_map1.begin(), g_map1.end());
+			ft::map<int, int> my_mp(g_map1.begin(), g_map1.end());
 
 			int i1 = mp[55];
 			int i2 = my_mp[55];
@@ -127,8 +127,8 @@ namespace ft_map
 			ASSERT_EQUAL(i1, i2);
 		}
 		{
-			std::map<std::string, int> mp(map3.begin(), map3.end());
-			ft::map<std::string, int> my_mp(map3.begin(), map3.end());
+			std::map<std::string, int> mp(g_map3.begin(), g_map3.end());
+			ft::map<std::string, int> my_mp(g_map3.begin(), g_map3.end());
 
 			int i1 = mp["eleven"];
 			int i2 = my_mp["eleven"];
@@ -170,11 +170,11 @@ namespace ft_map
 
 	void begin_end_test() {
 
-		std::map<int, int> mp(map1.begin(), map1.end());
+		std::map<int, int> mp(g_map1.begin(), g_map1.end());
 		std::map<int, int>::iterator it;
 		std::map<int, int>::reverse_iterator r_it;
 
-		ft::map<int, int> my_mp(map1.begin(), map1.end());
+		ft::map<int, int> my_mp(g_map1.begin(), g_map1.end());
 		ft::map<int, int>::iterator my_it;
 		ft::map<int, int>::reverse_iterator my_r_it;
 
@@ -222,22 +222,22 @@ namespace ft_map
 
 	void constructorRange_test() {
 		{
-			std::map<int, int> mp(map1.begin(), map1.end());	// map from std::map<int, int> - unsorted
-			ft::map<int, int> my_mp(map1.begin(), map1.end());
+			std::map<int, int> mp(g_map1.begin(), g_map1.end());	// map from std::map<int, int> - unsorted
+			ft::map<int, int> my_mp(g_map1.begin(), g_map1.end());
 			ASSERT_EQUAL(mp.size(), my_mp.size());
 			ASSERT_EQUAL(mapToString(mp), mapToString(my_mp));
 			print_tree(my_mp);
 		}
 		{
-			std::map<int, int> mp(map2.begin(), map2.end());	// map from std::map<int, int> - sorted
-			ft::map<int, int> my_mp(map2.begin(), map2.end());
+			std::map<int, int> mp(g_map2.begin(), g_map2.end());	// map from std::map<int, int> - sorted
+			ft::map<int, int> my_mp(g_map2.begin(), g_map2.end());
 			ASSERT_EQUAL(mp.size(), my_mp.size());
 			ASSERT_EQUAL(mapToString(mp), mapToString(my_mp));
 			print_tree(my_mp);
 		}
 		{
-			std::map<std::string, int> mp(map3.begin(), map3.end());	// map from std::map<std::string, int> - unsorted
-			ft::map<std::string, int> my_mp(map3.begin(), map3.end());
+			std::map<std::string, int> mp(g_map3.begin(), g_map3.end());	// map from std::map<std::string, int> - unsorted
+			ft::map<std::string, int> my_mp(g_map3.begin(), g_map3.end());
 			ASSERT_EQUAL(mp.size(), my_mp.size());
 			ASSERT_EQUAL(mapToString(mp), mapToString(my_mp));
 			print_tree(my_mp);
@@ -259,8 +259,8 @@ namespace ft_map
 		ft::map<int, int> my_mp1;
 		ASSERT_EQUAL(0u, my_mp1.size());
 
-		std::map<int, int> mp2(map1.begin(), map1.end());
-		ft::map<int, int> my_mp2(map1.begin(), map1.end());
+		std::map<int, int> mp2(g_map1.begin(), g_map1.end());
+		ft::map<int, int> my_mp2(g_map1.begin(), g_map1.end());
 		ASSERT_EQUAL(mp2.size(), my_mp2.size());
 	}
 
@@ -276,13 +276,13 @@ namespace ft_map
 		ft::map<int, int> my_mp1;
 		ASSERT_EQUAL(true, my_mp1.empty());
 
-		ft::map<int, int> my_mp2(map1.begin(), map1.end());
+		ft::map<int, int> my_mp2(g_map1.begin(), g_map1.end());
 		ASSERT_EQUAL(false, my_mp2.empty());
 	}
 
 	void find_test() {
-		std::map<int, int> mp(map1.begin(), map1.end());
-		ft::map<int, int> my_mp(map1.begin(), map1.end());
+		std::map<int, int> mp(g_map1.begin(), g_map1.end());
+		ft::map<int, int> my_mp(g_map1.begin(), g_map1.end());
 
 		std::map<int, int>::iterator it;
 		ft::map<int, int>::iterator my_it;
@@ -299,8 +299,8 @@ namespace ft_map
 
 	void count_test() {
 	
-		std::map<int, int> mp(map1.begin(), map1.end());
-		ft::map<int, int> my_mp(map1.begin(), map1.end());
+		std::map<int, int> mp(g_map1.begin(), g_map1.end());
+		ft::map<int, int> my_mp(g_map1.begin(), g_map1.end());
 
 		ASSERT_EQUAL(mp.count(16),   my_mp.count(16));			// value not found
 		ASSERT_EQUAL(mp.count(-1),   my_mp.count(-1));
@@ -319,23 +319,23 @@ namespace ft_map
 		std::map<int, int> mp1;
 		ft::map<int, int> my_mp1;
 
-		mp1.insert(map1.begin(), map1.end());
-		my_mp1.insert(map1.begin(), map1.end());
+		mp1.insert(g_map1.begin(), g_map1.end());
+		my_mp1.insert(g_map1.begin(), g_map1.end());
 		ASSERT_EQUAL(mapToString(mp1), mapToString(my_mp1));
 
-		mp1.insert(map2.begin(), map2.end());
-		my_mp1.insert(map2.begin(), map2.end());
+		mp1.insert(g_map2.begin(), g_map2.end());
+		my_mp1.insert(g_map2.begin(), g_map2.end());
 		ASSERT_EQUAL(mapToString(mp1), mapToString(my_mp1));
 		print_tree(my_mp1);
 
 		std::map<std::string, int> mp2;
 		ft::map<std::string, int> my_mp2;
-		mp2.insert(map3.begin(), map3.end());
-		my_mp2.insert(map3.begin(), map3.end());
+		mp2.insert(g_map3.begin(), g_map3.end());
+		my_mp2.insert(g_map3.begin(), g_map3.end());
 		ASSERT_EQUAL(mapToString(mp1), mapToString(my_mp1));
 
-		mp2.insert(map3.rbegin(), map3.rend());
-		my_mp2.insert(map3.rbegin(), map3.rend());
+		mp2.insert(g_map3.rbegin(), g_map3.rend());
+		my_mp2.insert(g_map3.rbegin(), g_map3.rend());
 		ASSERT_EQUAL(mapToString(mp2), mapToString(my_mp2));
 	}
 
@@ -377,8 +377,8 @@ namespace ft_map
 			ASSERT_EQUAL(mp.size(), my_mp.size());
 		}
 		{
-			std::map<int, int> mp(map1.begin(), map1.end());
-			ft::map<int, int> my_mp(map1.begin(), map1.end());
+			std::map<int, int> mp(g_map1.begin(), g_map1.end());
+			ft::map<int, int> my_mp(g_map1.begin(), g_map1.end());
 
 			std::map<int, int>::iterator it;
 			ft::map<int, int>::iterator my_it;
@@ -419,8 +419,8 @@ namespace ft_map
 			std::pair<int, int> pr1(12, 1);
 			std::pair<int, int> pr2(11, 1);
 
-			std::map<int, int> mp(map1.begin(), map1.end());
-			ft::map<int, int> my_mp(map1.begin(), map1.end());
+			std::map<int, int> mp(g_map1.begin(), g_map1.end());
+			ft::map<int, int> my_mp(g_map1.begin(), g_map1.end());
 
 			std::map<int, int>::iterator it;
 			ft::map<int, int>::iterator my_it;
@@ -445,8 +445,8 @@ namespace ft_map
 
 	void erase_single_test() {
 		{
-			std::map<int, int> mp(map1.begin(), map1.end());
-			ft::map<int, int> my_mp(map1.begin(), map1.end());
+			std::map<int, int> mp(g_map1.begin(), g_map1.end());
+			ft::map<int, int> my_mp(g_map1.begin(), g_map1.end());
 			
 			mp.erase(mp.begin());
 			my_mp.erase(my_mp.begin());
@@ -525,8 +525,8 @@ namespace ft_map
 			print_tree(my_mp);
 		}
 		{
-			std::map<std::string, int> mp(map3.begin(), map3.end());
-			ft::map<std::string, int> my_mp(map3.begin(), map3.end());
+			std::map<std::string, int> mp(g_map3.begin(), g_map3.end());
+			ft::map<std::string, int> my_mp(g_map3.begin(), g_map3.end());
 
 			ASSERT_EQUAL(mapToString(mp), mapToString(my_mp));
 			mp.erase(mp.begin());
@@ -604,8 +604,8 @@ namespace ft_map
 
 	void erase_key_test() {
 		{
-			std::map<int, int> mp(map1.begin(), map1.end());
-			ft::map<int, int> my_mp(map1.begin(), map1.end());
+			std::map<int, int> mp(g_map1.begin(), g_map1.end());
+			ft::map<int, int> my_mp(g_map1.begin(), g_map1.end());
 
 			size_t t1, t2;
 			
@@ -652,8 +652,8 @@ namespace ft_map
 
 	void erase_range_test() {
 		{
-			std::map<int, int> mp(map1.begin(), map1.end());
-			ft::map<int, int> my_mp(map1.begin(), map1.end());
+			std::map<int, int> mp(g_map1.begin(), g_map1.end());
+			ft::map<int, int> my_mp(g_map1.begin(), g_map1.end());
 
 			std::map<int, int>::iterator it = mp.insert(make_pair(64, 10)).first;
 			ft::map<int, int>::iterator my_it = my_mp.insert(make_pair(64, 10)).first;
@@ -674,8 +674,8 @@ namespace ft_map
 	}
 
 	void clear_test() {
-		std::map<int, int> mp1(map1.begin(), map1.end());
-		ft::map<int, int> my_mp1(map1.begin(), map1.end());
+		std::map<int, int> mp1(g_map1.begin(), g_map1.end());
+		ft::map<int, int> my_mp1(g_map1.begin(), g_map1.end());
 
 		mp1.clear();
 		my_mp1.clear();
@@ -689,12 +689,12 @@ namespace ft_map
 	}
 
 	void swap_test() {
-		std::map<int, int> mp1(map1.begin(), map1.end());
-		ft::map<int, int> my_mp1(map1.begin(), map1.end());
+		std::map<int, int> mp1(g_map1.begin(), g_map1.end());
+		ft::map<int, int> my_mp1(g_map1.begin(), g_map1.end());
 		ASSERT_EQUAL(mapToString(mp1), mapToString(my_mp1));
 
-		std::map<int, int> mp2(map1.begin(), map1.end());
-		ft::map<int, int> my_mp2(map1.begin(), map1.end());
+		std::map<int, int> mp2(g_map1.begin(), g_map1.end());
+		ft::map<int, int> my_mp2(g_map1.begin(), g_map1.end());
 
 		mp1.erase(mp1.begin());
 		my_mp1.erase(my_mp1.begin());
@@ -720,8 +720,8 @@ namespace ft_map
 	}
 
 	void lower_bound_test() {
-		std::map<int, int> mp(map1.begin(), map1.end());
-		ft::map<int, int> my_mp(map1.begin(), map1.end());
+		std::map<int, int> mp(g_map1.begin(), g_map1.end());
+		ft::map<int, int> my_mp(g_map1.begin(), g_map1.end());
 
 		std::map<int, int>::iterator it = mp.lower_bound(12);
 		ft::map<int, int>::iterator my_it = my_mp.lower_bound(12);
@@ -759,8 +759,8 @@ namespace ft_map
 	}
 
 	void upper_bound_test() {
-		std::map<int, int> mp(map1.begin(), map1.end());
-		ft::map<int, int> my_mp(map1.begin(), map1.end());
+		std::map<int, int> mp(g_map1.begin(), g_map1.end());
+		ft::map<int, int> my_mp(g_map1.begin(), g_map1.end());
 
 		std::map<int, int>::iterator it = mp.upper_bound(12);
 		ft::map<int, int>::iterator my_it = my_mp.upper_bound(12);
@@ -800,8 +800,8 @@ namespace ft_map
 
 	void equal_range_test() {
 
-		std::map<int, int> mp(map1.begin(), map1.end());
-		ft::map<int, int> my_mp(map1.begin(), map1.end());
+		std::map<int, int> mp(g_map1.begin(), g_map1.end());
+		ft::map<int, int> my_mp(g_map1.begin(), g_map1.end());
 
 		std::map<int, int>::iterator it;
 		ft::map<int, int>::iterator my_it;
@@ -900,7 +900,7 @@ namespace ft_map
 		std::map<int, int> mp1, mp2;
 		ft::map<int, int> my_mp1, my_mp2;
 
-		std::vector<pair<int, int> >src(map1);
+		std::vector<pair<int, int> >src(g_map1);
 		std::vector<pair<int, int> > v[6];
 
 		v[0] = src;			// 50 1, 25 2, 8 3, 35 4, 1 5, 12 6, 30 7, 40 8, 75 9, 60 10, 90 11, 55 12, 70 13, 80 14, 100 15

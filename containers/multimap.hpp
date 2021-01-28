@@ -19,16 +19,17 @@ namespace ft {
 
 	public:
 
-		typedef Key											key_type;
-		typedef T											mapped_type;
-		typedef std::pair<const Key, T>						value_type;
-		typedef Compare										key_compare;
-		typedef Alloc										allocator_type;
-		typedef T&											reference;
-		typedef const T&									const_reference;
-		typedef T*											pointer;
-		typedef const T*									const_pointer;
-		typedef size_t										size_type;
+		typedef Key						key_type;
+		typedef T						mapped_type;
+		typedef std::pair<const Key, T>	value_type;
+		typedef Compare					key_compare;
+		typedef Alloc					allocator_type;
+		typedef T&						reference;
+		typedef const T&				const_reference;
+		typedef T*						pointer;
+		typedef const T*				const_pointer;
+		typedef size_t					size_type;
+		typedef ptrdiff_t				difference_type;
 
 // ----------------------------------------------------------------------------
 

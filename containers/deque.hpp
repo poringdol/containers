@@ -3,14 +3,14 @@
 #include <limits>
 #include "cpp_type_traits.hpp"
 #include "deque.hpp"
-#include "deque_iterator.hpp"
+#include "list_iterator.hpp"
 
 
 namespace ft {
 /********************************** Deque class ***************************************/
 
 	  template<typename T, typename Alloc = std::allocator<T> >
-	class deque : public deque<T, Alloc> {
+	class deque {
 
 	private:
 
@@ -28,13 +28,14 @@ namespace ft {
 		};
 // ============================================================================
 
-		typedef ft::deque_iterator<T, _deque_node>			deque_iterator;
-		typedef ft::deque_reverse_iterator<T, _deque_node>	deque_reverse_iterator;
+		typedef ft::list_iterator<T, _deque_node>			deque_iterator;
+		typedef ft::list_reverse_iterator<T, _deque_node>	deque_reverse_iterator;
 
 	public:
 
 		typedef Alloc					allocator_type;
 		typedef size_t					size_type;
+		typedef ptrdiff_t				difference_type;
 		typedef T						value_type;
 		typedef T*						pointer;
 		typedef const T*				const_pointer;
@@ -55,8 +56,8 @@ namespace ft {
 
 		void
 		_deque_init () throw() {
-			this->_head = new _deque_node;
-			this->_head->_prev = this->_head->_next = this->_head;
+			_head = new _deque_node;
+			_head->_prev = _head->_next = _head;
 		}
 
 		/* 'insert' node placed to current position, 'current' moved to _next position */
@@ -71,7 +72,7 @@ namespace ft {
 		void
 		_insert (iterator position, InputIterator first, InputIterator last, ft::false_type_my) {
 			for (; first != last; ++first) {
-				this->insert(position, *first);
+				insert(position, *first);
 			}
 		}
 
@@ -80,16 +81,16 @@ namespace ft {
 		_insert (iterator position, size_type n, T1 val, ft::true_type_my) {
 			while (n--) {
 				iterator temp = position;
-				this->insert(temp, val);
+				insert(temp, val);
 			}
 		}
 
 		  template<typename InputIterator>
 		void
 		_assign (InputIterator first, InputIterator last, ft::false_type_my) {
-			this->clear();
+			clear();
 			while (first != last) {
-				this->push_back(*first);
+				push_back(*first);
 				++first;
 			}
 		}
@@ -97,9 +98,9 @@ namespace ft {
 		  template<typename T1>
 		void
 		_assign (size_type n, T1 val, ft::true_type_my) {
-			this->clear();
+			clear();
 			while (n--) {
-				this->push_back(val);
+				push_back(val);
 			}
 		}
 
@@ -123,28 +124,28 @@ namespace ft {
 		explicit
 		deque (size_type n, value_type val = value_type(), const allocator_type& x = allocator_type()): _deque_size(0), _alloc(x) {
 			_deque_init();
-			while (n--) { this->push_back(val); }
+			while (n--) { push_back(val); }
 		}
 		
 
 		  template<typename InputIterator>
 		deque (InputIterator first, InputIterator last, const allocator_type& x = allocator_type()): _deque_size(0), _alloc(x) {
 			_deque_init();
-			this->assign(first, last);
+			assign(first, last);
 		}
 
 		deque (const deque& x): _deque_size(0) { 
-			this->_deque_init();
+			_deque_init();
 			*this = x;
 		}
 
 		deque&
 		operator= (const deque& x) {
-			this->clear();
+			clear();
 
 			const_iterator temp = x.begin();
 			while (temp != x.end()) {
-				this->push_back(temp.ptr->_data);
+				push_back(temp.ptr->_data);
 				temp++;
 			}
 			return *this;
@@ -154,7 +155,7 @@ namespace ft {
 
 		~deque() {
 			clear();
-			delete this->_head;
+			delete _head;
 		}
 	
 // Deque methods ---------------------------------------------------------------------
@@ -162,28 +163,28 @@ namespace ft {
 	//  Iterators -------------------------------
 
 		iterator
-		begin () throw()			{ return iterator(this->_head->_next); }
+		begin () throw()			{ return iterator(_head->_next); }
 
 		const_iterator
-		begin () const throw()		{ return const_iterator(this->_head->_next); }
+		begin () const throw()		{ return const_iterator(_head->_next); }
 
 		iterator
-		end () throw()				{ return iterator(this->_head); }
+		end () throw()				{ return iterator(_head); }
 
 		const_iterator
-		end () const throw()		{ return const_iterator(this->_head); }
+		end () const throw()		{ return const_iterator(_head); }
 
 		reverse_iterator
-		rbegin () throw()			{ return reverse_iterator(this->_head->_prev); }
+		rbegin () throw()			{ return reverse_iterator(_head->_prev); }
 
 		const_reverse_iterator
-		rbegin () const throw() 	{ return const_reverse_iterator(this->_head->_prev); }
+		rbegin () const throw() 	{ return const_reverse_iterator(_head->_prev); }
 
 		reverse_iterator
-		rend () throw()				{ return reverse_iterator(this->_head); }
+		rend () throw()				{ return reverse_iterator(_head); }
 
 		const_reverse_iterator
-		rend () const throw()		{ return const_reverse_iterator(this->_head); }
+		rend () const throw()		{ return const_reverse_iterator(_head); }
 
 	// Capacity ----------------------------
 
@@ -193,22 +194,63 @@ namespace ft {
 		size_type
 		size () const throw()		{ return _deque_size; }
 
+		void
+		resize (size_type new_size, value_type val = value_type()) {
+			
+			if (new_size < _deque_size) {
+				iterator it = begin();
+				while (new_size--)
+					++it;
+				erase(it, end());
+			} else {
+				insert(end(), new_size - _deque_size, val);
+			}
+		}
+
 		size_type
-		max_size () const throw()	{ return std::numeric_limits<size_type>::max() / sizeof(_deque_node) / 2; }
+		max_size () const throw()	{ return std::numeric_limits<size_type>::max() / sizeof(_deque_node); }
 
 	// Element access -------------------------
 
 		reference
-		front () throw()			{ return *(begin()); }
+		operator[] (size_type n) throw() {
+			iterator it = begin();
+			for (size_type i = 0; i < n; it++, i++) ;
+			return *it;
+		}
 
-		value_type
-		front () const throw()		{ return *(this->begin()); }
+		const_reference
+		operator[] (size_type n) const throw() {
+			const_iterator it = begin();
+			for (size_type i = 0; i < n; it++, i++) ;
+			return *it;
+		}
 
 		reference
-		back () throw()				{ return *(-- (this->end())); }
+		at (size_type n) {
+			if (n >= _deque_size)
+				throw std::out_of_range("deque: n >= current size of deque");
+			return (*this)[n];
+		}
 
-		value_type
-		back () const throw()		{ return *(-- (this->end())); }
+		const_reference
+		at (size_type n) const {
+			if (n >= _deque_size)
+				throw std::out_of_range("deque: n >= current size of deque");
+			return (*this)[n];
+		}
+
+		reference
+		front () throw()			{ return *begin(); }
+
+		const_reference
+		front () const throw()		{ return *begin(); }
+
+		reference
+		back () throw()				{ return *(--end()); }
+
+		const_reference
+		back () const throw()		{ return *(--end()); }
 
 	// Modifiers ------------------------------
 
@@ -220,42 +262,43 @@ namespace ft {
 		}
 
 		void
-		assign (size_type n, value_type val) {
+		assign (size_type n, const value_type& val) {
 			_assign(n, val, ft::true_type_my());
 		}
 
 		void
-		push_front (value_type data) {
-			_deque_node* temp = new _deque_node(data, this->_head, this->_head->_next);
-			this->_head->_next = this->_head->_next->_prev = temp;
+		push_front (const value_type& data) {
+			_deque_node* temp = new _deque_node(data, _head, _head->_next);
+			_head->_next = _head->_next->_prev = temp;
 			_deque_size++;
 		}
 
 		void
-		pop_front () throw() { this->erase(this->begin()); }
+		pop_front () throw() { erase(begin()); }
 
 		void
-		push_back (value_type data) {
+		push_back (const value_type& data) {
+
 			if (!_deque_size) {
 				_deque_node* temp = new _deque_node(data);
-				this->_head->_prev = this->_head->_next = temp;
-				temp->_prev = temp->_next = this->_head;
+				_head->_prev = _head->_next = temp;
+				temp->_prev = temp->_next = _head;
 			} else {
-				_deque_node* temp = new _deque_node(data, this->_head->_prev, this->_head);
-				this->_head->_prev->_next = temp;
-				this->_head->_prev = temp;
+				_deque_node* temp = new _deque_node(data, _head->_prev, _head);
+				_head->_prev->_next = temp;
+				_head->_prev = temp;
 			}
 			_deque_size++;
 		}
 
 		void
-		pop_back () throw() { this->erase(iterator(this->_head->_prev)); }
+		pop_back () throw() { erase(iterator(_head->_prev)); }
 
 		iterator
-		insert (iterator position, value_type data) {
-			if (position == this->begin()) {
+		insert (iterator position, const value_type& data) {
+			if (position == begin()) {
 				push_front(data);
-				return this->begin();
+				return begin();
 			}
 
 			_deque_node* temp = new _deque_node(data);
@@ -265,7 +308,7 @@ namespace ft {
 		}
 
 		void
-		insert (iterator position, size_type n, value_type val) {
+		insert (iterator position, size_type n, const value_type& val) {
 			_insert(position, n, val, ft::true_type_my());
 		}
 		
@@ -278,11 +321,11 @@ namespace ft {
 
 		iterator
 		erase (iterator position) {
-			if (position != this->end()) {
+			if (position != end()) {
 				_cut(position);
 				iterator temp = position++;
-				if (temp == this->begin())
-					this->_head->_next = temp.ptr;
+				if (temp == begin())
+					_head->_next = temp.ptr;
 				delete temp.ptr;
 				_deque_size -= _deque_size ? 1 : 0;
 			}
@@ -299,207 +342,25 @@ namespace ft {
 
 		void
 		swap (deque& x) {
-			_deque_node* temp = this->_head;
-			this->_head = x._head;
+			_deque_node* temp = _head;
+			_head = x._head;
 			x._head = temp;
 
-			size_type size = this->_deque_size;
+			size_type size = _deque_size;
 			_deque_size = x._deque_size;
 			x._deque_size = size;
 		}
 
 		void
-		resize (size_type new_size, value_type val = value_type()) {
-			if (new_size < this->_deque_size) {
-				iterator it = this->begin();
-				while (new_size--)
-					++it;
-				erase(it, this->end());
-			} else {
-				insert(this->end(), new_size - this->_deque_size, val);
-			}
-		}
-
-		void
 		clear () throw() {
 			_deque_node* temp;
-			while (this->_deque_size) {
-				temp = this->_head->_next;
-				delete this->_head;
-				this->_head = temp;
-				this->_deque_size--;
+			while (_deque_size) {
+				temp = _head->_next;
+				delete _head;
+				_head = temp;
+				_deque_size--;
 			}
-			this->_head->_prev = this->_head->_next = this->_head;
-		}
-
-	// Operations -----------------------------
-
-		void
-		splice (iterator position, deque& x) {
-			while (x._deque_size--) {
-				iterator first = x.begin();
-				iterator temp = ++(x.begin());
-				_cut(first);
-				_node_insert(position.ptr, first.ptr);
-				first = temp;
-				_deque_size++;
-			}
-			x._head->_next = x._head->_prev = x._head;
-			x._deque_size = 0;
-		}
-
-		void
-		splice (iterator position, deque& x, iterator i) {
-			_cut(i);
-			_deque_size++;
-			x._deque_size--;
-			_node_insert(position.ptr, i.ptr);
-		}
-
-		void
-		splice (iterator position, deque& x, iterator first, iterator last) {
-			while (first != last) {
-				iterator temp = first;
-				++temp;
-				_cut(first);
-				_node_insert(position.ptr, first.ptr);
-				first = temp;
-				_deque_size++;
-				x._deque_size--;
-			}
-		}
-
-		void
-		remove (value_type val) {
-			iterator it = this->begin();
-			while (it != this->end()) {
-				iterator temp = it;
-				++it;
-				if (*temp == val) {
-					this->erase(temp);
-				}
-			}
-		}
-
-		  template<typename Compare>
-		void
-		remove_if (Compare comp) {
-			iterator it = this->begin();
-			while (it != this->end()) {
-				iterator temp = it;
-				++it;
-				if (comp(*temp)) {
-					this->erase(temp);
-				}
-			}
-		}
-
-		void
-		unique() {
-			iterator first = this->begin();
-			++first;
-			while (first != this->end()) {
-				if (first.ptr->_data == first.ptr->_prev->_data) {
-					iterator temp = first;
-					++temp;
-					_cut(first);
-					delete first.ptr;
-					_deque_size--;
-					first = temp;
-				} else {
-					++first;
-				}
-			}
-		}
-
-		  template<typename BinaryPredicate>
-		void
-		unique (BinaryPredicate binary_pred) {
-						iterator first = this->begin();
-			++first;
-			while (first != this->end()) {
-				if (binary_pred(first.ptr->_data, first.ptr->_prev->_data)) {
-					iterator temp = first;
-					++temp;
-					_cut(first);
-					delete first.ptr;
-					_deque_size--;
-					first = temp;
-				} else {
-					++first;
-				}
-			}
-		}
-
-		void
-		merge (deque& x) { this->merge(x, _compare); }
-
-		  template<typename Compare>
-		void
-		merge (deque& x, Compare comp) {
-			if (&x == this)
-				return;
-			iterator first1 = this->begin(), first2 = x.begin(),
-					  last1 = this->end(),	  last2 = x.end();
-			while (first1 != last1 && first2 != last2) {
-				if (comp(*first2, *first1)) {
-					iterator temp = first2;
-					temp++;
-					_node_insert(first1.ptr, first2.ptr);
-					first2 = temp;
-					this->_deque_size++;
-				}
-				else
-					++first1;
-			}
-			while (first2 != last2) {
-				iterator temp = first2;
-				temp++;
-				_node_insert(first1.ptr, first2.ptr);
-				first2 = temp;
-				this->_deque_size++;;
-			}
-			x._head->_next = x._head->_prev = x._head;
-			x._deque_size = 0;
-		}
-
-		void
-		sort() { this->sort(_compare); }
-
-		  template<typename Compare>
-		void
-		sort (Compare comp) {
-			for (iterator it = begin(); it != end(); ) {
-				iterator it_min;
-				it_min = it;
-				for (iterator itt = it; itt != end(); ++itt) {
-					if (comp(*itt, *it_min)) {
-						it_min = itt;
-					}
-				}
-				if (it_min != it) {
-					_cut(it_min);
-					_node_insert(it.ptr, it_min.ptr);
-				} else {
-					++it;
-				}
-			}
-		}
-
-		void
-		reverse () {
-			iterator first = this->_head;
-			size_type size = this->_deque_size;
-			while (size--) {
-				iterator last = -- (this->end());
-				_cut(last);
-				
-				first.ptr->_next->_prev = last.ptr;
-				last.ptr->_next = first.ptr->_next;
-				first.ptr->_next = last.ptr;
-				last.ptr->_prev = first.ptr;
-				++first;
-			}
+			_head->_prev = _head->_next = _head;
 		}
 
 // Friend functions -----------------------------------------------------------

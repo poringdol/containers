@@ -68,14 +68,14 @@ static std::pair<std::string, int> vect_map3[20] =  { std::make_pair("one", 1), 
 								std::make_pair("ten", 102), std::make_pair("eleven", 112),
 								std::make_pair("thirteen", 13), std::make_pair("fourteen", 14), std::make_pair("fifteen", 15) };
 
-static std::list<int> ls(arr_int, arr_int + 15);
-static std::vector<int> vc(arr_int, arr_int + 15);
-static std::vector<int> vc2(arr_int2, arr_int2 + 15);
-static std::deque<int> dq(arr_int, arr_int + 15);
-static std::vector<std::string> str(arr_str, arr_str + 15);
-static std::vector<std::pair<int, int> > map1(vect_map1, vect_map1 + 20);
-static std::vector<std::pair<int, int> > map2(vect_map2, vect_map2 + 20);
-static std::vector<std::pair<std::string, int> > map3(vect_map3, vect_map3 + 20);
+static std::list<int> g_ls(arr_int, arr_int + 15);
+static std::vector<int> g_vc(arr_int, arr_int + 15);
+static std::vector<int> g_vc2(arr_int2, arr_int2 + 15);
+static std::deque<int> g_dq(arr_int, arr_int + 15);
+static std::vector<std::string> g_str(arr_str, arr_str + 15);
+static std::vector<std::pair<int, int> > g_map1(vect_map1, vect_map1 + 20);
+static std::vector<std::pair<int, int> > g_map2(vect_map2, vect_map2 + 20);
+static std::vector<std::pair<std::string, int> > g_map3(vect_map3, vect_map3 + 20);
 
   template<typename T>
 std::string contToString(const T& cont) {
@@ -161,6 +161,7 @@ namespace ft_list
 	void assign_fill_test();
 	void sort_test();
 	void sort_compare_test();
+	void reverse_test();
 	void merge_test();
 	void splice_test();
 	void insert_test();
@@ -265,14 +266,27 @@ namespace ft_deque
 {
 	void deque_test();
 
-	// void constructorDefault_test();
-	// void size_test();
-	// void empty_test();
-	// void front_test();
-	// void back_test();
-	// void pop_test();
-	// void push_test();
-	// void operators_test();
+	void constructorDefault_test();
+	void constructorFill_test();
+	void constructorRange_test();
+	void begin_test();
+	void rbegin_rend_test();
+	void size_test();
+	void empty_test();
+	void resize_test();
+	void max_size_test();
+	void front_back_test();
+	void assign_range_test();
+	void assign_fill_test();
+	void insert_test();
+	void push_back_front_test();
+	void pop_back_front_test();
+	void clear_test();
+	void erase_test();
+	void swap_test();
+	void operators_test();
+	void oper_sq_braces_test();
+	void at_test();
 }
 
 namespace ft_set

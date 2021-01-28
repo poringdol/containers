@@ -1,6 +1,7 @@
 #pragma once
 
 #include <limits>
+#include <cstddef>
 #include "cpp_type_traits.hpp"
 #include "list_iterator.hpp"
 
@@ -32,17 +33,18 @@ namespace ft {
 
 	public:
 
-		typedef Alloc										allocator_type;
-		typedef size_t										size_type;
-		typedef T											value_type;
-		typedef T*											pointer;
-		typedef const T*									const_pointer;
-		typedef T&											reference;
-		typedef const T&									const_reference;
-		typedef list_iterator							iterator;
-		typedef list_iterator							const_iterator;
-		typedef list_reverse_iterator					reverse_iterator;
-		typedef list_reverse_iterator					const_reverse_iterator;
+		typedef Alloc					allocator_type;
+		typedef size_t					size_type;
+		typedef ptrdiff_t				difference_type;
+		typedef T						value_type;
+		typedef T*						pointer;
+		typedef const T*				const_pointer;
+		typedef T&						reference;
+		typedef const T&				const_reference;
+		typedef list_iterator			iterator;
+		typedef list_iterator			const_iterator;
+		typedef list_reverse_iterator	reverse_iterator;
+		typedef list_reverse_iterator	const_reverse_iterator;
 
 	protected:
 
@@ -54,8 +56,8 @@ namespace ft {
 
 		void
 		_list_init () throw() {
-			this->_head = new _list_node;
-			this->_head->_prev = this->_head->_next = this->_head;
+			_head = new _list_node;
+			_head->_prev = _head->_next = _head;
 		}
 
 		/* 'insert' node placed to current position, 'current' moved to _next position */
@@ -70,7 +72,7 @@ namespace ft {
 		void
 		_insert (iterator position, InputIterator first, InputIterator last, ft::false_type_my) {
 			for (; first != last; ++first) {
-				this->insert(position, *first);
+				insert(position, *first);
 			}
 		}
 
@@ -79,16 +81,16 @@ namespace ft {
 		_insert (iterator position, size_type n, T1 val, ft::true_type_my) {
 			while (n--) {
 				iterator temp = position;
-				this->insert(temp, val);
+				insert(temp, val);
 			}
 		}
 
 		  template<typename InputIterator>
 		void
 		_assign (InputIterator first, InputIterator last, ft::false_type_my) {
-			this->clear();
+			clear();
 			while (first != last) {
-				this->push_back(*first);
+				push_back(*first);
 				++first;
 			}
 		}
@@ -96,9 +98,9 @@ namespace ft {
 		  template<typename T1>
 		void
 		_assign (size_type n, T1 val, ft::true_type_my) {
-			this->clear();
+			clear();
 			while (n--) {
-				this->push_back(val);
+				push_back(val);
 			}
 		}
 
@@ -122,28 +124,28 @@ namespace ft {
 		explicit
 		list (size_type n, value_type val = value_type(), const allocator_type& x = allocator_type()): _list_size(0), _alloc(x) {
 			_list_init();
-			while (n--) { this->push_back(val); }
+			while (n--) { push_back(val); }
 		}
 		
 
 		  template<typename InputIterator>
 		list (InputIterator first, InputIterator last, const allocator_type& x = allocator_type()): _list_size(0), _alloc(x) {
 			_list_init();
-			this->assign(first, last);
+			assign(first, last);
 		}
 
 		list (const list& x): _list_size(0) { 
-			this->_list_init();
+			_list_init();
 			*this = x;
 		}
 
 		list&
 		operator= (const list& x) {
-			this->clear();
+			clear();
 
 			const_iterator temp = x.begin();
 			while (temp != x.end()) {
-				this->push_back(temp.ptr->_data);
+				push_back(temp.ptr->_data);
 				temp++;
 			}
 			return *this;
@@ -153,7 +155,7 @@ namespace ft {
 
 		~list() {
 			clear();
-			delete this->_head;
+			delete _head;
 		}
 	
 // List methods ---------------------------------------------------------------------
@@ -161,28 +163,28 @@ namespace ft {
 	//  Iterators -------------------------------
 
 		iterator
-		begin () throw()			{ return iterator(this->_head->_next); }
+		begin () throw()			{ return iterator(_head->_next); }
 
 		const_iterator
-		begin () const throw()		{ return const_iterator(this->_head->_next); }
+		begin () const throw()		{ return const_iterator(_head->_next); }
 
 		iterator
-		end () throw()				{ return iterator(this->_head); }
+		end () throw()				{ return iterator(_head); }
 
 		const_iterator
-		end () const throw()		{ return const_iterator(this->_head); }
+		end () const throw()		{ return const_iterator(_head); }
 
 		reverse_iterator
-		rbegin () throw()			{ return reverse_iterator(this->_head->_prev); }
+		rbegin () throw()			{ return reverse_iterator(_head->_prev); }
 
 		const_reverse_iterator
-		rbegin () const throw() 	{ return const_reverse_iterator(this->_head->_prev); }
+		rbegin () const throw() 	{ return const_reverse_iterator(_head->_prev); }
 
 		reverse_iterator
-		rend () throw()				{ return reverse_iterator(this->_head); }
+		rend () throw()				{ return reverse_iterator(_head); }
 
 		const_reverse_iterator
-		rend () const throw()		{ return const_reverse_iterator(this->_head); }
+		rend () const throw()		{ return const_reverse_iterator(_head); }
 
 	// Capacity ----------------------------
 
@@ -193,21 +195,21 @@ namespace ft {
 		size () const throw()		{ return _list_size; }
 
 		size_type
-		max_size () const throw()	{ return std::numeric_limits<size_type>::max() / sizeof(_list_node) / 2; }
+		max_size () const throw()	{ return std::numeric_limits<size_type>::max() / sizeof(_list_node); }
 
 	// Element access -------------------------
 
 		reference
-		front () throw()			{ return *(begin()); }
+		front () throw()			{ return *begin(); }
 
-		value_type
-		front () const throw()		{ return *(this->begin()); }
+		const_reference
+		front () const throw()		{ return *begin(); }
 
 		reference
-		back () throw()				{ return *(-- (this->end())); }
+		back () throw()				{ return *(--end()); }
 
-		value_type
-		back () const throw()		{ return *(-- (this->end())); }
+		const_reference
+		back () const throw()		{ return *(--end()); }
 
 	// Modifiers ------------------------------
 
@@ -219,42 +221,42 @@ namespace ft {
 		}
 
 		void
-		assign (size_type n, value_type val) {
+		assign (size_type n, const value_type& val) {
 			_assign(n, val, ft::true_type_my());
 		}
 
 		void
-		push_front (value_type data) {
-			_list_node* temp = new _list_node(data, this->_head, this->_head->_next);
-			this->_head->_next = this->_head->_next->_prev = temp;
+		push_front (const value_type& data) {
+			_list_node* temp = new _list_node(data, _head, _head->_next);
+			_head->_next = _head->_next->_prev = temp;
 			_list_size++;
 		}
 
 		void
-		pop_front () throw() { this->erase(this->begin()); }
+		pop_front () throw() { erase(begin()); }
 
 		void
-		push_back (value_type data) {
+		push_back (const value_type& data) {
 			if (!_list_size) {
 				_list_node* temp = new _list_node(data);
-				this->_head->_prev = this->_head->_next = temp;
-				temp->_prev = temp->_next = this->_head;
+				_head->_prev = _head->_next = temp;
+				temp->_prev = temp->_next = _head;
 			} else {
-				_list_node* temp = new _list_node(data, this->_head->_prev, this->_head);
-				this->_head->_prev->_next = temp;
-				this->_head->_prev = temp;
+				_list_node* temp = new _list_node(data, _head->_prev, _head);
+				_head->_prev->_next = temp;
+				_head->_prev = temp;
 			}
 			_list_size++;
 		}
 
 		void
-		pop_back () throw() { this->erase(iterator(this->_head->_prev)); }
+		pop_back () throw() { erase(iterator(_head->_prev)); }
 
 		iterator
-		insert (iterator position, value_type data) {
-			if (position == this->begin()) {
+		insert (iterator position, const value_type& data) {
+			if (position == begin()) {
 				push_front(data);
-				return this->begin();
+				return begin();
 			}
 
 			_list_node* temp = new _list_node(data);
@@ -264,7 +266,7 @@ namespace ft {
 		}
 
 		void
-		insert (iterator position, size_type n, value_type val) {
+		insert (iterator position, size_type n, const value_type& val) {
 			_insert(position, n, val, ft::true_type_my());
 		}
 		
@@ -277,11 +279,11 @@ namespace ft {
 
 		iterator
 		erase (iterator position) {
-			if (position != this->end()) {
+			if (position != end()) {
 				_cut(position);
 				iterator temp = position++;
-				if (temp == this->begin())
-					this->_head->_next = temp.ptr;
+				if (temp == begin())
+					_head->_next = temp.ptr;
 				delete temp.ptr;
 				_list_size -= _list_size ? 1 : 0;
 			}
@@ -298,37 +300,37 @@ namespace ft {
 
 		void
 		swap (list& x) {
-			_list_node* temp = this->_head;
-			this->_head = x._head;
+			_list_node* temp = _head;
+			_head = x._head;
 			x._head = temp;
 
-			size_type size = this->_list_size;
+			size_type size = _list_size;
 			_list_size = x._list_size;
 			x._list_size = size;
 		}
 
 		void
 		resize (size_type new_size, value_type val = value_type()) {
-			if (new_size < this->_list_size) {
-				iterator it = this->begin();
+			if (new_size < _list_size) {
+				iterator it = begin();
 				while (new_size--)
 					++it;
-				erase(it, this->end());
+				erase(it, end());
 			} else {
-				insert(this->end(), new_size - this->_list_size, val);
+				insert(end(), new_size - _list_size, val);
 			}
 		}
 
 		void
 		clear () throw() {
 			_list_node* temp;
-			while (this->_list_size) {
-				temp = this->_head->_next;
-				delete this->_head;
-				this->_head = temp;
-				this->_list_size--;
+			while (_list_size) {
+				temp = _head->_next;
+				delete _head;
+				_head = temp;
+				_list_size--;
 			}
-			this->_head->_prev = this->_head->_next = this->_head;
+			_head->_prev = _head->_next = _head;
 		}
 
 	// Operations -----------------------------
@@ -369,13 +371,13 @@ namespace ft {
 		}
 
 		void
-		remove (value_type val) {
-			iterator it = this->begin();
-			while (it != this->end()) {
+		remove (const value_type& val) {
+			iterator it = begin();
+			while (it != end()) {
 				iterator temp = it;
 				++it;
 				if (*temp == val) {
-					this->erase(temp);
+					erase(temp);
 				}
 			}
 		}
@@ -383,21 +385,21 @@ namespace ft {
 		  template<typename Compare>
 		void
 		remove_if (Compare comp) {
-			iterator it = this->begin();
-			while (it != this->end()) {
+			iterator it = begin();
+			while (it != end()) {
 				iterator temp = it;
 				++it;
 				if (comp(*temp)) {
-					this->erase(temp);
+					erase(temp);
 				}
 			}
 		}
 
 		void
 		unique() {
-			iterator first = this->begin();
+			iterator first = begin();
 			++first;
-			while (first != this->end()) {
+			while (first != end()) {
 				if (first.ptr->_data == first.ptr->_prev->_data) {
 					iterator temp = first;
 					++temp;
@@ -414,9 +416,9 @@ namespace ft {
 		  template<typename BinaryPredicate>
 		void
 		unique (BinaryPredicate binary_pred) {
-						iterator first = this->begin();
+						iterator first = begin();
 			++first;
-			while (first != this->end()) {
+			while (first != end()) {
 				if (binary_pred(first.ptr->_data, first.ptr->_prev->_data)) {
 					iterator temp = first;
 					++temp;
@@ -431,22 +433,22 @@ namespace ft {
 		}
 
 		void
-		merge (list& x) { this->merge(x, _compare); }
+		merge (list& x) { merge(x, _compare); }
 
 		  template<typename Compare>
 		void
 		merge (list& x, Compare comp) {
 			if (&x == this)
 				return;
-			iterator first1 = this->begin(), first2 = x.begin(),
-					  last1 = this->end(),	  last2 = x.end();
+			iterator first1 = begin(), first2 = x.begin(),
+					  last1 = end(),	  last2 = x.end();
 			while (first1 != last1 && first2 != last2) {
 				if (comp(*first2, *first1)) {
 					iterator temp = first2;
 					temp++;
 					_node_insert(first1.ptr, first2.ptr);
 					first2 = temp;
-					this->_list_size++;
+					_list_size++;
 				}
 				else
 					++first1;
@@ -456,14 +458,14 @@ namespace ft {
 				temp++;
 				_node_insert(first1.ptr, first2.ptr);
 				first2 = temp;
-				this->_list_size++;;
+				_list_size++;;
 			}
 			x._head->_next = x._head->_prev = x._head;
 			x._list_size = 0;
 		}
 
 		void
-		sort() { this->sort(_compare); }
+		sort() { sort(_compare); }
 
 		  template<typename Compare>
 		void
@@ -487,10 +489,10 @@ namespace ft {
 
 		void
 		reverse () {
-			iterator first = this->_head;
-			size_type size = this->_list_size;
+			iterator first = _head;
+			size_type size = _list_size;
 			while (size--) {
-				iterator last = -- (this->end());
+				iterator last = -- (end());
 				_cut(last);
 				
 				first.ptr->_next->_prev = last.ptr;
