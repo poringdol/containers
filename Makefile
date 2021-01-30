@@ -44,7 +44,7 @@ $(NAME): $(OBJ) $(MAIN)
 	@echo ""
 	@echo "$(GREEN)~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~$(B&W)"
 	@echo "$(GREEN)^						^$(B&W)"
-	@echo "$(GREEN)^	 $(B&W)Project: ft_services by $(GREEN)pdemocri	^$(B&W)"
+	@echo "$(GREEN)^	 $(B&W)Project: ft_containers by $(GREEN)pdemocri	^$(B&W)"
 	@echo "$(GREEN)^						^$(B&W)"
 	@echo "$(GREEN)^						^$(B&W)"
 	@echo "$(GREEN)^ [Tests created]				^$(B&W)"
