@@ -1,6 +1,8 @@
 #pragma once
 
 #include <limits>
+#include <memory>
+#include <cstddef>
 #include "cpp_type_traits.hpp"
 #include "deque.hpp"
 #include "list_iterator.hpp"

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <limits>
 #include "vector_iterator.hpp"
 #include "cpp_type_traits.hpp"
 
@@ -512,11 +513,11 @@ namespace ft {
 
 		  template<typename _T, typename _Alloc>
 		friend void
-		swap (list<_T, _Alloc>&, list<_T, _Alloc>&);
+		swap (vector<_T, _Alloc>&, vector<_T, _Alloc>&);
 
 	};
 
-/************************************ end of list class **************************************/
+/************************************ end of Vector class **************************************/
 
 // Friend functions definitions -------------------------------------------------
 

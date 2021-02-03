@@ -1,7 +1,6 @@
 #pragma once
 
 #include "list.hpp"
-#include <queue>
 
 namespace ft {
 /********************************** Queue class ***************************************/

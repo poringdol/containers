@@ -1,7 +1,9 @@
 #pragma once
 
+#include <iostream>
+#include <iomanip>
 #include <limits>
-#include <memory>
+#include <cstddef>
 #include "stack.hpp"
 #include "set_iterator.hpp"
 
