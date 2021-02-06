@@ -29,8 +29,6 @@ namespace ft {
 		};
 // ============================================================================
 
-		typedef ft::list_iterator<T, _list_node>			list_iterator;
-		typedef ft::list_reverse_iterator<T, _list_node>	list_reverse_iterator;
 
 	public:
 
@@ -42,10 +40,11 @@ namespace ft {
 		typedef const T*				const_pointer;
 		typedef T&						reference;
 		typedef const T&				const_reference;
-		typedef list_iterator			iterator;
-		typedef list_iterator			const_iterator;
-		typedef list_reverse_iterator	reverse_iterator;
-		typedef list_reverse_iterator	const_reverse_iterator;
+
+		typedef ft::list_iterator<T, _list_node>				iterator;
+		typedef ft::const_list_iterator<T, _list_node>			const_iterator;
+		typedef ft::list_reverse_iterator<T, _list_node>		reverse_iterator;
+		typedef ft::const_list_reverse_iterator<T, _list_node>	const_reverse_iterator;
 
 	protected:
 
@@ -529,8 +528,8 @@ namespace ft {
 		
 		if (lhs.size() != rhs.size()) return false;
 		
-		typename ft::list<T>::iterator first1 = lhs.begin();
-		typename ft::list<T>::iterator first2 = rhs.begin();
+		typename ft::list<T>::const_iterator first1 = lhs.begin();
+		typename ft::list<T>::const_iterator first2 = rhs.begin();
 		
 		while (first1 != lhs.end()) {
 			if (*first1 != *first2)
@@ -551,8 +550,8 @@ namespace ft {
 	inline bool
 	operator<  (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
 
-		typename ft::list<T>::iterator first1 = lhs.begin();
-		typename ft::list<T>::iterator first2 = rhs.begin();
+		typename ft::list<T>::const_iterator first1 = lhs.begin();
+		typename ft::list<T>::const_iterator first2 = rhs.begin();
 		
 		while (first1 != lhs.end() && first2 != rhs.end()) {
 			if (*first1 < *first2)
