@@ -238,7 +238,15 @@ namespace ft {
 		}
 
 		void
-		_print_tree () { std::cout << "\n"; _print(_root); std::cout << "\n"; }
+		_print_tree () {
+			if (!empty()) {
+				std::cout << "\n";
+				_print(_root); std::cout << "\n";
+			}
+			else
+				std::cout << "[EMPTY TREE]\n";
+		}
+
 
 	// Balancing ----------------------------------------------------------------
 

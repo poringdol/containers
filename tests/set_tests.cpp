@@ -29,14 +29,14 @@ namespace ft_set
 			ft::set<int> my_st(g_ls.begin(), g_ls.end());
 			ASSERT_EQUAL(st.size(), my_st.size());
 			ASSERT_EQUAL(contToString(st), contToString(my_st));
-			
+			print_tree(my_st);
 		}
 		{
 			std::set<int> st(g_vc.begin(), g_vc.end());	// set from std::vector
 			ft::set<int> my_st(g_vc.begin(), g_vc.end());
 			ASSERT_EQUAL(st.size(), my_st.size());
 			ASSERT_EQUAL(contToString(st), contToString(my_st));
-			
+			print_tree(my_st);
 		}
 		{
 			std::set<std::string> st(g_str.begin(), g_str.end());	// set from std::vector
@@ -45,7 +45,7 @@ namespace ft_set
 			contToString(st);
 			contToString(my_st);
 			ASSERT_EQUAL(contToString(st), contToString(my_st));
-			
+			print_tree(my_st);
 		}
 		{
 			std::vector<int> v;
@@ -227,6 +227,7 @@ namespace ft_set
 		st1.insert(g_vc2.begin(), g_vc2.end());
 		my_st1.insert(g_vc2.begin(), g_vc2.end());
 		ASSERT_EQUAL(contToString(st1), contToString(my_st1));
+		print_tree(my_st1);
 
 		std::set<std::string> st2;
 		ft::set<std::string> my_st2;
@@ -237,6 +238,7 @@ namespace ft_set
 		st2.insert(g_str.rbegin(), g_str.rend());
 		my_st2.insert(g_str.rbegin(), g_str.rend());
 		ASSERT_EQUAL(contToString(st2), contToString(my_st2));
+		print_tree(my_st2);
 	}
 
 	void insert_single_test() {
@@ -369,31 +371,37 @@ namespace ft_set
 		{
 			std::set<int> st(g_vc.begin(), g_vc.end());
 			ft::set<int> my_st(g_vc.begin(), g_vc.end());
-			
+			print_tree(my_st);
+
 			st.erase(st.begin());
 			my_st.erase(my_st.begin());
 			ASSERT_EQUAL(st.size(), my_st.size());
 			ASSERT_EQUAL(contToString(st), contToString(my_st));
+			print_tree(my_st);
 
 			st.erase(++st.begin());
 			my_st.erase(++my_st.begin());
 			ASSERT_EQUAL(st.size(), my_st.size());
 			ASSERT_EQUAL(contToString(st), contToString(my_st));
+			print_tree(my_st);
 
 			st.erase(--st.end());
 			my_st.erase(--my_st.end());
 			ASSERT_EQUAL(st.size(), my_st.size());
 			ASSERT_EQUAL(contToString(st), contToString(my_st));
+			print_tree(my_st);
 
 			st.erase(st.begin());
 			my_st.erase(my_st.begin());
 			ASSERT_EQUAL(st.size(), my_st.size());
 			ASSERT_EQUAL(contToString(st), contToString(my_st));
+			print_tree(my_st);
 	
 			st.erase(st.find(5));
 			my_st.erase(my_st.find(5));
 			ASSERT_EQUAL(st.size(), my_st.size());
 			ASSERT_EQUAL(contToString(st), contToString(my_st));
+			print_tree(my_st);
 
 			st.erase(st.find(7));
 			my_st.erase(my_st.find(7));
@@ -401,65 +409,71 @@ namespace ft_set
 			contToString(st);
 			contToString(my_st);
 			ASSERT_EQUAL(contToString(st), contToString(my_st));
-			
+			print_tree(my_st);
 
 			st.erase(st.begin());
 			my_st.erase(my_st.begin());
 			ASSERT_EQUAL(st.size(), my_st.size());
 			ASSERT_EQUAL(contToString(st), contToString(my_st));
-			
+			print_tree(my_st);
 
 			st.erase(st.begin());
 			my_st.erase(my_st.begin());
 			ASSERT_EQUAL(st.size(), my_st.size());
 			ASSERT_EQUAL(contToString(st), contToString(my_st));
-			
+			print_tree(my_st);
 			
 			st.erase(st.begin());
 			my_st.erase(my_st.begin());
 			ASSERT_EQUAL(st.size(), my_st.size());
 			ASSERT_EQUAL(contToString(st), contToString(my_st));
-			
+			print_tree(my_st);
 			
 			st.erase(--st.end());
 			my_st.erase(--my_st.end());
 			ASSERT_EQUAL(st.size(), my_st.size());
-			ASSERT_EQUAL(contToString(st), contToString(my_st));			
+			ASSERT_EQUAL(contToString(st), contToString(my_st));
+			print_tree(my_st);			
 		}
 		{
 			std::set<std::string> st(g_str.begin(), g_str.end());
 			ft::set<std::string> my_st(g_str.begin(), g_str.end());
+			print_tree(my_st);
 
 			ASSERT_EQUAL(contToString(st), contToString(my_st));
 			st.erase(st.begin());
 			my_st.erase(my_st.begin());
 			ASSERT_EQUAL(contToString(st), contToString(my_st));
-
+			print_tree(my_st);
 			
 			st.erase(++st.begin());
 			my_st.erase(++my_st.begin());
 			ASSERT_EQUAL(contToString(st), contToString(my_st));
-			
+			print_tree(my_st);
 			
 			st.erase(++st.begin());
 			my_st.erase(++my_st.begin());
 			ASSERT_EQUAL(contToString(st), contToString(my_st));
-
+			print_tree(my_st);
 			
 			st.erase(st.begin());
 			my_st.erase(my_st.begin());
 			ASSERT_EQUAL(contToString(st), contToString(my_st));
+			print_tree(my_st);
 
 			st.erase(--st.end());
 			my_st.erase(--my_st.end());
 			ASSERT_EQUAL(contToString(st), contToString(my_st));
+			print_tree(my_st);
 
 			st.erase(--st.end());
 			my_st.erase(--my_st.end());
 			ASSERT_EQUAL(contToString(st), contToString(my_st));
+			print_tree(my_st);
 
 			std::pair<std::set<std::string>::iterator, bool> pr = st.insert("odin");
 			std::pair<ft::set<std::string>::iterator, bool> my_pr = my_st.insert("odin");
+			print_tree(my_st);
 
 			std::set<std::string>::iterator it = pr.first;
 			ft::set<std::string>::iterator my_it = my_pr.first;
@@ -468,7 +482,7 @@ namespace ft_set
 			my_st.erase(my_it);
 			ASSERT_EQUAL(st.size(), my_st.size());
 			ASSERT_EQUAL(contToString(st), contToString(my_st));
-			
+			print_tree(my_st);			
 
 			it = st.find("seven_1");
 			my_it = my_st.find("seven_1");
@@ -476,7 +490,7 @@ namespace ft_set
 			my_st.erase(my_it);
 			ASSERT_EQUAL(st.size(), my_st.size());
 			ASSERT_EQUAL(contToString(st), contToString(my_st));
-			
+			print_tree(my_st);
 
 			it = st.find("three_1");
 			my_it = my_st.find("three_1");
@@ -484,6 +498,7 @@ namespace ft_set
 			my_st.erase(my_it);
 			ASSERT_EQUAL(st.size(), my_st.size());
 			ASSERT_EQUAL(contToString(st), contToString(my_st));
+			print_tree(my_st);
 		}
 	}
 
@@ -491,7 +506,8 @@ namespace ft_set
 		{
 			std::set<int> st(g_vc.begin(), g_vc.end());
 			ft::set<int> my_st(g_vc.begin(), g_vc.end());
-
+			print_tree(my_st);
+			
 			size_t t1, t2;
 			
 			t1 = st.erase(9);
@@ -530,6 +546,7 @@ namespace ft_set
 			ASSERT_EQUAL(st.size(), my_st.size());
 
 			ASSERT_EQUAL(contToString(st), contToString(my_st));
+			print_tree(my_st);
 		}
 	}
 

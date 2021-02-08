@@ -199,7 +199,7 @@ namespace ft {
 				if (indent)
 					std::cout << std::setw(indent) << ' ';
 				std::cout << (p->_color ? "\033[1;31m" : "") <<
-					"[" << p->_data.first << " " << p->_data.second << "]" <<
+					"[" << p->_data << "]" <<
 					"\033[0;0m" << "\n ";
 				if(p->_left && p->_left != _rend)
 					_print(p->_left, indent + 5);
@@ -236,7 +236,14 @@ namespace ft {
 		}
 
 		void
-		_print_tree () { std::cout << "\n"; _print(_root); std::cout << "\n"; }
+		_print_tree () {
+			if (!empty()) {
+				std::cout << "\n";
+				_print(_root); std::cout << "\n";
+			}
+			else
+				std::cout << "[EMPTY TREE]\n";
+		}
 
 	// Balancing ----------------------------------------------------------------
 
@@ -788,6 +795,10 @@ namespace ft {
 
 		  template <typename _T, typename _Compare, typename _Alloc>
   		void swap (set<_T,_Compare,_Alloc>& x, set<_T,_Compare,_Alloc>& y);
+
+		 template<typename U>
+		friend void
+		print_tree(U& tree);
 	};
 
 /************************************ end of Set class ***********************************/

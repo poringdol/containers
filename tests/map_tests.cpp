@@ -337,6 +337,7 @@ namespace ft_map
 		mp2.insert(g_map3.rbegin(), g_map3.rend());
 		my_mp2.insert(g_map3.rbegin(), g_map3.rend());
 		ASSERT_EQUAL(mapToString(mp2), mapToString(my_mp2));
+		print_tree(my_mp2);
 	}
 
 	void insert_single_test() {

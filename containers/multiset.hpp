@@ -287,7 +287,30 @@ namespace ft {
 			_root = NULL;
 		}
 
+		void
+		_print (node* p, int indent = 0) {
+			if(p != _null) {
+				if (indent)
+					std::cout << std::setw(indent) << ' ';
+				std::cout << "[" << p->_data << "]" << "\n ";
+				if(p->_left && p->_left != _rend)
+					_print(p->_left, indent + 5);
+				if(p->_right && p->_right != _end)
+					_print(p->_right, indent + 5);
+			}
+		}
+
 	public:
+
+		void
+		_print_tree () {
+			if (!empty()) {
+				std::cout << "\n";
+				_print(_root); std::cout << "\n";
+			}
+			else
+				std::cout << "[EMPTY TREE]\n";
+		}
 
 // Multiset constructors -----------------------------------------------------------
 

@@ -130,10 +130,10 @@ namespace ft {
 		_assign (InputIterator first, InputIterator last, ft::false_type_my) {
 			size_type new_size = _range_size(first, last);
 			if (new_size <= capacity()) {
-				_destroy(first, last);
+				_destroy(this->begin(), this->end());
 				_construct(first, last, ft::false_type_my());
 			} else {
-				_destroy(first, last);
+				_destroy(this->begin(), this->end());
 				_dealloc(_start, _finish, _end_of_storage);
 				_allocate(first, last, ft::false_type_my());
 				_construct(first, last, ft::false_type_my());
