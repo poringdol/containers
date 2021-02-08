@@ -1,0 +1,31 @@
+		void
+        resize (size_type n, value_type val = value_type()) {
+			if (n == size()) return;
+
+			size_type _size;
+			if (n < size()) {
+				_size = size() - n;
+				_destroy_simple(begin() + _size, iterator(_finish));
+				_finish -= _size;
+			} else {
+				_size = n - size();
+				if (n <= capacity()) {
+					this->insert(this->end(), _size, val);
+				} else {
+					pointer _start_old = _start;
+					pointer _finish_old = _finish;
+					pointer	_end_of_s_old = _end_of_storage;
+
+					size_type _alloc_size = !size() ? n : _max(size() * 2, n);
+					_allocate(_alloc_size, val, ft::__true_type());
+					iterator _end = _start + 1;
+					if (_start_old != _finish_old)
+						_end = _copy_range(_start + 1, iterator(_start_old + 1), iterator(_finish_old));
+					_end = _copy_fill(_end, _size, val);
+					if (_start_old != _finish_old)
+						_destroy(iterator(_start_old + 1), iterator(_finish_old));
+					_dealloc(_start_old, _finish_old, _end_of_s_old);
+					_finish = _end.base();
+				}
+			}
+		}
